@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CuidaMayor — Profesionales de salud verificados para tu familiar</title>
+  <title>FamHealth — El cuidado de tu familia, siempre cerca</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -466,7 +466,7 @@
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">Cuida<span>Mayor</span></a>
+  <a href="#" class="nav-logo">Fam<span>Health</span></a>
   <ul class="nav-links">
     <li><a href="#como-funciona">Cómo funciona</a></li>
     <li><a href="#profesionales">Para profesionales</a></li>
@@ -767,7 +767,7 @@
 <footer>
   <div class="footer-inner">
     <div>
-      <div class="footer-logo">Cuida<span>Mayor</span></div>
+      <div class="footer-logo">Fam<span>Health</span></div>
       <p class="footer-tagline">Profesionales verificados para el cuidado de quienes más quieres.</p>
     </div>
     <div>
@@ -781,13 +781,13 @@
     <div>
       <div style="font-size:.85rem;font-weight:600;color:rgba(255,255,255,.4);margin-bottom:.75rem;letter-spacing:1px;text-transform:uppercase">Contacto</div>
       <div class="footer-links">
-        <a href="mailto:contacto@cuidamayor.cl">contacto@cuidamayor.cl</a>
+        <a href="mailto:contacto@famhealth.cl">contacto@famhealth.cl</a>
         <a href="https://wa.me/56900000000">WhatsApp</a>
       </div>
     </div>
   </div>
   <div class="footer-bottom">
-    <p>© 2025 CuidaMayor · Santiago, Chile &nbsp;·&nbsp; <a href="#" style="color:rgba(255,255,255,.4);text-decoration:none">Política de privacidad</a> &nbsp;·&nbsp; <a href="#" style="color:rgba(255,255,255,.4);text-decoration:none">Términos de uso</a></p>
+    <p>© 2025 FamHealth · Santiago, Chile &nbsp;·&nbsp; <a href="#" style="color:rgba(255,255,255,.4);text-decoration:none">Política de privacidad</a> &nbsp;·&nbsp; <a href="#" style="color:rgba(255,255,255,.4);text-decoration:none">Términos de uso</a></p>
   </div>
 </footer>
 
@@ -800,20 +800,23 @@
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // Form submit
-  function submitForm(tipo) {
+  // Form submit con Formspree
+  async function submitForm(tipo) {
     const form = document.getElementById('form-' + tipo);
     const success = document.getElementById('success-' + tipo);
-
-    // Validación básica
+    const btn = form.querySelector('.form-submit');
     const inputs = form.querySelectorAll('input, select');
+
+    // Validación
     let valido = true;
+    const datos = {};
     inputs.forEach(input => {
       input.style.borderColor = '';
       if (!input.value.trim() && input.id !== 'f-paciente') {
         input.style.borderColor = '#E07A5F';
         valido = false;
       }
+      datos[input.id] = input.value;
     });
 
     if (!valido) {
@@ -822,16 +825,35 @@
       return;
     }
 
-    // Recolectar datos (en producción: enviar a tu backend o Google Sheets)
-    const datos = {};
-    inputs.forEach(input => { datos[input.id] = input.value; });
-    console.log('Registro ' + tipo + ':', datos);
+    // Deshabilitar botón durante envío
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+    btn.style.opacity = '0.7';
 
-    // Mostrar éxito
-    form.style.display = 'none';
-    success.style.display = 'block';
+    const endpoints = {
+      familias:      'https://formspree.io/f/xzdowero',
+      profesionales: 'https://formspree.io/f/xvzlykro'
+    };
 
-    // En producción: fetch('/api/registro', { method:'POST', body: JSON.stringify(datos) })
+    try {
+      const res = await fetch(endpoints[tipo], {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ ...datos, tipo, _subject: 'Nuevo registro FamHealth — ' + tipo })
+      });
+
+      if (res.ok) {
+        form.style.display = 'none';
+        success.style.display = 'block';
+      } else {
+        throw new Error('Error');
+      }
+    } catch(e) {
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.textContent = tipo === 'familias' ? 'Buscar profesional →' : 'Registrar mi perfil →';
+      alert('Hubo un problema al enviar. Por favor intenta de nuevo.');
+    }
   }
 
   // Formato RUT chileno
