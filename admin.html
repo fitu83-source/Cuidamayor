@@ -9,113 +9,148 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --verde:#2D6A4F;--verde-claro:#52B788;--verde-suave:#D8F3DC;
+  --verde:#2D6A4F;--vc:#52B788;--vs:#D8F3DC;
   --crema:#FAF7F2;--arena:#E9E0D0;--texto:#1A1A1A;--gris:#5C5C5C;
-  --blanco:#FFFFFF;--rojo:#E07A5F;--rojo-suave:#FCEBEB;
-  --amber-suave:#FAEEDA;--amber:#854F0B;--sidebar:200px;
-  --bg-sec:#F5F4F0;--border:#E2DDD6;
+  --blanco:#FFFFFF;--rojo:#E07A5F;--rs:#FCEBEB;
+  --as:#FAEEDA;--amber:#854F0B;--sb:210px;
+  --bg2:#F5F4F0;--bdr:#E2DDD6;
 }
 @media(prefers-color-scheme:dark){:root{
-  --crema:#1A1A1A;--texto:#F0EDE8;--gris:#9A9590;--blanco:#2A2A2A;
-  --arena:#3A3A3A;--bg-sec:#222222;--border:#3A3A3A;
-  --verde-suave:#1A3D2B;--amber-suave:#2D1F08;--rojo-suave:#2D1515;
+  --crema:#1A1A1A;--texto:#F0EDE8;--gris:#9A9590;--blanco:#252525;
+  --arena:#3A3A3A;--bg2:#222;--bdr:#3A3A3A;
+  --vs:#1A3D2B;--as:#2D1F08;--rs:#2D1515;
 }}
 html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--texto);background:var(--crema)}
 
-#login-screen{position:fixed;inset:0;background:var(--verde);display:flex;align-items:center;justify-content:center;z-index:1000}
-.login-box{background:var(--blanco);border-radius:16px;padding:2.5rem;width:320px}
-.login-logo{font-size:22px;font-weight:500;color:var(--verde);margin-bottom:4px}
-.login-logo span{color:var(--verde-claro)}
-.login-sub{font-size:12px;color:var(--gris);margin-bottom:2rem}
-.login-box label{font-size:12px;font-weight:500;display:block;margin-bottom:6px;color:var(--gris)}
-.login-box input{width:100%;padding:9px 12px;border:0.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--texto);background:var(--bg-sec);outline:none;margin-bottom:1rem;transition:border-color .2s}
-.login-box input:focus{border-color:var(--verde-claro)}
-.login-btn{width:100%;background:var(--verde);color:#fff;border:none;border-radius:8px;padding:10px;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s}
-.login-btn:hover{background:#1f5239}
-.login-error{color:var(--rojo);font-size:12px;margin-top:8px;display:none}
+/* LOGIN */
+#ls{position:fixed;inset:0;background:var(--verde);display:flex;align-items:center;justify-content:center;z-index:1000}
+.lb{background:var(--blanco);border-radius:16px;padding:2.5rem;width:320px}
+.ll{font-size:22px;font-weight:500;color:var(--verde);margin-bottom:4px}
+.ll span{color:var(--vc)}
+.ls{font-size:12px;color:var(--gris);margin-bottom:2rem}
+.lb label{font-size:12px;font-weight:500;display:block;margin-bottom:6px;color:var(--gris)}
+.lb input{width:100%;padding:9px 12px;border:0.5px solid var(--bdr);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--texto);background:var(--bg2);outline:none;margin-bottom:1rem;transition:border-color .2s}
+.lb input:focus{border-color:var(--vc)}
+.lbtn{width:100%;background:var(--verde);color:#fff;border:none;border-radius:8px;padding:10px;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s}
+.lbtn:hover{background:#1f5239}
+.le{color:var(--rojo);font-size:12px;margin-top:8px;display:none}
 
+/* LAYOUT */
 #app{display:none;height:100vh;overflow:hidden}
-
-.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sidebar);background:var(--blanco);border-right:0.5px solid var(--border);display:flex;flex-direction:column;z-index:100}
-.sb-logo{padding:14px 16px;font-size:15px;font-weight:500;color:var(--texto);border-bottom:0.5px solid var(--border)}
-.sb-logo span{color:var(--verde)}
-.sb-logo small{display:block;font-size:10px;color:var(--gris);font-weight:400;margin-top:1px}
-.nav-sec{font-size:10px;font-weight:500;color:var(--gris);padding:10px 16px 3px;letter-spacing:.08em;text-transform:uppercase}
-.nav-btn{display:flex;align-items:center;gap:8px;width:100%;padding:7px 16px;background:none;border:none;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--gris);text-align:left;transition:all .15s}
-.nav-btn:hover{background:var(--bg-sec);color:var(--texto)}
-.nav-btn.active{background:var(--verde-suave);color:var(--verde);font-weight:500}
-.nav-btn i{font-size:15px}
-.nav-btn .chip{margin-left:auto;background:var(--rojo);color:#fff;border-radius:20px;font-size:10px;padding:1px 6px;display:none}
-.sb-foot{margin-top:auto;padding:12px 16px;border-top:0.5px solid var(--border);font-size:11px;color:var(--gris);line-height:1.6}
-.sb-foot a{color:var(--verde);text-decoration:none}
-
-.main{margin-left:var(--sidebar);height:100vh;overflow-y:auto;padding:1.25rem}
-.page{display:none}
-.page.active{display:block}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sb);background:var(--blanco);border-right:0.5px solid var(--bdr);display:flex;flex-direction:column;z-index:100;overflow-y:auto}
+.slogo{padding:14px 16px;font-size:15px;font-weight:500;color:var(--texto);border-bottom:0.5px solid var(--bdr)}
+.slogo span{color:var(--verde)}
+.slogo small{display:block;font-size:10px;color:var(--gris);font-weight:400;margin-top:1px}
+.nsec{font-size:10px;font-weight:500;color:var(--gris);padding:10px 16px 3px;letter-spacing:.08em;text-transform:uppercase}
+.nb{display:flex;align-items:center;gap:8px;width:100%;padding:7px 16px;background:none;border:none;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--gris);text-align:left;transition:all .15s}
+.nb:hover{background:var(--bg2);color:var(--texto)}
+.nb.on{background:var(--vs);color:var(--verde);font-weight:500}
+.nb i{font-size:15px}
+.chip{margin-left:auto;background:var(--rojo);color:#fff;border-radius:20px;font-size:10px;padding:1px 6px;display:none}
+.sfoot{margin-top:auto;padding:12px 16px;border-top:0.5px solid var(--bdr);font-size:11px;color:var(--gris);line-height:1.7}
+.sfoot a{color:var(--verde);text-decoration:none}
+.main{margin-left:var(--sb);height:100vh;overflow-y:auto;padding:1.25rem}
+.pg{display:none}
+.pg.on{display:block}
 .ph h1{font-size:18px;font-weight:500;margin-bottom:2px}
 .ph p{font-size:12px;color:var(--gris);margin-bottom:1rem}
 
+/* METRICS */
 .mets{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1rem}
-.met{background:var(--bg-sec);border-radius:8px;padding:12px}
+.met{background:var(--bg2);border-radius:8px;padding:12px}
 .met .ml{font-size:11px;color:var(--gris);margin-bottom:3px}
 .met .mv{font-size:22px;font-weight:500}
-.met .md{font-size:11px;color:var(--verde-claro);margin-top:2px}
+.met .md{font-size:11px;color:var(--vc);margin-top:2px}
 .met.warn .mv{color:var(--amber)}
 
-.card{background:var(--blanco);border:0.5px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:.75rem}
-.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+/* CARDS */
+.card{background:var(--blanco);border:0.5px solid var(--bdr);border-radius:12px;padding:1rem;margin-bottom:.75rem}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;gap:8px;flex-wrap:wrap}
 .ct{font-size:13px;font-weight:500}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
 
+/* TABLE */
 table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
-th{text-align:left;padding:6px 8px;font-size:10px;font-weight:500;color:var(--gris);border-bottom:0.5px solid var(--border);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
-td{padding:8px;border-bottom:0.5px solid var(--bg-sec);color:var(--texto);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
+th{text-align:left;padding:6px 8px;font-size:10px;font-weight:500;color:var(--gris);border-bottom:0.5px solid var(--bdr);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+td{padding:8px;border-bottom:0.5px solid var(--bg2);color:var(--texto);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
 tr:last-child td{border-bottom:none}
-tr:hover td{background:var(--bg-sec)}
+tr:hover td{background:var(--bg2)}
 
+/* BADGES */
 .badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px}
-.bg{background:var(--verde-suave);color:var(--verde)}
-.ba{background:var(--amber-suave);color:var(--amber)}
-.br{background:var(--rojo-suave);color:#A32D2D}
+.bg{background:var(--vs);color:var(--verde)}
+.ba{background:var(--as);color:var(--amber)}
+.br{background:var(--rs);color:#A32D2D}
 .bb{background:#E6F1FB;color:#185FA5}
-.bgr{background:var(--bg-sec);color:var(--gris)}
+.bgr{background:var(--bg2);color:var(--gris)}
+.bpu{background:#EDE9FE;color:#5B21B6}
 
-.btn{font-size:11px;padding:3px 9px;border-radius:6px;cursor:pointer;border:0.5px solid var(--border);background:var(--blanco);color:var(--texto);font-family:'DM Sans',sans-serif;transition:all .15s;margin-right:4px}
-.btn:hover{background:var(--bg-sec)}
+/* BUTTONS */
+.btn{font-size:11px;padding:3px 9px;border-radius:6px;cursor:pointer;border:0.5px solid var(--bdr);background:var(--blanco);color:var(--texto);font-family:'DM Sans',sans-serif;transition:all .15s;margin-right:4px}
+.btn:hover{background:var(--bg2)}
 .btn-p{background:var(--verde);color:#fff;border-color:var(--verde)}
 .btn-p:hover{background:#1f5239}
 .btn-d{color:#A32D2D;border-color:#F7C1C1}
-.btn-d:hover{background:var(--rojo-suave)}
+.btn-d:hover{background:var(--rs)}
+.btn-sm{font-size:11px;padding:3px 8px}
 
+/* FILTERS */
 .filt{display:flex;gap:6px;margin-bottom:.75rem;flex-wrap:wrap}
-.filt input,.filt select{font-size:12px;padding:5px 8px;border:0.5px solid var(--border);border-radius:8px;background:var(--bg-sec);color:var(--texto);font-family:'DM Sans',sans-serif;outline:none}
-.filt input{flex:1}
-.filt input:focus,.filt select:focus{border-color:var(--verde-claro)}
+.filt input,.filt select{font-size:12px;padding:5px 8px;border:0.5px solid var(--bdr);border-radius:8px;background:var(--bg2);color:var(--texto);font-family:'DM Sans',sans-serif;outline:none}
+.filt input{flex:1;min-width:140px}
+.filt input:focus,.filt select:focus{border-color:var(--vc)}
 
-.vc{background:var(--blanco);border:0.5px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:.75rem}
-.vc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
-.vc-name{font-size:13px;font-weight:500}
-.vg{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin:.75rem 0;font-size:12px}
-.vgl{color:var(--gris);font-size:11px}
-.va{display:flex;gap:8px;align-items:center}
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{font-size:11px;font-weight:500;color:var(--gris)}
+.fg input,.fg select,.fg textarea{font-size:13px;padding:7px 10px;border:0.5px solid var(--bdr);border-radius:8px;background:var(--bg2);color:var(--texto);font-family:'DM Sans',sans-serif;outline:none}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--vc)}
+.fg textarea{resize:vertical;min-height:70px}
+.fg.full{grid-column:1/-1}
 
-.av{width:26px;height:26px;border-radius:50%;background:var(--verde-suave);color:var(--verde);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;margin-right:6px;vertical-align:middle;flex-shrink:0}
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:none;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:var(--blanco);border-radius:14px;padding:1.5rem;width:560px;max-width:95vw;max-height:90vh;overflow-y:auto}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.modal-title{font-size:15px;font-weight:500}
+.modal-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--gris);padding:4px}
 
-.cita-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border)}
+/* DETALLE PACIENTE */
+.tabs{display:flex;gap:4px;border-bottom:0.5px solid var(--bdr);margin-bottom:1rem}
+.tab{padding:7px 14px;font-size:12px;cursor:pointer;border:none;background:none;color:var(--gris);font-family:'DM Sans',sans-serif;border-bottom:2px solid transparent;transition:all .15s}
+.tab.on{color:var(--verde);border-bottom-color:var(--verde);font-weight:500}
+.tab-pane{display:none}
+.tab-pane.on{display:block}
+
+/* MISC */
+.av{width:26px;height:26px;border-radius:50%;background:var(--vs);color:var(--verde);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;margin-right:6px;vertical-align:middle;flex-shrink:0}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--bdr);border-top-color:var(--verde);border-radius:50%;animation:sp .8s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.loading{text-align:center;padding:2rem;color:var(--gris);font-size:12px}
+.empty{text-align:center;padding:2rem;color:var(--gris);font-size:12px}
+
+/* ALERT CARD */
+.alerta-card{background:var(--blanco);border:0.5px solid var(--bdr);border-radius:10px;padding:.85rem;margin-bottom:.5rem;display:flex;align-items:center;gap:12px}
+.alerta-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.alerta-info{flex:1}
+.alerta-info .an{font-size:12px;font-weight:500}
+.alerta-info .ad{font-size:11px;color:var(--gris)}
+
+/* BAR */
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.bar-lbl{font-size:11px;color:var(--gris);width:90px;flex-shrink:0}
+.bar-wrap{flex:1;height:5px;background:var(--bg2);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;background:var(--vc);border-radius:3px}
+.bar-val{font-size:11px;font-weight:500;min-width:18px;text-align:right}
+
+/* CITA ROW */
+.cita-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--bdr)}
 .cita-row:last-child{border-bottom:none}
 .cita-time{font-size:12px;font-weight:500;color:var(--verde);min-width:40px}
 .cita-info .cn{font-size:12px;font-weight:500}
 .cita-info .cd{font-size:11px;color:var(--gris)}
-
-.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.bar-lbl{font-size:11px;color:var(--gris);width:90px;flex-shrink:0}
-.bar-wrap{flex:1;height:5px;background:var(--bg-sec);border-radius:3px;overflow:hidden}
-.bar-fill{height:100%;background:var(--verde-claro);border-radius:3px}
-.bar-val{font-size:11px;font-weight:500;min-width:18px;text-align:right}
-
-.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--verde);border-radius:50%;animation:sp .8s linear infinite;vertical-align:middle;margin-right:6px}
-@keyframes sp{to{transform:rotate(360deg)}}
-.loading{text-align:center;padding:2rem;color:var(--gris);font-size:12px}
 
 #toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--verde);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;transform:translateY(100px);opacity:0;transition:all .3s;z-index:999}
 #toast.show{transform:translateY(0);opacity:1}
@@ -123,28 +158,36 @@ tr:hover td{background:var(--bg-sec)}
 </head>
 <body>
 
-<div id="login-screen">
-  <div class="login-box">
-    <div class="login-logo">Fam<span>Health</span></div>
-    <div class="login-sub">Panel de Administración</div>
+<!-- LOGIN -->
+<div id="ls">
+  <div class="lb">
+    <div class="ll">Fam<span>Health</span></div>
+    <div class="ls">Panel de Administración</div>
     <label>Contraseña</label>
     <input type="password" id="pwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/>
-    <button class="login-btn" onclick="doLogin()">Ingresar</button>
-    <div class="login-error" id="login-err">Contraseña incorrecta</div>
+    <button class="lbtn" onclick="doLogin()">Ingresar</button>
+    <div class="le" id="lerr">Contraseña incorrecta</div>
   </div>
 </div>
 
+<!-- APP -->
 <div id="app">
   <aside class="sidebar">
-    <div class="sb-logo">Fam<span>Health</span><small>Panel Admin</small></div>
-    <div class="nav-sec">Principal</div>
-    <button class="nav-btn active" onclick="showPage('dashboard',this)"><i class="ti ti-layout-dashboard" aria-hidden="true"></i>Dashboard</button>
-    <div class="nav-sec">Registros</div>
-    <button class="nav-btn" onclick="showPage('familias',this);loadFamilias()"><i class="ti ti-users" aria-hidden="true"></i>Familias</button>
-    <button class="nav-btn" onclick="showPage('profesionales',this);loadProfesionales()"><i class="ti ti-stethoscope" aria-hidden="true"></i>Profesionales</button>
-    <div class="nav-sec">Gestión</div>
-    <button class="nav-btn" onclick="showPage('verificacion',this);loadVerificacion()"><i class="ti ti-shield-check" aria-hidden="true"></i>Verificación RNPI<span class="chip" id="vchip"></span></button>
-    <div class="sb-foot">
+    <div class="slogo">Fam<span>Health</span><small>Panel Admin</small></div>
+    <div class="nsec">Principal</div>
+    <button class="nb on" onclick="sp('dashboard',this)"><i class="ti ti-layout-dashboard" aria-hidden="true"></i>Dashboard</button>
+    <div class="nsec">Registros</div>
+    <button class="nb" onclick="sp('familias',this);loadFamilias()"><i class="ti ti-users" aria-hidden="true"></i>Familias</button>
+    <button class="nb" onclick="sp('profesionales',this);loadProfesionales()"><i class="ti ti-stethoscope" aria-hidden="true"></i>Profesionales</button>
+    <div class="nsec">Clínico</div>
+    <button class="nb" onclick="sp('pacientes',this);loadPacientes()"><i class="ti ti-file-text" aria-hidden="true"></i>Fichas de pacientes</button>
+    <button class="nb" onclick="sp('atenciones',this);loadAtenciones()"><i class="ti ti-history" aria-hidden="true"></i>Historial atenciones</button>
+    <button class="nb" onclick="sp('recetas',this);loadRecetas()"><i class="ti ti-pill" aria-hidden="true"></i>Recetas entregadas</button>
+    <button class="nb" onclick="sp('alertas',this);loadAlertas()"><i class="ti ti-bell" aria-hidden="true"></i>Alertas<span class="chip" id="achip"></span></button>
+    <div class="nsec">Gestión</div>
+    <button class="nb" onclick="sp('citas',this);loadCitas()"><i class="ti ti-calendar" aria-hidden="true"></i>Citas agendadas</button>
+    <button class="nb" onclick="sp('verificacion',this);loadVerificacion()"><i class="ti ti-shield-check" aria-hidden="true"></i>Verificación RNPI<span class="chip" id="vchip"></span></button>
+    <div class="sfoot">
       famhealthcl@gmail.com<br>
       <a href="https://docs.google.com/spreadsheets/d/1zL7by07oR7yqBZPiMcPcH18_OfGhahuahq43ChwNW_Q/edit" target="_blank">Ver Google Sheets →</a>
     </div>
@@ -153,243 +196,701 @@ tr:hover td{background:var(--bg-sec)}
   <main class="main">
 
     <!-- DASHBOARD -->
-    <div id="page-dashboard" class="page active">
+    <div id="pg-dashboard" class="pg on">
       <div class="ph"><h1>Dashboard</h1><p id="dash-fecha">Cargando...</p></div>
       <div class="mets">
         <div class="met"><div class="ml">Familias</div><div class="mv" id="m-fam">—</div><div class="md">Total acumulado</div></div>
-        <div class="met"><div class="ml">Prof. aprobados</div><div class="mv" id="m-prof-act">—</div><div class="md">Activos en plataforma</div></div>
-        <div class="met warn"><div class="ml">Pendientes</div><div class="mv" id="m-pend">—</div><div class="md" style="color:var(--amber)">Requieren atención</div></div>
-        <div class="met"><div class="ml">Total profesionales</div><div class="mv" id="m-prof-total">—</div><div class="md">Registrados</div></div>
+        <div class="met"><div class="ml">Prof. aprobados</div><div class="mv" id="m-pa">—</div><div class="md">Activos</div></div>
+        <div class="met"><div class="ml">Pacientes activos</div><div class="mv" id="m-pac">—</div><div class="md">En fichas</div></div>
+        <div class="met warn"><div class="ml">Pendientes verificar</div><div class="mv" id="m-pend">—</div><div class="md" style="color:var(--amber)">Requieren atención</div></div>
       </div>
       <div class="two">
         <div class="card"><div class="ch"><span class="ct">Últimas familias</span></div><div id="dash-fam"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
         <div class="card"><div class="ch"><span class="ct">Especialidades más buscadas</span></div><div id="dash-esp"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
       </div>
+      <div class="two">
+        <div class="card"><div class="ch"><span class="ct">Alertas activas recientes</span><button class="btn btn-sm" onclick="sp('alertas',document.querySelectorAll('.nb')[8])">Ver todas</button></div><div id="dash-alertas"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
+        <div class="card"><div class="ch"><span class="ct">Atenciones recientes</span></div><div id="dash-atenciones"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
+      </div>
     </div>
 
     <!-- FAMILIAS -->
-    <div id="page-familias" class="page">
+    <div id="pg-familias" class="pg">
       <div class="ph"><h1>Familias registradas</h1><p id="fam-count">Cargando...</p></div>
       <div class="card">
         <div class="filt">
-          <input type="text" id="sf" placeholder="Buscar por nombre, email o comuna..." oninput="ft('fam-body',this.value,document.getElementById('flt-esp').value)">
-          <select id="flt-esp" onchange="ft('fam-body',document.getElementById('sf').value,this.value)">
+          <input type="text" id="sf" placeholder="Buscar nombre, email o comuna..." oninput="ft('fam-body',this.value,'')">
+          <select onchange="ft('fam-body','',this.value)">
             <option value="">Todas las especialidades</option>
             <option>Kinesiología</option><option>Geriatría</option><option>Enfermería</option>
             <option>Fonoaudiología</option><option>Psicología</option><option>Nutrición</option>
           </select>
-          <button class="btn btn-p" onclick="loadFamilias()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
+          <button class="btn btn-p btn-sm" onclick="loadFamilias()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
         </div>
-        <div style="overflow-x:auto">
-          <table>
-            <thead><tr><th style="width:18%">Nombre</th><th style="width:18%">Email</th><th style="width:13%">WhatsApp</th><th style="width:14%">Especialidad</th><th style="width:11%">Comuna</th><th style="width:13%">Urgencia</th><th style="width:8%">Estado</th><th style="width:5%">Fecha</th></tr></thead>
-            <tbody id="fam-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando datos...</td></tr></tbody>
-          </table>
-        </div>
+        <div style="overflow-x:auto"><table>
+          <thead><tr><th style="width:18%">Nombre</th><th style="width:18%">Email</th><th style="width:12%">WhatsApp</th><th style="width:13%">Especialidad</th><th style="width:10%">Comuna</th><th style="width:13%">Urgencia</th><th style="width:8%">Estado</th><th style="width:8%">Fecha</th></tr></thead>
+          <tbody id="fam-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
+        </table></div>
       </div>
     </div>
 
     <!-- PROFESIONALES -->
-    <div id="page-profesionales" class="page">
+    <div id="pg-profesionales" class="pg">
       <div class="ph"><h1>Profesionales</h1><p id="prof-count">Cargando...</p></div>
       <div class="card">
         <div class="filt">
-          <input type="text" id="sp2" placeholder="Buscar por nombre, RUT o especialidad..." oninput="ft('prof-body',this.value,document.getElementById('flt-est').value)">
-          <select id="flt-est" onchange="ft('prof-body',document.getElementById('sp2').value,this.value)">
+          <input type="text" id="sp2" placeholder="Buscar nombre, RUT o especialidad..." oninput="ft('prof-body',this.value,'')">
+          <select onchange="ft('prof-body','',this.value)">
             <option value="">Todos los estados</option>
             <option>Aprobado</option><option>Pendiente</option><option>Rechazado</option>
           </select>
-          <button class="btn btn-p" onclick="loadProfesionales()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
+          <button class="btn btn-p btn-sm" onclick="loadProfesionales()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
         </div>
-        <div style="overflow-x:auto">
-          <table>
-            <thead><tr><th style="width:18%">Nombre</th><th style="width:11%">RUT</th><th style="width:13%">Especialidad</th><th style="width:14%">Comunas</th><th style="width:12%">Modalidad</th><th style="width:10%">RNPI</th><th style="width:9%">Estado</th><th style="width:13%">Acciones</th></tr></thead>
-            <tbody id="prof-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando datos...</td></tr></tbody>
-          </table>
+        <div style="overflow-x:auto"><table>
+          <thead><tr><th style="width:17%">Nombre</th><th style="width:11%">RUT</th><th style="width:13%">Especialidad</th><th style="width:13%">Comunas</th><th style="width:12%">Modalidad</th><th style="width:10%">RNPI</th><th style="width:9%">Estado</th><th style="width:15%">Acciones</th></tr></thead>
+          <tbody id="prof-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- FICHAS DE PACIENTES -->
+    <div id="pg-pacientes" class="pg">
+      <div class="ph"><h1>Fichas de pacientes</h1><p id="pac-count">Cargando...</p></div>
+      <div class="card">
+        <div class="ch">
+          <div class="filt" style="margin:0;flex:1">
+            <input type="text" id="sp3" placeholder="Buscar por nombre, RUT o profesional..." oninput="ft('pac-body',this.value,'')">
+            <button class="btn btn-p btn-sm" onclick="loadPacientes()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
+          </div>
+          <button class="btn btn-p btn-sm" onclick="openModal('modal-paciente')"><i class="ti ti-plus" aria-hidden="true"></i> Nueva ficha</button>
         </div>
+        <div style="overflow-x:auto"><table>
+          <thead><tr><th style="width:16%">Nombre</th><th style="width:11%">RUT</th><th style="width:16%">Diagnóstico</th><th style="width:18%">Medicamentos</th><th style="width:13%">Profesional</th><th style="width:11%">Familia</th><th style="width:7%">Estado</th><th style="width:8%">Acciones</th></tr></thead>
+          <tbody id="pac-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- HISTORIAL ATENCIONES -->
+    <div id="pg-atenciones" class="pg">
+      <div class="ph"><h1>Historial de atenciones</h1><p id="at-count">Cargando...</p></div>
+      <div class="card">
+        <div class="ch">
+          <div class="filt" style="margin:0;flex:1">
+            <input type="text" id="sp4" placeholder="Buscar paciente, profesional o notas..." oninput="ft('at-body',this.value,'')">
+            <button class="btn btn-p btn-sm" onclick="loadAtenciones()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
+          </div>
+          <button class="btn btn-p btn-sm" onclick="openModal('modal-atencion')"><i class="ti ti-plus" aria-hidden="true"></i> Registrar atención</button>
+        </div>
+        <div style="overflow-x:auto"><table>
+          <thead><tr><th style="width:12%">Fecha</th><th style="width:16%">Paciente</th><th style="width:11%">RUT</th><th style="width:16%">Profesional</th><th style="width:14%">Especialidad</th><th style="width:22%">Notas</th><th style="width:9%">Próx. sesión</th></tr></thead>
+          <tbody id="at-body"><tr><td colspan="7" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- RECETAS -->
+    <div id="pg-recetas" class="pg">
+      <div class="ph"><h1>Recetas entregadas</h1><p id="rec-count">Cargando...</p></div>
+      <div class="card">
+        <div class="ch">
+          <div class="filt" style="margin:0;flex:1">
+            <input type="text" id="sp5" placeholder="Buscar paciente, medicamento o profesional..." oninput="ft('rec-body',this.value,'')">
+            <button class="btn btn-p btn-sm" onclick="loadRecetas()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
+          </div>
+          <button class="btn btn-p btn-sm" onclick="openModal('modal-receta')"><i class="ti ti-plus" aria-hidden="true"></i> Nueva receta</button>
+        </div>
+        <div style="overflow-x:auto"><table>
+          <thead><tr><th style="width:12%">Fecha</th><th style="width:16%">Paciente</th><th style="width:11%">RUT</th><th style="width:16%">Profesional</th><th style="width:18%">Medicamento</th><th style="width:13%">Dosis</th><th style="width:14%">Duración</th></tr></thead>
+          <tbody id="rec-body"><tr><td colspan="7" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ALERTAS -->
+    <div id="pg-alertas" class="pg">
+      <div class="ph"><h1>Módulo de alertas</h1><p id="al-count">Cargando...</p></div>
+      <div class="card">
+        <div class="ch">
+          <span class="ct">Alertas configuradas</span>
+          <button class="btn btn-p btn-sm" onclick="openModal('modal-alerta')"><i class="ti ti-plus" aria-hidden="true"></i> Nueva alerta</button>
+        </div>
+        <div class="filt">
+          <input type="text" id="sp6" placeholder="Buscar paciente o RUT..." oninput="ft('al-body',this.value,'')">
+          <select onchange="ft('al-body','',this.value)" id="flt-tipo-alerta">
+            <option value="">Todos los tipos</option>
+            <option>Medicamento</option><option>Cita</option><option>Examen</option><option>Control</option>
+          </select>
+          <select onchange="ft('al-body','',this.value)">
+            <option value="">Todos los estados</option>
+            <option>Activa</option><option>Pausada</option><option>Completada</option>
+          </select>
+          <button class="btn btn-p btn-sm" onclick="loadAlertas()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
+        </div>
+        <div style="overflow-x:auto"><table>
+          <thead><tr><th style="width:14%">Paciente</th><th style="width:11%">RUT</th><th style="width:10%">Tipo</th><th style="width:24%">Mensaje</th><th style="width:12%">Frecuencia</th><th style="width:10%">Canal</th><th style="width:9%">Estado</th><th style="width:10%">Acciones</th></tr></thead>
+          <tbody id="al-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- CITAS -->
+    <div id="pg-citas" class="pg">
+      <div class="ph"><h1>Citas agendadas</h1><p id="cit-count">Cargando...</p></div>
+      <div class="card">
+        <div class="filt">
+          <input type="text" id="sp7" placeholder="Buscar familia o profesional..." oninput="ft('cit-body',this.value,'')">
+          <select onchange="ft('cit-body','',this.value)">
+            <option value="">Todos los estados</option>
+            <option>Confirmada</option><option>Pendiente</option><option>Cancelada</option>
+          </select>
+          <button class="btn btn-p btn-sm" onclick="loadCitas()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
+        </div>
+        <div style="overflow-x:auto"><table>
+          <thead><tr><th style="width:10%">Fecha</th><th style="width:9%">Hora</th><th style="width:15%">Familia</th><th style="width:15%">Profesional</th><th style="width:13%">Especialidad</th><th style="width:11%">Modalidad</th><th style="width:9%">Estado</th><th style="width:18%">Acciones</th></tr></thead>
+          <tbody id="cit-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
+        </table></div>
+      </div>
+      <div class="card" style="margin-top:.75rem">
+        <div class="ch"><span class="ct"><i class="ti ti-calendar-plus" aria-hidden="true"></i> Configurar agendamiento Cal.com por profesional</span></div>
+        <p style="font-size:12px;color:var(--gris);margin-bottom:.75rem">Agrega el link de Cal.com de cada profesional para mostrar su calendario en la plataforma.</p>
+        <div id="cal-list"><div class="loading"><span class="spin"></span>Cargando profesionales...</div></div>
       </div>
     </div>
 
     <!-- VERIFICACIÓN -->
-    <div id="page-verificacion" class="page">
-      <div class="ph"><h1>Verificación RNPI</h1><p id="verif-count">Cargando...</p></div>
-      <div id="verif-list"><div class="loading"><span class="spin"></span>Cargando...</div></div>
+    <div id="pg-verificacion" class="pg">
+      <div class="ph"><h1>Verificación RNPI</h1><p id="ver-count">Cargando...</p></div>
+      <div id="ver-list"><div class="loading"><span class="spin"></span>Cargando...</div></div>
     </div>
 
   </main>
 </div>
 
+<!-- MODAL NUEVA FICHA -->
+<div class="modal-bg" id="modal-paciente">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Nueva ficha de paciente</span>
+      <button class="modal-close" onclick="closeModal('modal-paciente')"><i class="ti ti-x" aria-hidden="true"></i></button>
+    </div>
+    <div class="form-grid">
+      <div class="fg"><label>Nombre completo *</label><input type="text" id="pac-nombre" placeholder="María González"/></div>
+      <div class="fg"><label>RUT *</label><input type="text" id="pac-rut" placeholder="12.345.678-9"/></div>
+      <div class="fg"><label>Fecha de nacimiento</label><input type="date" id="pac-fnac"/></div>
+      <div class="fg"><label>Profesional asignado</label><input type="text" id="pac-prof" placeholder="Dr. Pérez"/></div>
+      <div class="fg"><label>Familia vinculada</label><input type="text" id="pac-fam" placeholder="Familia Torres"/></div>
+      <div class="fg"><label>Contacto familiar</label><input type="text" id="pac-contacto" placeholder="+56 9 XXXX XXXX"/></div>
+      <div class="fg full"><label>Diagnóstico principal</label><textarea id="pac-diag" placeholder="Artrosis de rodilla, HTA..."></textarea></div>
+      <div class="fg full"><label>Medicamentos actuales</label><textarea id="pac-meds" placeholder="Losartán 50mg, Metformina 500mg..."></textarea></div>
+      <div class="fg full"><label>Alergias conocidas</label><input type="text" id="pac-alergias" placeholder="Penicilina, AINEs..."/></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn" onclick="closeModal('modal-paciente')">Cancelar</button>
+      <button class="btn btn-p" onclick="savePaciente()"><i class="ti ti-check" aria-hidden="true"></i> Guardar ficha</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL REGISTRAR ATENCIÓN -->
+<div class="modal-bg" id="modal-atencion">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Registrar atención</span>
+      <button class="modal-close" onclick="closeModal('modal-atencion')"><i class="ti ti-x" aria-hidden="true"></i></button>
+    </div>
+    <div class="form-grid">
+      <div class="fg"><label>Paciente *</label><input type="text" id="at-pac" placeholder="Nombre del paciente"/></div>
+      <div class="fg"><label>RUT paciente *</label><input type="text" id="at-rut" placeholder="12.345.678-9"/></div>
+      <div class="fg"><label>Profesional *</label><input type="text" id="at-prof" placeholder="Dr. María González"/></div>
+      <div class="fg"><label>Especialidad</label><input type="text" id="at-esp" placeholder="Kinesiología"/></div>
+      <div class="fg full"><label>Notas de la sesión</label><textarea id="at-notas" placeholder="Evolución del paciente, tratamiento aplicado..."></textarea></div>
+      <div class="fg"><label>Próxima sesión</label><input type="date" id="at-prox"/></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn" onclick="closeModal('modal-atencion')">Cancelar</button>
+      <button class="btn btn-p" onclick="saveAtencion()"><i class="ti ti-check" aria-hidden="true"></i> Registrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NUEVA RECETA -->
+<div class="modal-bg" id="modal-receta">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Registrar receta entregada</span>
+      <button class="modal-close" onclick="closeModal('modal-receta')"><i class="ti ti-x" aria-hidden="true"></i></button>
+    </div>
+    <div class="form-grid">
+      <div class="fg"><label>Paciente *</label><input type="text" id="rec-pac" placeholder="Nombre del paciente"/></div>
+      <div class="fg"><label>RUT paciente *</label><input type="text" id="rec-rut" placeholder="12.345.678-9"/></div>
+      <div class="fg"><label>Profesional *</label><input type="text" id="rec-prof" placeholder="Dr. Ramírez"/></div>
+      <div class="fg"><label>Medicamento *</label><input type="text" id="rec-med" placeholder="Losartán 50mg"/></div>
+      <div class="fg"><label>Dosis</label><input type="text" id="rec-dosis" placeholder="1 comprimido cada 12h"/></div>
+      <div class="fg"><label>Duración</label><input type="text" id="rec-dur" placeholder="30 días"/></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn" onclick="closeModal('modal-receta')">Cancelar</button>
+      <button class="btn btn-p" onclick="saveReceta()"><i class="ti ti-check" aria-hidden="true"></i> Guardar receta</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NUEVA ALERTA -->
+<div class="modal-bg" id="modal-alerta">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Configurar nueva alerta</span>
+      <button class="modal-close" onclick="closeModal('modal-alerta')"><i class="ti ti-x" aria-hidden="true"></i></button>
+    </div>
+    <div class="form-grid">
+      <div class="fg"><label>Paciente *</label><input type="text" id="al-pac" placeholder="Nombre del paciente"/></div>
+      <div class="fg"><label>RUT paciente *</label><input type="text" id="al-rut" placeholder="12.345.678-9"/></div>
+      <div class="fg"><label>Tipo de alerta *</label>
+        <select id="al-tipo">
+          <option value="">Seleccionar...</option>
+          <option>Medicamento</option><option>Cita</option><option>Examen</option><option>Control médico</option>
+        </select>
+      </div>
+      <div class="fg"><label>Canal de envío</label>
+        <select id="al-canal">
+          <option>WhatsApp</option><option>Email</option><option>SMS</option><option>WhatsApp + Email</option>
+        </select>
+      </div>
+      <div class="fg"><label>Frecuencia</label>
+        <select id="al-frec">
+          <option>Diario</option><option>Cada 8 horas</option><option>Cada 12 horas</option>
+          <option>Semanal</option><option>Mensual</option><option>Una vez</option>
+        </select>
+      </div>
+      <div class="fg"><label>Hora de envío</label><input type="time" id="al-hora" value="09:00"/></div>
+      <div class="fg full"><label>Mensaje personalizado *</label><textarea id="al-msg" placeholder="Ej: María, recuerda tomar Losartán 50mg con el desayuno"></textarea></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn" onclick="closeModal('modal-alerta')">Cancelar</button>
+      <button class="btn btn-p" onclick="saveAlerta()"><i class="ti ti-check" aria-hidden="true"></i> Activar alerta</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DETALLE PACIENTE -->
+<div class="modal-bg" id="modal-detalle">
+  <div class="modal" style="width:680px">
+    <div class="modal-header">
+      <span class="modal-title" id="det-titulo">Ficha del paciente</span>
+      <button class="modal-close" onclick="closeModal('modal-detalle')"><i class="ti ti-x" aria-hidden="true"></i></button>
+    </div>
+    <div class="tabs">
+      <button class="tab on" onclick="showTab('det-ficha',this)">Ficha</button>
+      <button class="tab" onclick="showTab('det-atenciones',this)">Atenciones</button>
+      <button class="tab" onclick="showTab('det-recetas',this)">Recetas</button>
+      <button class="tab" onclick="showTab('det-alertas',this)">Alertas</button>
+    </div>
+    <div id="det-ficha" class="tab-pane on"><div class="loading"><span class="spin"></span>Cargando...</div></div>
+    <div id="det-atenciones" class="tab-pane"><div class="loading"><span class="spin"></span>Cargando...</div></div>
+    <div id="det-recetas" class="tab-pane"><div class="loading"><span class="spin"></span>Cargando...</div></div>
+    <div id="det-alertas" class="tab-pane"><div class="loading"><span class="spin"></span>Cargando...</div></div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
-const SCRIPT='https://script.google.com/macros/s/AKfycbx_xi8hHRO9PBGb3TmExYUFJNiN7MpMsjeBkv0QxGHypwqY03hmwtDOEHJetdsK03MRdg/exec';
-const PWD='famhealth2025';
-let dataFam=[],dataProf=[];
+const SC = 'https://script.google.com/macros/s/AKfycby9Be0SzaDVwLvpCakQfjaWlPZq8wd9910dXg09bea7enTihWmBzhcBOPxyQa7a4g69aQ/exec';
+const PWD = 'famhealth2025';
 
-function doLogin(){
-  if(document.getElementById('pwd').value===PWD){
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('app').style.display='block';
+// ── AUTH ──
+function doLogin() {
+  if (document.getElementById('pwd').value === PWD) {
+    document.getElementById('ls').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
     loadDashboard();
   } else {
-    document.getElementById('login-err').style.display='block';
+    document.getElementById('lerr').style.display = 'block';
   }
 }
 
-function toast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
+// ── NAV ──
+function sp(id, btn) {
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
+  document.getElementById('pg-' + id).classList.add('on');
+  if (btn) btn.classList.add('on');
 }
 
-function showPage(id,btn){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  if(btn)btn.classList.add('active');
+// ── TOAST ──
+function toast(msg, ok) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = ok === false ? '#E07A5F' : '#2D6A4F';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-function badge(e){
-  if(!e)e='Nuevo';
-  const m={'Aprobado':'bg','Pendiente':'ba','Rechazado':'br','Nuevo':'bb','Activo':'bg','Inactivo':'bgr'};
-  return `<span class="badge ${m[e]||'bgr'}">${e}</span>`;
+// ── MODAL ──
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ── TABS (detalle) ──
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  if (btn) btn.classList.add('on');
 }
 
-function av(n){
-  if(!n)return '??';
-  const p=n.trim().split(' ');
-  return (p[0][0]+(p[1]?p[1][0]:'')).toUpperCase();
+// ── BADGES ──
+function badge(e) {
+  if (!e) e = 'Sin estado';
+  const m = { 'Aprobado': 'bg', 'Activo': 'bg', 'Activa': 'bg', 'Confirmada': 'bg',
+    'Pendiente': 'ba', 'Pausada': 'ba',
+    'Rechazado': 'br', 'Cancelada': 'br',
+    'Nuevo': 'bb', 'Completada': 'bgr',
+    'Medicamento': 'bpu', 'Cita': 'bb', 'Examen': 'ba', 'Control médico': 'bg' };
+  return `<span class="badge ${m[e] || 'bgr'}">${e}</span>`;
 }
 
-async function get(action){
-  try{const r=await fetch(SCRIPT+'?action='+action);const j=await r.json();return j.data||[];}
-  catch(e){return [];}
+function av(n) {
+  if (!n) return '??';
+  const p = n.trim().split(' ');
+  return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase();
 }
 
-async function loadDashboard(){
-  const now=new Date();
-  document.getElementById('dash-fecha').textContent=now.toLocaleDateString('es-CL',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  const [fam,prof]=await Promise.all([get('getFamilias'),get('getProfesionales')]);
-  dataFam=fam;dataProf=prof;
-  const act=prof.filter(p=>p.estado==='Aprobado').length;
-  const pend=prof.filter(p=>p.estado==='Pendiente').length;
-  document.getElementById('m-fam').textContent=fam.length;
-  document.getElementById('m-prof-act').textContent=act;
-  document.getElementById('m-pend').textContent=pend;
-  document.getElementById('m-prof-total').textContent=prof.length;
-  const vc=document.getElementById('vchip');
-  if(pend>0){vc.style.display='inline';vc.textContent=pend;}
-  const ul=fam.slice(-5).reverse();
-  let h='<table><tbody>';
-  ul.forEach(f=>{h+=`<tr><td style="width:40%"><span class="av">${av(f.nombre)}</span>${f.nombre||'—'}</td><td style="color:var(--gris)">${f.especialidad||'—'}</td><td>${badge(f.estado)}</td></tr>`;});
-  h+='</tbody></table>';
-  document.getElementById('dash-fam').innerHTML=fam.length?h:'<div class="loading">Sin registros aún</div>';
-  const cnt={};
-  fam.forEach(f=>{if(f.especialidad)cnt[f.especialidad]=(cnt[f.especialidad]||0)+1;});
-  const s=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
-  const mx=s[0]?s[0][1]:1;
-  let eh='';
-  s.forEach(([e,n])=>{const p=Math.round(n/mx*100);eh+=`<div class="bar-row"><span class="bar-lbl">${e}</span><div class="bar-wrap"><div class="bar-fill" style="width:${p}%"></div></div><span class="bar-val">${n}</span></div>`;});
-  document.getElementById('dash-esp').innerHTML=eh||'<div class="loading">Sin datos aún</div>';
+// ── FETCH ──
+async function get(action, extra) {
+  try {
+    let url = SC + '?action=' + action;
+    if (extra) url += '&' + extra;
+    const r = await fetch(url);
+    const j = await r.json();
+    return j.data || j || {};
+  } catch (e) { return {}; }
 }
 
-async function loadFamilias(){
-  document.getElementById('fam-body').innerHTML='<tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr>';
-  dataFam=await get('getFamilias');
-  document.getElementById('fam-count').textContent=dataFam.length+' familias registradas';
-  const tb=document.getElementById('fam-body');
-  if(!dataFam.length){tb.innerHTML='<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--gris)">Sin registros aún</td></tr>';return;}
-  tb.innerHTML=dataFam.map(f=>`<tr>
-    <td><span class="av">${av(f.nombre)}</span>${f.nombre||'—'}</td>
-    <td style="color:var(--gris)">${f.email||'—'}</td>
-    <td>${f.whatsapp||'—'}</td>
-    <td>${f.especialidad||'—'}</td>
-    <td>${f.comuna||'—'}</td>
-    <td>${f.urgencia||'—'}</td>
-    <td>${badge(f.estado)}</td>
-    <td style="color:var(--gris);font-size:10px">${(f.fecha||'').substring(0,10)}</td>
-  </tr>`).join('');
+async function post(data) {
+  try {
+    await fetch(SC, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    return true;
+  } catch (e) { return false; }
 }
 
-async function loadProfesionales(){
-  document.getElementById('prof-body').innerHTML='<tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr>';
-  dataProf=await get('getProfesionales');
-  const act=dataProf.filter(p=>p.estado==='Aprobado').length;
-  const pend=dataProf.filter(p=>p.estado==='Pendiente').length;
-  document.getElementById('prof-count').textContent=`${dataProf.length} registrados · ${act} aprobados · ${pend} pendientes`;
-  const tb=document.getElementById('prof-body');
-  if(!dataProf.length){tb.innerHTML='<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--gris)">Sin registros aún</td></tr>';return;}
-  tb.innerHTML=dataProf.map(p=>`<tr>
-    <td><span class="av">${av(p.nombre)}</span>${p.nombre||'—'}</td>
-    <td style="font-size:11px">${p.rut||'—'}</td>
-    <td>${p.especialidad||'—'}</td>
-    <td style="color:var(--gris)">${p.comunas||'—'}</td>
-    <td>${p.modalidad||'—'}</td>
-    <td><span class="badge ${p.registro==='Sí, vigente'?'bg':'ba'}">${p.registro||'—'}</span></td>
+// ── FILTER ──
+function ft(id, q, esp) {
+  q = q.toLowerCase(); esp = esp.toLowerCase();
+  document.querySelectorAll('#' + id + ' tr').forEach(r => {
+    const t = r.textContent.toLowerCase();
+    r.style.display = (!q || t.includes(q)) && (!esp || t.includes(esp)) ? '' : 'none';
+  });
+}
+
+// ── DASHBOARD ──
+async function loadDashboard() {
+  const now = new Date();
+  document.getElementById('dash-fecha').textContent = now.toLocaleDateString('es-CL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  const [fam, prof, pac, al] = await Promise.all([
+    get('getFamilias'), get('getProfesionales'), get('getPacientes'), get('getAlertas')
+  ]);
+  const famArr  = fam.data  || [];
+  const profArr = prof.data || [];
+  const pacArr  = pac.data  || [];
+  const alArr   = al.data   || [];
+
+  const act  = profArr.filter(p => p.estado === 'Aprobado').length;
+  const pend = profArr.filter(p => p.estado === 'Pendiente').length;
+
+  document.getElementById('m-fam').textContent  = famArr.length;
+  document.getElementById('m-pa').textContent   = act;
+  document.getElementById('m-pac').textContent  = pacArr.length;
+  document.getElementById('m-pend').textContent = pend;
+
+  const vc = document.getElementById('vchip');
+  if (pend > 0) { vc.style.display = 'inline'; vc.textContent = pend; }
+  const ac = document.getElementById('achip');
+  const activas = alArr.filter(a => a.estado === 'Activa').length;
+  if (activas > 0) { ac.style.display = 'inline'; ac.textContent = activas; }
+
+  // Últimas familias
+  const ul = famArr.slice(-5).reverse();
+  let h = ul.length ? '<table><tbody>' + ul.map(f =>
+    `<tr><td><span class="av">${av(f.nombre)}</span>${f.nombre || '—'}</td><td style="color:var(--gris)">${f.especialidad || '—'}</td><td>${badge(f.estado)}</td></tr>`
+  ).join('') + '</tbody></table>' : '<div class="empty">Sin registros aún</div>';
+  document.getElementById('dash-fam').innerHTML = h;
+
+  // Especialidades
+  const cnt = {};
+  famArr.forEach(f => { if (f.especialidad) cnt[f.especialidad] = (cnt[f.especialidad] || 0) + 1; });
+  const s = Object.entries(cnt).sort((a, b) => b[1] - a[1]);
+  const mx = s[0] ? s[0][1] : 1;
+  document.getElementById('dash-esp').innerHTML = s.length ? s.map(([e, n]) =>
+    `<div class="bar-row"><span class="bar-lbl">${e}</span><div class="bar-wrap"><div class="bar-fill" style="width:${Math.round(n/mx*100)}%"></div></div><span class="bar-val">${n}</span></div>`
+  ).join('') : '<div class="empty">Sin datos aún</div>';
+
+  // Alertas activas
+  const ala = alArr.filter(a => a.estado === 'Activa').slice(0, 4);
+  const iconMap = { 'Medicamento': 'ti-pill', 'Cita': 'ti-calendar', 'Examen': 'ti-microscope', 'Control médico': 'ti-stethoscope' };
+  document.getElementById('dash-alertas').innerHTML = ala.length ? ala.map(a =>
+    `<div class="alerta-card">
+      <div class="alerta-icon" style="background:var(--as)"><i class="ti ${iconMap[a.tipo] || 'ti-bell'}" style="color:var(--amber)" aria-hidden="true"></i></div>
+      <div class="alerta-info"><div class="an">${a.paciente} — ${a.tipo}</div><div class="ad">${a.mensaje} · ${a.frecuencia} · ${a.canal}</div></div>
+      ${badge('Activa')}
+    </div>`
+  ).join('') : '<div class="empty">Sin alertas activas</div>';
+
+  // Atenciones recientes
+  const atArr = (await get('getAtenciones')).data || [];
+  const atu = atArr.slice(-4).reverse();
+  document.getElementById('dash-atenciones').innerHTML = atu.length ? '<table><tbody>' + atu.map(a =>
+    `<tr><td><span class="av">${av(a.paciente)}</span>${a.paciente || '—'}</td><td style="color:var(--gris)">${a.profesional || '—'}</td><td style="color:var(--gris);font-size:11px">${(a.fecha || '').substring(0, 10)}</td></tr>`
+  ).join('') + '</tbody></table>' : '<div class="empty">Sin atenciones registradas aún</div>';
+}
+
+// ── FAMILIAS ──
+async function loadFamilias() {
+  document.getElementById('fam-body').innerHTML = '<tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr>';
+  const d = (await get('getFamilias')).data || [];
+  document.getElementById('fam-count').textContent = d.length + ' familias registradas';
+  document.getElementById('fam-body').innerHTML = d.length ? d.map(f =>
+    `<tr><td><span class="av">${av(f.nombre)}</span>${f.nombre || '—'}</td><td style="color:var(--gris)">${f.email || '—'}</td><td>${f.whatsapp || '—'}</td><td>${f.especialidad || '—'}</td><td>${f.comuna || '—'}</td><td>${f.urgencia || '—'}</td><td>${badge(f.estado)}</td><td style="color:var(--gris);font-size:10px">${(f.fecha || '').substring(0, 10)}</td></tr>`
+  ).join('') : '<tr><td colspan="8" class="empty">Sin registros aún</td></tr>';
+}
+
+// ── PROFESIONALES ──
+async function loadProfesionales() {
+  document.getElementById('prof-body').innerHTML = '<tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr>';
+  const d = (await get('getProfesionales')).data || [];
+  const act = d.filter(p => p.estado === 'Aprobado').length;
+  const pend = d.filter(p => p.estado === 'Pendiente').length;
+  document.getElementById('prof-count').textContent = `${d.length} registrados · ${act} aprobados · ${pend} pendientes`;
+  document.getElementById('prof-body').innerHTML = d.length ? d.map(p =>
+    `<tr><td><span class="av">${av(p.nombre)}</span>${p.nombre || '—'}</td><td style="font-size:11px">${p.rut || '—'}</td><td>${p.especialidad || '—'}</td><td style="color:var(--gris)">${p.comunas || '—'}</td><td>${p.modalidad || '—'}</td>
+    <td><span class="badge ${p.registro === 'Sí, vigente' ? 'bg' : 'ba'}">${p.registro || '—'}</span></td>
     <td>${badge(p.estado)}</td>
-    <td>${p.estado==='Pendiente'?
-      `<button class="btn btn-p" onclick="aprobar(${p.fila},'Aprobado')">Aprobar</button><button class="btn btn-d" onclick="aprobar(${p.fila},'Rechazado')">Rechazar</button>`:
+    <td>${p.estado === 'Pendiente' ?
+      `<button class="btn btn-p" onclick="aprobar(${p.fila},'Aprobado')">Aprobar</button><button class="btn btn-d" onclick="aprobar(${p.fila},'Rechazado')">Rechazar</button>` :
       `<button class="btn" onclick="window.open('https://rnpi.superdesalud.gob.cl','_blank')">RNPI</button>`
-    }</td>
-  </tr>`).join('');
+    }</td></tr>`
+  ).join('') : '<tr><td colspan="8" class="empty">Sin registros aún</td></tr>';
 }
 
-async function loadVerificacion(){
-  dataProf=await get('getProfesionales');
-  const pend=dataProf.filter(p=>p.estado==='Pendiente');
-  document.getElementById('verif-count').textContent=`${pend.length} profesionales pendientes de verificación`;
-  const vc=document.getElementById('vchip');
-  if(pend.length>0){vc.style.display='inline';vc.textContent=pend.length;}else{vc.style.display='none';}
-  const list=document.getElementById('verif-list');
-  if(!pend.length){list.innerHTML='<div style="text-align:center;padding:3rem;color:var(--gris)"><i class="ti ti-circle-check" style="font-size:2rem;color:var(--verde-claro);display:block;margin-bottom:.5rem" aria-hidden="true"></i>No hay profesionales pendientes</div>';return;}
-  list.innerHTML=pend.map(p=>`
-    <div class="vc" id="vc-${p.fila}">
-      <div class="vc-head">
-        <div><div class="vc-name">${p.nombre||'—'}</div><div style="font-size:11px;color:var(--gris)">${p.especialidad||'—'} · Registrado el ${(p.fecha||'').substring(0,10)}</div></div>
-        <span class="badge ba">Pendiente</span>
+// ── PACIENTES ──
+async function loadPacientes() {
+  document.getElementById('pac-body').innerHTML = '<tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr>';
+  const d = (await get('getPacientes')).data || [];
+  document.getElementById('pac-count').textContent = d.length + ' fichas de pacientes';
+  document.getElementById('pac-body').innerHTML = d.length ? d.map(p =>
+    `<tr><td><span class="av">${av(p.nombre)}</span>${p.nombre || '—'}</td><td style="font-size:11px">${p.rut || '—'}</td><td style="color:var(--gris)">${p.diagnostico || '—'}</td><td style="color:var(--gris)">${p.medicamentos || '—'}</td><td>${p.profesional || '—'}</td><td>${p.familia || '—'}</td><td>${badge(p.estado)}</td>
+    <td><button class="btn btn-p" onclick="verDetalle('${p.rut}','${p.nombre}')">Ver ficha</button></td></tr>`
+  ).join('') : '<tr><td colspan="8" class="empty">Sin fichas aún — crea la primera con el botón Nueva ficha</td></tr>';
+}
+
+// ── ATENCIONES ──
+async function loadAtenciones() {
+  document.getElementById('at-body').innerHTML = '<tr><td colspan="7" class="loading"><span class="spin"></span>Cargando...</td></tr>';
+  const d = (await get('getAtenciones')).data || [];
+  document.getElementById('at-count').textContent = d.length + ' atenciones registradas';
+  document.getElementById('at-body').innerHTML = d.length ? d.map(a =>
+    `<tr><td style="font-size:11px">${(a.fecha || '').substring(0, 10)}</td><td><span class="av">${av(a.paciente)}</span>${a.paciente || '—'}</td><td style="font-size:11px">${a.rut || '—'}</td><td>${a.profesional || '—'}</td><td>${a.especialidad || '—'}</td><td style="color:var(--gris)">${a.notas || '—'}</td><td style="font-size:11px">${a.proximaSesion || '—'}</td></tr>`
+  ).join('') : '<tr><td colspan="7" class="empty">Sin atenciones registradas aún</td></tr>';
+}
+
+// ── RECETAS ──
+async function loadRecetas() {
+  document.getElementById('rec-body').innerHTML = '<tr><td colspan="7" class="loading"><span class="spin"></span>Cargando...</td></tr>';
+  const d = (await get('getRecetas')).data || [];
+  document.getElementById('rec-count').textContent = d.length + ' recetas registradas';
+  document.getElementById('rec-body').innerHTML = d.length ? d.map(r =>
+    `<tr><td style="font-size:11px">${(r.fecha || '').substring(0, 10)}</td><td><span class="av">${av(r.paciente)}</span>${r.paciente || '—'}</td><td style="font-size:11px">${r.rut || '—'}</td><td>${r.profesional || '—'}</td><td>${r.medicamento || '—'}</td><td style="color:var(--gris)">${r.dosis || '—'}</td><td style="color:var(--gris)">${r.duracion || '—'}</td></tr>`
+  ).join('') : '<tr><td colspan="7" class="empty">Sin recetas registradas aún</td></tr>';
+}
+
+// ── ALERTAS ──
+async function loadAlertas() {
+  document.getElementById('al-body').innerHTML = '<tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr>';
+  const d = (await get('getAlertas')).data || [];
+  const activas = d.filter(a => a.estado === 'Activa').length;
+  document.getElementById('al-count').textContent = `${d.length} alertas configuradas · ${activas} activas`;
+  const ac = document.getElementById('achip');
+  if (activas > 0) { ac.style.display = 'inline'; ac.textContent = activas; } else { ac.style.display = 'none'; }
+  document.getElementById('al-body').innerHTML = d.length ? d.map(a =>
+    `<tr><td><span class="av">${av(a.paciente)}</span>${a.paciente || '—'}</td><td style="font-size:11px">${a.rut || '—'}</td><td>${badge(a.tipo)}</td><td style="color:var(--gris)">${a.mensaje || '—'}</td><td>${a.frecuencia || '—'}</td><td>${a.canal || '—'}</td><td>${badge(a.estado)}</td>
+    <td>${a.estado === 'Activa' ?
+      `<button class="btn btn-d" onclick="updateAlerta(${a.fila},'Pausada')">Pausar</button>` :
+      `<button class="btn btn-p" onclick="updateAlerta(${a.fila},'Activa')">Activar</button>`
+    }</td></tr>`
+  ).join('') : '<tr><td colspan="8" class="empty">Sin alertas configuradas aún</td></tr>';
+}
+
+// ── CITAS ──
+async function loadCitas() {
+  document.getElementById('cit-body').innerHTML = '<tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr>';
+  document.getElementById('cit-count').textContent = 'Las citas se gestionan via Cal.com';
+  document.getElementById('cit-body').innerHTML = '<tr><td colspan="8" class="empty">Integración Cal.com — las citas agendadas aparecerán aquí</td></tr>';
+
+  // Cal.com config por profesional
+  const d = (await get('getProfesionales')).data || [];
+  const aprobados = d.filter(p => p.estado === 'Aprobado');
+  document.getElementById('cal-list').innerHTML = aprobados.length ? aprobados.map(p =>
+    `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--bdr)">
+      <span class="av">${av(p.nombre)}</span>
+      <div style="flex:1"><div style="font-size:13px;font-weight:500">${p.nombre}</div><div style="font-size:11px;color:var(--gris)">${p.especialidad} · ${p.comunas}</div></div>
+      <input type="text" placeholder="cal.com/tu-usuario" style="font-size:12px;padding:4px 8px;border:0.5px solid var(--bdr);border-radius:6px;background:var(--bg2);color:var(--texto);width:200px;font-family:'DM Sans',sans-serif;outline:none"/>
+      <button class="btn btn-p btn-sm">Guardar</button>
+    </div>`
+  ).join('') : '<div class="empty">Sin profesionales aprobados aún</div>';
+}
+
+// ── VERIFICACIÓN ──
+async function loadVerificacion() {
+  const d = (await get('getProfesionales')).data || [];
+  const pend = d.filter(p => p.estado === 'Pendiente');
+  document.getElementById('ver-count').textContent = `${pend.length} profesionales pendientes`;
+  const vc = document.getElementById('vchip');
+  if (pend.length > 0) { vc.style.display = 'inline'; vc.textContent = pend.length; } else { vc.style.display = 'none'; }
+  document.getElementById('ver-list').innerHTML = pend.length ? pend.map(p =>
+    `<div class="card" id="vc-${p.fila}">
+      <div class="ch"><div><div style="font-size:13px;font-weight:500">${p.nombre || '—'}</div><div style="font-size:11px;color:var(--gris)">${p.especialidad || '—'} · ${(p.fecha || '').substring(0, 10)}</div></div>${badge('Pendiente')}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin:.75rem 0;font-size:12px">
+        <div><div style="font-size:11px;color:var(--gris)">RUT</div>${p.rut || '—'}</div>
+        <div><div style="font-size:11px;color:var(--gris)">Email</div>${p.email || '—'}</div>
+        <div><div style="font-size:11px;color:var(--gris)">WhatsApp</div>${p.whatsapp || '—'}</div>
+        <div><div style="font-size:11px;color:var(--gris)">Comunas</div>${p.comunas || '—'}</div>
+        <div><div style="font-size:11px;color:var(--gris)">Modalidad</div>${p.modalidad || '—'}</div>
+        <div><div style="font-size:11px;color:var(--gris)">Reg. MINSAL</div>${p.registro || '—'}</div>
       </div>
-      <div class="vg">
-        <div><div class="vgl">RUT</div><div>${p.rut||'—'}</div></div>
-        <div><div class="vgl">Email</div><div>${p.email||'—'}</div></div>
-        <div><div class="vgl">WhatsApp</div><div>${p.whatsapp||'—'}</div></div>
-        <div><div class="vgl">Comunas</div><div>${p.comunas||'—'}</div></div>
-        <div><div class="vgl">Modalidad</div><div>${p.modalidad||'—'}</div></div>
-        <div><div class="vgl">Reg. MINSAL</div><div>${p.registro||'—'}</div></div>
-      </div>
-      <div class="va">
-        <button class="btn" onclick="window.open('https://rnpi.superdesalud.gob.cl','_blank')"><i class="ti ti-external-link" aria-hidden="true"></i> Verificar en RNPI</button>
+      <div style="display:flex;gap:8px">
+        <button class="btn" onclick="window.open('https://rnpi.superdesalud.gob.cl','_blank')"><i class="ti ti-external-link" aria-hidden="true"></i> Verificar RNPI</button>
         <button class="btn btn-p" onclick="aprobar(${p.fila},'Aprobado')"><i class="ti ti-check" aria-hidden="true"></i> Aprobar</button>
         <button class="btn btn-d" onclick="aprobar(${p.fila},'Rechazado')"><i class="ti ti-x" aria-hidden="true"></i> Rechazar</button>
       </div>
-    </div>`).join('');
+    </div>`
+  ).join('') : '<div class="empty" style="padding:3rem"><i class="ti ti-circle-check" style="font-size:2rem;color:var(--vc);display:block;margin-bottom:.5rem" aria-hidden="true"></i>No hay profesionales pendientes</div>';
 }
 
-async function aprobar(fila,estado){
-  toast('Actualizando...');
-  try{
-    await fetch(`${SCRIPT}?action=updateEstado&fila=${fila}&estado=${estado}`);
-    const card=document.getElementById('vc-'+fila);
-    if(card){
-      card.innerHTML=`<div style="display:flex;align-items:center;gap:8px;color:${estado==='Aprobado'?'var(--verde)':'#A32D2D'};font-size:13px">
-        <i class="ti ti-circle-check" style="font-size:18px" aria-hidden="true"></i>
-        ${estado==='Aprobado'?'Aprobado — se envió notificación por email':'Rechazado — se notificó al profesional'}
-      </div>`;
-    }
-    toast(`✓ Profesional ${estado.toLowerCase()} correctamente`);
-    const vc=document.getElementById('vchip');
-    const n=parseInt(vc.textContent||'0')-1;
-    if(n<=0)vc.style.display='none';else vc.textContent=n;
-    document.getElementById('m-pend').textContent=Math.max(0,parseInt(document.getElementById('m-pend').textContent||'0')-1);
-  }catch(e){toast('Error al actualizar. Intenta de nuevo.');}
-}
-
-function ft(tbId,q,esp){
-  q=q.toLowerCase();esp=esp.toLowerCase();
-  document.querySelectorAll('#'+tbId+' tr').forEach(r=>{
-    const t=r.textContent.toLowerCase();
-    r.style.display=(!q||t.includes(q))&&(!esp||t.includes(esp))?'':'none';
+// ── DETALLE PACIENTE ──
+async function verDetalle(rut, nombre) {
+  document.getElementById('det-titulo').textContent = 'Ficha — ' + nombre;
+  openModal('modal-detalle');
+  ['det-ficha', 'det-atenciones', 'det-recetas', 'det-alertas'].forEach(id => {
+    document.getElementById(id).innerHTML = '<div class="loading"><span class="spin"></span>Cargando...</div>';
   });
+  const d = await get('getPacienteDetalle', 'rut=' + encodeURIComponent(rut));
+  const p = d.paciente || {};
+  document.getElementById('det-ficha').innerHTML = `
+    <div class="form-grid" style="font-size:13px">
+      <div><div style="font-size:11px;color:var(--gris)">Nombre</div>${p.nombre || '—'}</div>
+      <div><div style="font-size:11px;color:var(--gris)">RUT</div>${p.rut || '—'}</div>
+      <div><div style="font-size:11px;color:var(--gris)">Fecha de nacimiento</div>${p.fechaNac || '—'}</div>
+      <div><div style="font-size:11px;color:var(--gris)">Estado</div>${badge(p.estado)}</div>
+      <div class="full"><div style="font-size:11px;color:var(--gris)">Diagnóstico</div>${p.diagnostico || '—'}</div>
+      <div class="full"><div style="font-size:11px;color:var(--gris)">Medicamentos</div>${p.medicamentos || '—'}</div>
+      <div><div style="font-size:11px;color:var(--gris)">Alergias</div>${p.alergias || '—'}</div>
+      <div><div style="font-size:11px;color:var(--gris)">Profesional</div>${p.profesional || '—'}</div>
+      <div><div style="font-size:11px;color:var(--gris)">Familia</div>${p.familia || '—'}</div>
+      <div><div style="font-size:11px;color:var(--gris)">Contacto familiar</div>${p.contactoFamiliar || '—'}</div>
+    </div>`;
+
+  const ats = d.atenciones || [];
+  document.getElementById('det-atenciones').innerHTML = ats.length ? '<table><thead><tr><th>Fecha</th><th>Profesional</th><th>Notas</th><th>Próx. sesión</th></tr></thead><tbody>' +
+    ats.map(a => `<tr><td>${(a.fecha||'').substring(0,10)}</td><td>${a.profesional||'—'}</td><td>${a.notas||'—'}</td><td>${a.proximaSesion||'—'}</td></tr>`).join('') + '</tbody></table>' :
+    '<div class="empty">Sin atenciones registradas</div>';
+
+  const recs = d.recetas || [];
+  document.getElementById('det-recetas').innerHTML = recs.length ? '<table><thead><tr><th>Fecha</th><th>Profesional</th><th>Medicamento</th><th>Dosis</th><th>Duración</th></tr></thead><tbody>' +
+    recs.map(r => `<tr><td>${(r.fecha||'').substring(0,10)}</td><td>${r.profesional||'—'}</td><td>${r.medicamento||'—'}</td><td>${r.dosis||'—'}</td><td>${r.duracion||'—'}</td></tr>`).join('') + '</tbody></table>' :
+    '<div class="empty">Sin recetas registradas</div>';
+
+  const als = d.alertas || [];
+  document.getElementById('det-alertas').innerHTML = als.length ? '<table><thead><tr><th>Tipo</th><th>Mensaje</th><th>Frecuencia</th><th>Canal</th><th>Estado</th></tr></thead><tbody>' +
+    als.map(a => `<tr><td>${badge(a.tipo)}</td><td>${a.mensaje||'—'}</td><td>${a.frecuencia||'—'}</td><td>${a.canal||'—'}</td><td>${badge(a.estado)}</td></tr>`).join('') + '</tbody></table>' :
+    '<div class="empty">Sin alertas configuradas</div>';
 }
+
+// ── SAVE FORMS ──
+async function savePaciente() {
+  const n = document.getElementById('pac-nombre').value;
+  const r = document.getElementById('pac-rut').value;
+  if (!n || !r) { toast('Nombre y RUT son obligatorios', false); return; }
+  await post({ tipo: 'paciente', nombre: n, rut: r,
+    fechaNac: document.getElementById('pac-fnac').value,
+    diagnostico: document.getElementById('pac-diag').value,
+    medicamentos: document.getElementById('pac-meds').value,
+    alergias: document.getElementById('pac-alergias').value,
+    profesional: document.getElementById('pac-prof').value,
+    familia: document.getElementById('pac-fam').value,
+    contactoFamiliar: document.getElementById('pac-contacto').value
+  });
+  closeModal('modal-paciente');
+  toast('✓ Ficha guardada correctamente');
+  setTimeout(loadPacientes, 1500);
+}
+
+async function saveAtencion() {
+  const p = document.getElementById('at-pac').value;
+  const r = document.getElementById('at-rut').value;
+  if (!p || !r) { toast('Paciente y RUT son obligatorios', false); return; }
+  await post({ tipo: 'atencion', paciente: p, rut: r,
+    profesional: document.getElementById('at-prof').value,
+    especialidad: document.getElementById('at-esp').value,
+    notas: document.getElementById('at-notas').value,
+    proximaSesion: document.getElementById('at-prox').value
+  });
+  closeModal('modal-atencion');
+  toast('✓ Atención registrada');
+  setTimeout(loadAtenciones, 1500);
+}
+
+async function saveReceta() {
+  const p = document.getElementById('rec-pac').value;
+  const r = document.getElementById('rec-rut').value;
+  if (!p || !r) { toast('Paciente y RUT son obligatorios', false); return; }
+  await post({ tipo: 'receta', paciente: p, rut: r,
+    profesional: document.getElementById('rec-prof').value,
+    medicamento: document.getElementById('rec-med').value,
+    dosis: document.getElementById('rec-dosis').value,
+    duracion: document.getElementById('rec-dur').value
+  });
+  closeModal('modal-receta');
+  toast('✓ Receta registrada');
+  setTimeout(loadRecetas, 1500);
+}
+
+async function saveAlerta() {
+  const p = document.getElementById('al-pac').value;
+  const r = document.getElementById('al-rut').value;
+  const t = document.getElementById('al-tipo').value;
+  const m = document.getElementById('al-msg').value;
+  if (!p || !r || !t || !m) { toast('Completa todos los campos obligatorios', false); return; }
+  const hora = document.getElementById('al-hora').value;
+  const frec = document.getElementById('al-frec').value + (hora ? ' a las ' + hora : '');
+  await get('addAlerta', `paciente=${encodeURIComponent(p)}&rut=${encodeURIComponent(r)}&tipo=${encodeURIComponent(t)}&mensaje=${encodeURIComponent(m)}&frecuencia=${encodeURIComponent(frec)}&canal=${encodeURIComponent(document.getElementById('al-canal').value)}`);
+  closeModal('modal-alerta');
+  toast('✓ Alerta activada');
+  setTimeout(loadAlertas, 1500);
+}
+
+// ── APROBAR PROF ──
+async function aprobar(fila, estado) {
+  toast('Actualizando...');
+  await get('updateEstado', `fila=${fila}&estado=${estado}`);
+  const card = document.getElementById('vc-' + fila);
+  if (card) card.innerHTML = `<div style="display:flex;align-items:center;gap:8px;color:${estado === 'Aprobado' ? 'var(--verde)' : '#A32D2D'};font-size:13px"><i class="ti ti-circle-check" style="font-size:18px" aria-hidden="true"></i>${estado === 'Aprobado' ? 'Aprobado — notificación enviada por email' : 'Rechazado — profesional notificado'}</div>`;
+  toast('✓ Estado actualizado');
+  const vc = document.getElementById('vchip');
+  const n = parseInt(vc.textContent || '0') - 1;
+  if (n <= 0) vc.style.display = 'none'; else vc.textContent = n;
+}
+
+// ── PAUSAR/ACTIVAR ALERTA ──
+async function updateAlerta(fila, estado) {
+  await get('updateAlerta', `fila=${fila}&estado=${estado}`);
+  toast('✓ Alerta ' + estado.toLowerCase());
+  setTimeout(loadAlertas, 1000);
+}
+
+// Cerrar modales con click en fondo
+document.querySelectorAll('.modal-bg').forEach(bg => {
+  bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('open'); });
+});
 </script>
 </body>
 </html>
