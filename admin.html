@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
 <meta charset="UTF-8"/>
@@ -12,7 +13,7 @@
   --verde:#2D6A4F;--vc:#52B788;--vs:#D8F3DC;
   --crema:#FAF7F2;--arena:#E9E0D0;--texto:#1A1A1A;--gris:#5C5C5C;
   --blanco:#FFFFFF;--rojo:#E07A5F;--rs:#FCEBEB;
-  --as:#FAEEDA;--amber:#854F0B;--sb:210px;
+  --as:#FAEEDA;--amber:#854F0B;--sb:210px;--sb-mini:52px;
   --bg2:#F5F4F0;--bdr:#E2DDD6;
 }
 @media(prefers-color-scheme:dark){:root{
@@ -23,142 +24,224 @@
 html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--texto);background:var(--crema)}
 
 /* LOGIN */
-#ls{position:fixed;inset:0;background:var(--verde);display:flex;align-items:center;justify-content:center;z-index:1000}
-.lb{background:var(--blanco);border-radius:16px;padding:2.5rem;width:320px}
-.ll{font-size:22px;font-weight:500;color:var(--verde);margin-bottom:4px}
-.ll span{color:var(--vc)}
-.ls{font-size:12px;color:var(--gris);margin-bottom:2rem}
-.lb label{font-size:12px;font-weight:500;display:block;margin-bottom:6px;color:var(--gris)}
-.lb input{width:100%;padding:9px 12px;border:0.5px solid var(--bdr);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--texto);background:var(--bg2);outline:none;margin-bottom:1rem;transition:border-color .2s}
-.lb input:focus{border-color:var(--vc)}
-.lbtn{width:100%;background:var(--verde);color:#fff;border:none;border-radius:8px;padding:10px;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s}
+#ls{position:fixed;inset:0;background:var(–verde);display:flex;align-items:center;justify-content:center;z-index:1000}
+.lb{background:var(–blanco);border-radius:16px;padding:2rem;width:300px;max-width:90vw}
+.ll{font-size:22px;font-weight:500;color:var(–verde);margin-bottom:4px}
+.ll span{color:var(–vc)}
+.ls{font-size:12px;color:var(–gris);margin-bottom:2rem}
+.lb label{font-size:12px;font-weight:500;display:block;margin-bottom:6px;color:var(–gris)}
+.lb input{width:100%;padding:9px 12px;border:0.5px solid var(–bdr);border-radius:8px;font-size:16px;font-family:‘DM Sans’,sans-serif;color:var(–texto);background:var(–bg2);outline:none;margin-bottom:1rem;transition:border-color .2s}
+.lb input:focus{border-color:var(–vc)}
+.lbtn{width:100%;background:var(–verde);color:#fff;border:none;border-radius:8px;padding:12px;font-size:15px;font-weight:500;cursor:pointer;font-family:‘DM Sans’,sans-serif;transition:background .2s}
 .lbtn:hover{background:#1f5239}
-.le{color:var(--rojo);font-size:12px;margin-top:8px;display:none}
+.le{color:var(–rojo);font-size:12px;margin-top:8px;display:none}
 
 /* LAYOUT */
 #app{display:none;height:100vh;overflow:hidden}
-.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sb);background:var(--blanco);border-right:0.5px solid var(--bdr);display:flex;flex-direction:column;z-index:100;overflow-y:auto}
-.slogo{padding:14px 16px;font-size:15px;font-weight:500;color:var(--texto);border-bottom:0.5px solid var(--bdr)}
-.slogo span{color:var(--verde)}
-.slogo small{display:block;font-size:10px;color:var(--gris);font-weight:400;margin-top:1px}
-.nsec{font-size:10px;font-weight:500;color:var(--gris);padding:10px 16px 3px;letter-spacing:.08em;text-transform:uppercase}
-.nb{display:flex;align-items:center;gap:8px;width:100%;padding:7px 16px;background:none;border:none;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--gris);text-align:left;transition:all .15s}
-.nb:hover{background:var(--bg2);color:var(--texto)}
-.nb.on{background:var(--vs);color:var(--verde);font-weight:500}
-.nb i{font-size:15px}
-.chip{margin-left:auto;background:var(--rojo);color:#fff;border-radius:20px;font-size:10px;padding:1px 6px;display:none}
-.sfoot{margin-top:auto;padding:12px 16px;border-top:0.5px solid var(--bdr);font-size:11px;color:var(--gris);line-height:1.7}
-.sfoot a{color:var(--verde);text-decoration:none}
-.main{margin-left:var(--sb);height:100vh;overflow-y:auto;padding:1.25rem}
+
+/* SIDEBAR */
+.sidebar{
+position:fixed;left:0;top:0;bottom:0;
+width:var(–sb);
+background:var(–blanco);
+border-right:0.5px solid var(–bdr);
+display:flex;flex-direction:column;
+z-index:200;overflow-y:auto;
+transition:width .2s ease;
+}
+.sidebar.mini{width:var(–sb-mini)}
+.sidebar.mini .slogo-text{display:none}
+.sidebar.mini .nsec{display:none}
+.sidebar.mini .nb-text{display:none}
+.sidebar.mini .chip{display:none!important}
+.sidebar.mini .sfoot{display:none}
+.sidebar.mini .nb{justify-content:center;padding:10px 0}
+.sidebar.mini .nb i{font-size:18px}
+
+/* MOBILE — sidebar como overlay */
+@media(max-width:768px){
+.sidebar{
+width:var(–sb);
+transform:translateX(-100%);
+transition:transform .25s ease;
+box-shadow:4px 0 20px rgba(0,0,0,.15);
+}
+.sidebar.open{transform:translateX(0)}
+.sidebar.mini{width:var(–sb);transform:translateX(-100%)}
+.main{margin-left:0!important}
+.topbar{display:flex!important}
+}
+
+/* OVERLAY mobile */
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:150}
+#overlay.show{display:block}
+
+/* TOPBAR mobile */
+.topbar{
+display:none;
+position:sticky;top:0;z-index:100;
+background:var(–blanco);
+border-bottom:0.5px solid var(–bdr);
+padding:10px 1rem;
+align-items:center;gap:12px;
+}
+.topbar-logo{font-size:15px;font-weight:500;color:var(–verde);flex:1}
+.topbar-logo span{color:var(–vc)}
+.menu-btn{background:none;border:none;cursor:pointer;color:var(–gris);padding:4px;font-size:20px;line-height:1}
+
+/* TOGGLE SIDEBAR DESKTOP */
+.toggle-btn{
+position:absolute;top:14px;right:-14px;
+width:28px;height:28px;border-radius:50%;
+background:var(–blanco);border:0.5px solid var(–bdr);
+cursor:pointer;display:flex;align-items:center;justify-content:center;
+font-size:13px;color:var(–gris);z-index:10;
+transition:all .2s;
+}
+.toggle-btn:hover{background:var(–bg2);color:var(–verde)}
+
+.slogo{padding:14px 16px;font-size:15px;font-weight:500;color:var(–texto);border-bottom:0.5px solid var(–bdr);position:relative;display:flex;align-items:center;gap:8px}
+.slogo span{color:var(–verde)}
+.slogo small{display:block;font-size:10px;color:var(–gris);font-weight:400;margin-top:1px}
+.nsec{font-size:10px;font-weight:500;color:var(–gris);padding:10px 16px 3px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.nb{display:flex;align-items:center;gap:8px;width:100%;padding:7px 16px;background:none;border:none;cursor:pointer;font-size:13px;font-family:‘DM Sans’,sans-serif;color:var(–gris);text-align:left;transition:all .15s;white-space:nowrap}
+.nb:hover{background:var(–bg2);color:var(–texto)}
+.nb.on{background:var(–vs);color:var(–verde);font-weight:500}
+.nb i{font-size:15px;flex-shrink:0}
+.chip{margin-left:auto;background:var(–rojo);color:#fff;border-radius:20px;font-size:10px;padding:1px 6px;display:none}
+.sfoot{margin-top:auto;padding:12px 16px;border-top:0.5px solid var(–bdr);font-size:11px;color:var(–gris);line-height:1.7}
+.sfoot a{color:var(–verde);text-decoration:none}
+
+.main{margin-left:var(–sb);height:100vh;overflow-y:auto;padding:1.25rem;transition:margin-left .2s ease}
+.main.mini{margin-left:var(–sb-mini)}
 .pg{display:none}
 .pg.on{display:block}
 .ph h1{font-size:18px;font-weight:500;margin-bottom:2px}
-.ph p{font-size:12px;color:var(--gris);margin-bottom:1rem}
+.ph p{font-size:12px;color:var(–gris);margin-bottom:1rem}
 
-/* METRICS */
+/* METRICS — responsive */
 .mets{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1rem}
-.met{background:var(--bg2);border-radius:8px;padding:12px}
-.met .ml{font-size:11px;color:var(--gris);margin-bottom:3px}
+@media(max-width:640px){.mets{grid-template-columns:repeat(2,1fr)}}
+.met{background:var(–bg2);border-radius:8px;padding:12px}
+.met .ml{font-size:11px;color:var(–gris);margin-bottom:3px}
 .met .mv{font-size:22px;font-weight:500}
-.met .md{font-size:11px;color:var(--vc);margin-top:2px}
-.met.warn .mv{color:var(--amber)}
+.met .md{font-size:11px;color:var(–vc);margin-top:2px}
+.met.warn .mv{color:var(–amber)}
 
 /* CARDS */
-.card{background:var(--blanco);border:0.5px solid var(--bdr);border-radius:12px;padding:1rem;margin-bottom:.75rem}
+.card{background:var(–blanco);border:0.5px solid var(–bdr);border-radius:12px;padding:1rem;margin-bottom:.75rem}
 .ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;gap:8px;flex-wrap:wrap}
 .ct{font-size:13px;font-weight:500}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+@media(max-width:640px){.two{grid-template-columns:1fr}}
 
-/* TABLE */
-table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
-th{text-align:left;padding:6px 8px;font-size:10px;font-weight:500;color:var(--gris);border-bottom:0.5px solid var(--bdr);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
-td{padding:8px;border-bottom:0.5px solid var(--bg2);color:var(--texto);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
+/* TABLE — mobile scrollable */
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed;min-width:500px}
+th{text-align:left;padding:6px 8px;font-size:10px;font-weight:500;color:var(–gris);border-bottom:0.5px solid var(–bdr);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+td{padding:8px;border-bottom:0.5px solid var(–bg2);color:var(–texto);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
 tr:last-child td{border-bottom:none}
-tr:hover td{background:var(--bg2)}
+tr:hover td{background:var(–bg2)}
+
+/* MOBILE CARDS para tablas */
+@media(max-width:640px){
+.use-cards table,.use-cards thead{display:none}
+.use-cards .mobile-card{display:block!important}
+}
+.mobile-card{display:none;background:var(–blanco);border:0.5px solid var(–bdr);border-radius:10px;padding:.85rem;margin-bottom:.5rem}
+.mc-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:12px}
+.mc-label{color:var(–gris);font-size:11px}
 
 /* BADGES */
 .badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px}
-.bg{background:var(--vs);color:var(--verde)}
-.ba{background:var(--as);color:var(--amber)}
-.br{background:var(--rs);color:#A32D2D}
+.bg{background:var(–vs);color:var(–verde)}
+.ba{background:var(–as);color:var(–amber)}
+.br{background:var(–rs);color:#A32D2D}
 .bb{background:#E6F1FB;color:#185FA5}
-.bgr{background:var(--bg2);color:var(--gris)}
+.bgr{background:var(–bg2);color:var(–gris)}
 .bpu{background:#EDE9FE;color:#5B21B6}
 
 /* BUTTONS */
-.btn{font-size:11px;padding:3px 9px;border-radius:6px;cursor:pointer;border:0.5px solid var(--bdr);background:var(--blanco);color:var(--texto);font-family:'DM Sans',sans-serif;transition:all .15s;margin-right:4px}
-.btn:hover{background:var(--bg2)}
-.btn-p{background:var(--verde);color:#fff;border-color:var(--verde)}
+.btn{font-size:11px;padding:3px 9px;border-radius:6px;cursor:pointer;border:0.5px solid var(–bdr);background:var(–blanco);color:var(–texto);font-family:‘DM Sans’,sans-serif;transition:all .15s;margin-right:4px}
+.btn:hover{background:var(–bg2)}
+.btn-p{background:var(–verde);color:#fff;border-color:var(–verde)}
 .btn-p:hover{background:#1f5239}
 .btn-d{color:#A32D2D;border-color:#F7C1C1}
-.btn-d:hover{background:var(--rs)}
+.btn-d:hover{background:var(–rs)}
 .btn-sm{font-size:11px;padding:3px 8px}
+@media(max-width:640px){.btn{padding:6px 12px;font-size:12px}}
 
 /* FILTERS */
 .filt{display:flex;gap:6px;margin-bottom:.75rem;flex-wrap:wrap}
-.filt input,.filt select{font-size:12px;padding:5px 8px;border:0.5px solid var(--bdr);border-radius:8px;background:var(--bg2);color:var(--texto);font-family:'DM Sans',sans-serif;outline:none}
-.filt input{flex:1;min-width:140px}
-.filt input:focus,.filt select:focus{border-color:var(--vc)}
+.filt input,.filt select{font-size:12px;padding:5px 8px;border:0.5px solid var(–bdr);border-radius:8px;background:var(–bg2);color:var(–texto);font-family:‘DM Sans’,sans-serif;outline:none}
+.filt input{flex:1;min-width:120px}
+.filt input:focus,.filt select:focus{border-color:var(–vc)}
+@media(max-width:640px){.filt input,.filt select{font-size:14px;padding:8px 10px}}
 
 /* FORM */
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+@media(max-width:500px){.form-grid{grid-template-columns:1fr}}
 .fg{display:flex;flex-direction:column;gap:4px}
-.fg label{font-size:11px;font-weight:500;color:var(--gris)}
-.fg input,.fg select,.fg textarea{font-size:13px;padding:7px 10px;border:0.5px solid var(--bdr);border-radius:8px;background:var(--bg2);color:var(--texto);font-family:'DM Sans',sans-serif;outline:none}
-.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--vc)}
+.fg label{font-size:11px;font-weight:500;color:var(–gris)}
+.fg input,.fg select,.fg textarea{font-size:14px;padding:9px 10px;border:0.5px solid var(–bdr);border-radius:8px;background:var(–bg2);color:var(–texto);font-family:‘DM Sans’,sans-serif;outline:none}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(–vc)}
 .fg textarea{resize:vertical;min-height:70px}
 .fg.full{grid-column:1/-1}
 
 /* MODAL */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:none;align-items:center;justify-content:center}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:none;align-items:flex-end;justify-content:center}
+@media(min-width:640px){.modal-bg{align-items:center}}
 .modal-bg.open{display:flex}
-.modal{background:var(--blanco);border-radius:14px;padding:1.5rem;width:560px;max-width:95vw;max-height:90vh;overflow-y:auto}
+.modal{background:var(–blanco);border-radius:14px 14px 0 0;padding:1.5rem;width:100%;max-width:560px;max-height:92vh;overflow-y:auto}
+@media(min-width:640px){.modal{border-radius:14px}}
 .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
 .modal-title{font-size:15px;font-weight:500}
-.modal-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--gris);padding:4px}
+.modal-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(–gris);padding:4px}
 
 /* DETALLE PACIENTE */
-.tabs{display:flex;gap:4px;border-bottom:0.5px solid var(--bdr);margin-bottom:1rem}
-.tab{padding:7px 14px;font-size:12px;cursor:pointer;border:none;background:none;color:var(--gris);font-family:'DM Sans',sans-serif;border-bottom:2px solid transparent;transition:all .15s}
-.tab.on{color:var(--verde);border-bottom-color:var(--verde);font-weight:500}
+.tabs{display:flex;gap:4px;border-bottom:0.5px solid var(–bdr);margin-bottom:1rem}
+.tab{padding:7px 14px;font-size:12px;cursor:pointer;border:none;background:none;color:var(–gris);font-family:‘DM Sans’,sans-serif;border-bottom:2px solid transparent;transition:all .15s}
+.tab.on{color:var(–verde);border-bottom-color:var(–verde);font-weight:500}
 .tab-pane{display:none}
 .tab-pane.on{display:block}
 
 /* MISC */
-.av{width:26px;height:26px;border-radius:50%;background:var(--vs);color:var(--verde);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;margin-right:6px;vertical-align:middle;flex-shrink:0}
-.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--bdr);border-top-color:var(--verde);border-radius:50%;animation:sp .8s linear infinite;vertical-align:middle;margin-right:6px}
+.av{width:26px;height:26px;border-radius:50%;background:var(–vs);color:var(–verde);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;margin-right:6px;vertical-align:middle;flex-shrink:0}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(–bdr);border-top-color:var(–verde);border-radius:50%;animation:sp .8s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes sp{to{transform:rotate(360deg)}}
-.loading{text-align:center;padding:2rem;color:var(--gris);font-size:12px}
-.empty{text-align:center;padding:2rem;color:var(--gris);font-size:12px}
+.loading{text-align:center;padding:2rem;color:var(–gris);font-size:12px}
+.empty{text-align:center;padding:2rem;color:var(–gris);font-size:12px}
 
 /* ALERT CARD */
-.alerta-card{background:var(--blanco);border:0.5px solid var(--bdr);border-radius:10px;padding:.85rem;margin-bottom:.5rem;display:flex;align-items:center;gap:12px}
+.alerta-card{background:var(–blanco);border:0.5px solid var(–bdr);border-radius:10px;padding:.85rem;margin-bottom:.5rem;display:flex;align-items:center;gap:12px}
 .alerta-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .alerta-info{flex:1}
 .alerta-info .an{font-size:12px;font-weight:500}
-.alerta-info .ad{font-size:11px;color:var(--gris)}
+.alerta-info .ad{font-size:11px;color:var(–gris)}
 
 /* BAR */
 .bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.bar-lbl{font-size:11px;color:var(--gris);width:90px;flex-shrink:0}
-.bar-wrap{flex:1;height:5px;background:var(--bg2);border-radius:3px;overflow:hidden}
-.bar-fill{height:100%;background:var(--vc);border-radius:3px}
+.bar-lbl{font-size:11px;color:var(–gris);width:90px;flex-shrink:0}
+.bar-wrap{flex:1;height:5px;background:var(–bg2);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;background:var(–vc);border-radius:3px}
 .bar-val{font-size:11px;font-weight:500;min-width:18px;text-align:right}
 
 /* CITA ROW */
-.cita-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--bdr)}
+.cita-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(–bdr)}
 .cita-row:last-child{border-bottom:none}
-.cita-time{font-size:12px;font-weight:500;color:var(--verde);min-width:40px}
+.cita-time{font-size:12px;font-weight:500;color:var(–verde);min-width:40px}
 .cita-info .cn{font-size:12px;font-weight:500}
-.cita-info .cd{font-size:11px;color:var(--gris)}
+.cita-info .cd{font-size:11px;color:var(–gris)}
 
-#toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--verde);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;transform:translateY(100px);opacity:0;transition:all .3s;z-index:999}
+#toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(–verde);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;transform:translateY(100px);opacity:0;transition:all .3s;z-index:999}
 #toast.show{transform:translateY(0);opacity:1}
 </style>
+
 </head>
 <body>
 
 <!-- LOGIN -->
+
 <div id="ls">
   <div class="lb">
     <div class="ll">Fam<span>Health</span></div>
@@ -170,23 +253,42 @@ tr:hover td{background:var(--bg2)}
   </div>
 </div>
 
+<!-- OVERLAY MOBILE -->
+
+<div id="overlay" onclick="closeSidebar()"></div>
+
 <!-- APP -->
+
 <div id="app">
-  <aside class="sidebar">
-    <div class="slogo">Fam<span>Health</span><small>Panel Admin</small></div>
+  <!-- TOPBAR MOBILE -->
+  <div class="topbar">
+    <button class="menu-btn" onclick="toggleSidebar()" aria-label="Menú"><i class="ti ti-menu-2" aria-hidden="true"></i></button>
+    <div class="topbar-logo">Fam<span>Health</span></div>
+  </div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="slogo">
+      <div class="slogo-text">
+        Fam<span>Health</span>
+        <small>Panel Admin</small>
+      </div>
+      <button class="toggle-btn" id="toggle-btn" onclick="toggleDesktop()" title="Colapsar menú" aria-label="Colapsar menú">
+        <i class="ti ti-chevron-left" id="toggle-icon" aria-hidden="true"></i>
+      </button>
+    </div>
     <div class="nsec">Principal</div>
-    <button class="nb on" onclick="sp('dashboard',this)"><i class="ti ti-layout-dashboard" aria-hidden="true"></i>Dashboard</button>
+    <button class="nb on" onclick="sp('dashboard',this)"><i class="ti ti-layout-dashboard" aria-hidden="true"></i><span class="nb-text">Dashboard</span></button>
     <div class="nsec">Registros</div>
-    <button class="nb" onclick="sp('familias',this);loadFamilias()"><i class="ti ti-users" aria-hidden="true"></i>Familias</button>
-    <button class="nb" onclick="sp('profesionales',this);loadProfesionales()"><i class="ti ti-stethoscope" aria-hidden="true"></i>Profesionales</button>
+    <button class="nb" onclick="sp('familias',this);loadFamilias()"><i class="ti ti-users" aria-hidden="true"></i><span class="nb-text">Familias</span></button>
+    <button class="nb" onclick="sp('profesionales',this);loadProfesionales()"><i class="ti ti-stethoscope" aria-hidden="true"></i><span class="nb-text">Profesionales</span></button>
     <div class="nsec">Clínico</div>
-    <button class="nb" onclick="sp('pacientes',this);loadPacientes()"><i class="ti ti-file-text" aria-hidden="true"></i>Fichas de pacientes</button>
-    <button class="nb" onclick="sp('atenciones',this);loadAtenciones()"><i class="ti ti-history" aria-hidden="true"></i>Historial atenciones</button>
-    <button class="nb" onclick="sp('recetas',this);loadRecetas()"><i class="ti ti-pill" aria-hidden="true"></i>Recetas entregadas</button>
-    <button class="nb" onclick="sp('alertas',this);loadAlertas()"><i class="ti ti-bell" aria-hidden="true"></i>Alertas<span class="chip" id="achip"></span></button>
+    <button class="nb" onclick="sp('pacientes',this);loadPacientes()"><i class="ti ti-file-text" aria-hidden="true"></i><span class="nb-text">Fichas de pacientes</span></button>
+    <button class="nb" onclick="sp('atenciones',this);loadAtenciones()"><i class="ti ti-history" aria-hidden="true"></i><span class="nb-text">Historial atenciones</span></button>
+    <button class="nb" onclick="sp('recetas',this);loadRecetas()"><i class="ti ti-pill" aria-hidden="true"></i><span class="nb-text">Recetas entregadas</span></button>
+    <button class="nb" onclick="sp('alertas',this);loadAlertas()"><i class="ti ti-bell" aria-hidden="true"></i><span class="nb-text">Alertas</span><span class="chip" id="achip"></span></button>
     <div class="nsec">Gestión</div>
-    <button class="nb" onclick="sp('citas',this);loadCitas()"><i class="ti ti-calendar" aria-hidden="true"></i>Citas agendadas</button>
-    <button class="nb" onclick="sp('verificacion',this);loadVerificacion()"><i class="ti ti-shield-check" aria-hidden="true"></i>Verificación RNPI<span class="chip" id="vchip"></span></button>
+    <button class="nb" onclick="sp('citas',this);loadCitas()"><i class="ti ti-calendar" aria-hidden="true"></i><span class="nb-text">Citas agendadas</span></button>
+    <button class="nb" onclick="sp('verificacion',this);loadVerificacion()"><i class="ti ti-shield-check" aria-hidden="true"></i><span class="nb-text">Verificación RNPI</span><span class="chip" id="vchip"></span></button>
     <div class="sfoot">
       famhealthcl@gmail.com<br>
       <a href="https://docs.google.com/spreadsheets/d/1zL7by07oR7yqBZPiMcPcH18_OfGhahuahq43ChwNW_Q/edit" target="_blank">Ver Google Sheets →</a>
@@ -195,179 +297,182 @@ tr:hover td{background:var(--bg2)}
 
   <main class="main">
 
-    <!-- DASHBOARD -->
-    <div id="pg-dashboard" class="pg on">
-      <div class="ph"><h1>Dashboard</h1><p id="dash-fecha">Cargando...</p></div>
-      <div class="mets">
-        <div class="met"><div class="ml">Familias</div><div class="mv" id="m-fam">—</div><div class="md">Total acumulado</div></div>
-        <div class="met"><div class="ml">Prof. aprobados</div><div class="mv" id="m-pa">—</div><div class="md">Activos</div></div>
-        <div class="met"><div class="ml">Pacientes activos</div><div class="mv" id="m-pac">—</div><div class="md">En fichas</div></div>
-        <div class="met warn"><div class="ml">Pendientes verificar</div><div class="mv" id="m-pend">—</div><div class="md" style="color:var(--amber)">Requieren atención</div></div>
-      </div>
-      <div class="two">
-        <div class="card"><div class="ch"><span class="ct">Últimas familias</span></div><div id="dash-fam"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
-        <div class="card"><div class="ch"><span class="ct">Especialidades más buscadas</span></div><div id="dash-esp"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
-      </div>
-      <div class="two">
-        <div class="card"><div class="ch"><span class="ct">Alertas activas recientes</span><button class="btn btn-sm" onclick="sp('alertas',document.querySelectorAll('.nb')[8])">Ver todas</button></div><div id="dash-alertas"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
-        <div class="card"><div class="ch"><span class="ct">Atenciones recientes</span></div><div id="dash-atenciones"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
-      </div>
-    </div>
+```
+<!-- DASHBOARD -->
+<div id="pg-dashboard" class="pg on">
+  <div class="ph"><h1>Dashboard</h1><p id="dash-fecha">Cargando...</p></div>
+  <div class="mets">
+    <div class="met"><div class="ml">Familias</div><div class="mv" id="m-fam">—</div><div class="md">Total acumulado</div></div>
+    <div class="met"><div class="ml">Prof. aprobados</div><div class="mv" id="m-pa">—</div><div class="md">Activos</div></div>
+    <div class="met"><div class="ml">Pacientes activos</div><div class="mv" id="m-pac">—</div><div class="md">En fichas</div></div>
+    <div class="met warn"><div class="ml">Pendientes verificar</div><div class="mv" id="m-pend">—</div><div class="md" style="color:var(--amber)">Requieren atención</div></div>
+  </div>
+  <div class="two">
+    <div class="card"><div class="ch"><span class="ct">Últimas familias</span></div><div id="dash-fam"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
+    <div class="card"><div class="ch"><span class="ct">Especialidades más buscadas</span></div><div id="dash-esp"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
+  </div>
+  <div class="two">
+    <div class="card"><div class="ch"><span class="ct">Alertas activas recientes</span><button class="btn btn-sm" onclick="sp('alertas',document.querySelectorAll('.nb')[8])">Ver todas</button></div><div id="dash-alertas"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
+    <div class="card"><div class="ch"><span class="ct">Atenciones recientes</span></div><div id="dash-atenciones"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
+  </div>
+</div>
 
-    <!-- FAMILIAS -->
-    <div id="pg-familias" class="pg">
-      <div class="ph"><h1>Familias registradas</h1><p id="fam-count">Cargando...</p></div>
-      <div class="card">
-        <div class="filt">
-          <input type="text" id="sf" placeholder="Buscar nombre, email o comuna..." oninput="ft('fam-body',this.value,'')">
-          <select onchange="ft('fam-body','',this.value)">
-            <option value="">Todas las especialidades</option>
-            <option>Kinesiología</option><option>Geriatría</option><option>Enfermería</option>
-            <option>Fonoaudiología</option><option>Psicología</option><option>Nutrición</option>
-          </select>
-          <button class="btn btn-p btn-sm" onclick="loadFamilias()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
-        </div>
-        <div style="overflow-x:auto"><table>
-          <thead><tr><th style="width:18%">Nombre</th><th style="width:18%">Email</th><th style="width:12%">WhatsApp</th><th style="width:13%">Especialidad</th><th style="width:10%">Comuna</th><th style="width:13%">Urgencia</th><th style="width:8%">Estado</th><th style="width:8%">Fecha</th></tr></thead>
-          <tbody id="fam-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
-        </table></div>
-      </div>
+<!-- FAMILIAS -->
+<div id="pg-familias" class="pg">
+  <div class="ph"><h1>Familias registradas</h1><p id="fam-count">Cargando...</p></div>
+  <div class="card">
+    <div class="filt">
+      <input type="text" id="sf" placeholder="Buscar nombre, email o comuna..." oninput="ft('fam-body',this.value,'')">
+      <select onchange="ft('fam-body','',this.value)">
+        <option value="">Todas las especialidades</option>
+        <option>Kinesiología</option><option>Geriatría</option><option>Enfermería</option>
+        <option>Fonoaudiología</option><option>Psicología</option><option>Nutrición</option>
+      </select>
+      <button class="btn btn-p btn-sm" onclick="loadFamilias()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
     </div>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th style="width:18%">Nombre</th><th style="width:18%">Email</th><th style="width:12%">WhatsApp</th><th style="width:13%">Especialidad</th><th style="width:10%">Comuna</th><th style="width:13%">Urgencia</th><th style="width:8%">Estado</th><th style="width:8%">Fecha</th></tr></thead>
+      <tbody id="fam-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
+    </table></div>
+  </div>
+</div>
 
-    <!-- PROFESIONALES -->
-    <div id="pg-profesionales" class="pg">
-      <div class="ph"><h1>Profesionales</h1><p id="prof-count">Cargando...</p></div>
-      <div class="card">
-        <div class="filt">
-          <input type="text" id="sp2" placeholder="Buscar nombre, RUT o especialidad..." oninput="ft('prof-body',this.value,'')">
-          <select onchange="ft('prof-body','',this.value)">
-            <option value="">Todos los estados</option>
-            <option>Aprobado</option><option>Pendiente</option><option>Rechazado</option>
-          </select>
-          <button class="btn btn-p btn-sm" onclick="loadProfesionales()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
-        </div>
-        <div style="overflow-x:auto"><table>
-          <thead><tr><th style="width:17%">Nombre</th><th style="width:11%">RUT</th><th style="width:13%">Especialidad</th><th style="width:13%">Comunas</th><th style="width:12%">Modalidad</th><th style="width:10%">RNPI</th><th style="width:9%">Estado</th><th style="width:15%">Acciones</th></tr></thead>
-          <tbody id="prof-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
-        </table></div>
-      </div>
+<!-- PROFESIONALES -->
+<div id="pg-profesionales" class="pg">
+  <div class="ph"><h1>Profesionales</h1><p id="prof-count">Cargando...</p></div>
+  <div class="card">
+    <div class="filt">
+      <input type="text" id="sp2" placeholder="Buscar nombre, RUT o especialidad..." oninput="ft('prof-body',this.value,'')">
+      <select onchange="ft('prof-body','',this.value)">
+        <option value="">Todos los estados</option>
+        <option>Aprobado</option><option>Pendiente</option><option>Rechazado</option>
+      </select>
+      <button class="btn btn-p btn-sm" onclick="loadProfesionales()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
     </div>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th style="width:17%">Nombre</th><th style="width:11%">RUT</th><th style="width:13%">Especialidad</th><th style="width:13%">Comunas</th><th style="width:12%">Modalidad</th><th style="width:10%">RNPI</th><th style="width:9%">Estado</th><th style="width:15%">Acciones</th></tr></thead>
+      <tbody id="prof-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
+    </table></div>
+  </div>
+</div>
 
-    <!-- FICHAS DE PACIENTES -->
-    <div id="pg-pacientes" class="pg">
-      <div class="ph"><h1>Fichas de pacientes</h1><p id="pac-count">Cargando...</p></div>
-      <div class="card">
-        <div class="ch">
-          <div class="filt" style="margin:0;flex:1">
-            <input type="text" id="sp3" placeholder="Buscar por nombre, RUT o profesional..." oninput="ft('pac-body',this.value,'')">
-            <button class="btn btn-p btn-sm" onclick="loadPacientes()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
-          </div>
-          <button class="btn btn-p btn-sm" onclick="openModal('modal-paciente')"><i class="ti ti-plus" aria-hidden="true"></i> Nueva ficha</button>
-        </div>
-        <div style="overflow-x:auto"><table>
-          <thead><tr><th style="width:16%">Nombre</th><th style="width:11%">RUT</th><th style="width:16%">Diagnóstico</th><th style="width:18%">Medicamentos</th><th style="width:13%">Profesional</th><th style="width:11%">Familia</th><th style="width:7%">Estado</th><th style="width:8%">Acciones</th></tr></thead>
-          <tbody id="pac-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
-        </table></div>
+<!-- FICHAS DE PACIENTES -->
+<div id="pg-pacientes" class="pg">
+  <div class="ph"><h1>Fichas de pacientes</h1><p id="pac-count">Cargando...</p></div>
+  <div class="card">
+    <div class="ch">
+      <div class="filt" style="margin:0;flex:1">
+        <input type="text" id="sp3" placeholder="Buscar por nombre, RUT o profesional..." oninput="ft('pac-body',this.value,'')">
+        <button class="btn btn-p btn-sm" onclick="loadPacientes()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
       </div>
+      <button class="btn btn-p btn-sm" onclick="openModal('modal-paciente')"><i class="ti ti-plus" aria-hidden="true"></i> Nueva ficha</button>
     </div>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th style="width:16%">Nombre</th><th style="width:11%">RUT</th><th style="width:16%">Diagnóstico</th><th style="width:18%">Medicamentos</th><th style="width:13%">Profesional</th><th style="width:11%">Familia</th><th style="width:7%">Estado</th><th style="width:8%">Acciones</th></tr></thead>
+      <tbody id="pac-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
+    </table></div>
+  </div>
+</div>
 
-    <!-- HISTORIAL ATENCIONES -->
-    <div id="pg-atenciones" class="pg">
-      <div class="ph"><h1>Historial de atenciones</h1><p id="at-count">Cargando...</p></div>
-      <div class="card">
-        <div class="ch">
-          <div class="filt" style="margin:0;flex:1">
-            <input type="text" id="sp4" placeholder="Buscar paciente, profesional o notas..." oninput="ft('at-body',this.value,'')">
-            <button class="btn btn-p btn-sm" onclick="loadAtenciones()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
-          </div>
-          <button class="btn btn-p btn-sm" onclick="openModal('modal-atencion')"><i class="ti ti-plus" aria-hidden="true"></i> Registrar atención</button>
-        </div>
-        <div style="overflow-x:auto"><table>
-          <thead><tr><th style="width:12%">Fecha</th><th style="width:16%">Paciente</th><th style="width:11%">RUT</th><th style="width:16%">Profesional</th><th style="width:14%">Especialidad</th><th style="width:22%">Notas</th><th style="width:9%">Próx. sesión</th></tr></thead>
-          <tbody id="at-body"><tr><td colspan="7" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
-        </table></div>
+<!-- HISTORIAL ATENCIONES -->
+<div id="pg-atenciones" class="pg">
+  <div class="ph"><h1>Historial de atenciones</h1><p id="at-count">Cargando...</p></div>
+  <div class="card">
+    <div class="ch">
+      <div class="filt" style="margin:0;flex:1">
+        <input type="text" id="sp4" placeholder="Buscar paciente, profesional o notas..." oninput="ft('at-body',this.value,'')">
+        <button class="btn btn-p btn-sm" onclick="loadAtenciones()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
       </div>
+      <button class="btn btn-p btn-sm" onclick="openModal('modal-atencion')"><i class="ti ti-plus" aria-hidden="true"></i> Registrar atención</button>
     </div>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th style="width:12%">Fecha</th><th style="width:16%">Paciente</th><th style="width:11%">RUT</th><th style="width:16%">Profesional</th><th style="width:14%">Especialidad</th><th style="width:22%">Notas</th><th style="width:9%">Próx. sesión</th></tr></thead>
+      <tbody id="at-body"><tr><td colspan="7" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
+    </table></div>
+  </div>
+</div>
 
-    <!-- RECETAS -->
-    <div id="pg-recetas" class="pg">
-      <div class="ph"><h1>Recetas entregadas</h1><p id="rec-count">Cargando...</p></div>
-      <div class="card">
-        <div class="ch">
-          <div class="filt" style="margin:0;flex:1">
-            <input type="text" id="sp5" placeholder="Buscar paciente, medicamento o profesional..." oninput="ft('rec-body',this.value,'')">
-            <button class="btn btn-p btn-sm" onclick="loadRecetas()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
-          </div>
-          <button class="btn btn-p btn-sm" onclick="openModal('modal-receta')"><i class="ti ti-plus" aria-hidden="true"></i> Nueva receta</button>
-        </div>
-        <div style="overflow-x:auto"><table>
-          <thead><tr><th style="width:12%">Fecha</th><th style="width:16%">Paciente</th><th style="width:11%">RUT</th><th style="width:16%">Profesional</th><th style="width:18%">Medicamento</th><th style="width:13%">Dosis</th><th style="width:14%">Duración</th></tr></thead>
-          <tbody id="rec-body"><tr><td colspan="7" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
-        </table></div>
+<!-- RECETAS -->
+<div id="pg-recetas" class="pg">
+  <div class="ph"><h1>Recetas entregadas</h1><p id="rec-count">Cargando...</p></div>
+  <div class="card">
+    <div class="ch">
+      <div class="filt" style="margin:0;flex:1">
+        <input type="text" id="sp5" placeholder="Buscar paciente, medicamento o profesional..." oninput="ft('rec-body',this.value,'')">
+        <button class="btn btn-p btn-sm" onclick="loadRecetas()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
       </div>
+      <button class="btn btn-p btn-sm" onclick="openModal('modal-receta')"><i class="ti ti-plus" aria-hidden="true"></i> Nueva receta</button>
     </div>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th style="width:12%">Fecha</th><th style="width:16%">Paciente</th><th style="width:11%">RUT</th><th style="width:16%">Profesional</th><th style="width:18%">Medicamento</th><th style="width:13%">Dosis</th><th style="width:14%">Duración</th></tr></thead>
+      <tbody id="rec-body"><tr><td colspan="7" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
+    </table></div>
+  </div>
+</div>
 
-    <!-- ALERTAS -->
-    <div id="pg-alertas" class="pg">
-      <div class="ph"><h1>Módulo de alertas</h1><p id="al-count">Cargando...</p></div>
-      <div class="card">
-        <div class="ch">
-          <span class="ct">Alertas configuradas</span>
-          <button class="btn btn-p btn-sm" onclick="openModal('modal-alerta')"><i class="ti ti-plus" aria-hidden="true"></i> Nueva alerta</button>
-        </div>
-        <div class="filt">
-          <input type="text" id="sp6" placeholder="Buscar paciente o RUT..." oninput="ft('al-body',this.value,'')">
-          <select onchange="ft('al-body','',this.value)" id="flt-tipo-alerta">
-            <option value="">Todos los tipos</option>
-            <option>Medicamento</option><option>Cita</option><option>Examen</option><option>Control</option>
-          </select>
-          <select onchange="ft('al-body','',this.value)">
-            <option value="">Todos los estados</option>
-            <option>Activa</option><option>Pausada</option><option>Completada</option>
-          </select>
-          <button class="btn btn-p btn-sm" onclick="loadAlertas()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
-        </div>
-        <div style="overflow-x:auto"><table>
-          <thead><tr><th style="width:14%">Paciente</th><th style="width:11%">RUT</th><th style="width:10%">Tipo</th><th style="width:24%">Mensaje</th><th style="width:12%">Frecuencia</th><th style="width:10%">Canal</th><th style="width:9%">Estado</th><th style="width:10%">Acciones</th></tr></thead>
-          <tbody id="al-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
-        </table></div>
-      </div>
+<!-- ALERTAS -->
+<div id="pg-alertas" class="pg">
+  <div class="ph"><h1>Módulo de alertas</h1><p id="al-count">Cargando...</p></div>
+  <div class="card">
+    <div class="ch">
+      <span class="ct">Alertas configuradas</span>
+      <button class="btn btn-p btn-sm" onclick="openModal('modal-alerta')"><i class="ti ti-plus" aria-hidden="true"></i> Nueva alerta</button>
     </div>
+    <div class="filt">
+      <input type="text" id="sp6" placeholder="Buscar paciente o RUT..." oninput="ft('al-body',this.value,'')">
+      <select onchange="ft('al-body','',this.value)" id="flt-tipo-alerta">
+        <option value="">Todos los tipos</option>
+        <option>Medicamento</option><option>Cita</option><option>Examen</option><option>Control</option>
+      </select>
+      <select onchange="ft('al-body','',this.value)">
+        <option value="">Todos los estados</option>
+        <option>Activa</option><option>Pausada</option><option>Completada</option>
+      </select>
+      <button class="btn btn-p btn-sm" onclick="loadAlertas()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
+    </div>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th style="width:14%">Paciente</th><th style="width:11%">RUT</th><th style="width:10%">Tipo</th><th style="width:24%">Mensaje</th><th style="width:12%">Frecuencia</th><th style="width:10%">Canal</th><th style="width:9%">Estado</th><th style="width:10%">Acciones</th></tr></thead>
+      <tbody id="al-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
+    </table></div>
+  </div>
+</div>
 
-    <!-- CITAS -->
-    <div id="pg-citas" class="pg">
-      <div class="ph"><h1>Citas agendadas</h1><p id="cit-count">Cargando...</p></div>
-      <div class="card">
-        <div class="filt">
-          <input type="text" id="sp7" placeholder="Buscar familia o profesional..." oninput="ft('cit-body',this.value,'')">
-          <select onchange="ft('cit-body','',this.value)">
-            <option value="">Todos los estados</option>
-            <option>Confirmada</option><option>Pendiente</option><option>Cancelada</option>
-          </select>
-          <button class="btn btn-p btn-sm" onclick="loadCitas()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
-        </div>
-        <div style="overflow-x:auto"><table>
-          <thead><tr><th style="width:10%">Fecha</th><th style="width:9%">Hora</th><th style="width:15%">Familia</th><th style="width:15%">Profesional</th><th style="width:13%">Especialidad</th><th style="width:11%">Modalidad</th><th style="width:9%">Estado</th><th style="width:18%">Acciones</th></tr></thead>
-          <tbody id="cit-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
-        </table></div>
-      </div>
-      <div class="card" style="margin-top:.75rem">
-        <div class="ch"><span class="ct"><i class="ti ti-calendar-plus" aria-hidden="true"></i> Configurar agendamiento Cal.com por profesional</span></div>
-        <p style="font-size:12px;color:var(--gris);margin-bottom:.75rem">Agrega el link de Cal.com de cada profesional para mostrar su calendario en la plataforma.</p>
-        <div id="cal-list"><div class="loading"><span class="spin"></span>Cargando profesionales...</div></div>
-      </div>
+<!-- CITAS -->
+<div id="pg-citas" class="pg">
+  <div class="ph"><h1>Citas agendadas</h1><p id="cit-count">Cargando...</p></div>
+  <div class="card">
+    <div class="filt">
+      <input type="text" id="sp7" placeholder="Buscar familia o profesional..." oninput="ft('cit-body',this.value,'')">
+      <select onchange="ft('cit-body','',this.value)">
+        <option value="">Todos los estados</option>
+        <option>Confirmada</option><option>Pendiente</option><option>Cancelada</option>
+      </select>
+      <button class="btn btn-p btn-sm" onclick="loadCitas()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
     </div>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th style="width:10%">Fecha</th><th style="width:9%">Hora</th><th style="width:15%">Familia</th><th style="width:15%">Profesional</th><th style="width:13%">Especialidad</th><th style="width:11%">Modalidad</th><th style="width:9%">Estado</th><th style="width:18%">Acciones</th></tr></thead>
+      <tbody id="cit-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
+    </table></div>
+  </div>
+  <div class="card" style="margin-top:.75rem">
+    <div class="ch"><span class="ct"><i class="ti ti-calendar-plus" aria-hidden="true"></i> Configurar agendamiento Cal.com por profesional</span></div>
+    <p style="font-size:12px;color:var(--gris);margin-bottom:.75rem">Agrega el link de Cal.com de cada profesional para mostrar su calendario en la plataforma.</p>
+    <div id="cal-list"><div class="loading"><span class="spin"></span>Cargando profesionales...</div></div>
+  </div>
+</div>
 
-    <!-- VERIFICACIÓN -->
-    <div id="pg-verificacion" class="pg">
-      <div class="ph"><h1>Verificación RNPI</h1><p id="ver-count">Cargando...</p></div>
-      <div id="ver-list"><div class="loading"><span class="spin"></span>Cargando...</div></div>
-    </div>
+<!-- VERIFICACIÓN -->
+<div id="pg-verificacion" class="pg">
+  <div class="ph"><h1>Verificación RNPI</h1><p id="ver-count">Cargando...</p></div>
+  <div id="ver-list"><div class="loading"><span class="spin"></span>Cargando...</div></div>
+</div>
+```
 
   </main>
 </div>
 
 <!-- MODAL NUEVA FICHA -->
+
 <div class="modal-bg" id="modal-paciente">
   <div class="modal">
     <div class="modal-header">
@@ -393,6 +498,7 @@ tr:hover td{background:var(--bg2)}
 </div>
 
 <!-- MODAL REGISTRAR ATENCIÓN -->
+
 <div class="modal-bg" id="modal-atencion">
   <div class="modal">
     <div class="modal-header">
@@ -415,6 +521,7 @@ tr:hover td{background:var(--bg2)}
 </div>
 
 <!-- MODAL NUEVA RECETA -->
+
 <div class="modal-bg" id="modal-receta">
   <div class="modal">
     <div class="modal-header">
@@ -437,6 +544,7 @@ tr:hover td{background:var(--bg2)}
 </div>
 
 <!-- MODAL NUEVA ALERTA -->
+
 <div class="modal-bg" id="modal-alerta">
   <div class="modal">
     <div class="modal-header">
@@ -474,6 +582,7 @@ tr:hover td{background:var(--bg2)}
 </div>
 
 <!-- MODAL DETALLE PACIENTE -->
+
 <div class="modal-bg" id="modal-detalle">
   <div class="modal" style="width:680px">
     <div class="modal-header">
@@ -499,6 +608,30 @@ tr:hover td{background:var(--bg2)}
 const SC = 'https://script.google.com/macros/s/AKfycbzvW9UMkQ7XeqeXY17996KkOtb0t7yvPAWk1QzHoDJcD_jgN7Q-fnD5X0cqEHrjmoVEig/exec';
 const PWD = '1111';
 
+// ── SIDEBAR TOGGLE ──
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('overlay');
+  sb.classList.toggle('open');
+  ov.classList.toggle('show');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+let sidebarMini = false;
+function toggleDesktop() {
+  const sb = document.getElementById('sidebar');
+  const main = document.querySelector('.main');
+  const icon = document.getElementById('toggle-icon');
+  sidebarMini = !sidebarMini;
+  sb.classList.toggle('mini', sidebarMini);
+  main.classList.toggle('mini', sidebarMini);
+  icon.className = sidebarMini ? 'ti ti-chevron-right' : 'ti ti-chevron-left';
+}
+
 // ── AUTH ──
 function doLogin() {
   if (document.getElementById('pwd').value === PWD) {
@@ -516,6 +649,7 @@ function sp(id, btn) {
   document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
   document.getElementById('pg-' + id).classList.add('on');
   if (btn) btn.classList.add('on');
+  closeSidebar();
 }
 
 // ── TOAST ──
@@ -901,5 +1035,6 @@ document.querySelectorAll('.modal-bg').forEach(bg => {
   bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('open'); });
 });
 </script>
+
 </body>
 </html>
