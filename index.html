@@ -833,24 +833,20 @@
     btn.textContent = 'Enviando...';
     btn.style.opacity = '0.7';
 
-    const endpoints = {
-      familias:      'https://formspree.io/f/meendapv',
-      profesionales: 'https://formspree.io/f/mgodqapq'
-    };
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzLaHqQwABOPlOi6kbFIFjVERpKLjdawQhmXsxbSfsG8SR4RRpniZqRsvpPFI3toNIFRA/exec';
 
     try {
-      const res = await fetch(endpoints[tipo], {
+      await fetch(SCRIPT_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ ...datos, tipo, _subject: 'Nuevo registro FamHealth — ' + tipo })
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...datos, tipo })
       });
 
-      if (res.ok) {
-        form.style.display = 'none';
-        success.style.display = 'block';
-      } else {
-        throw new Error('Error');
-      }
+      // no-cors no devuelve respuesta — asumimos éxito
+      form.style.display = 'none';
+      success.style.display = 'block';
+
     } catch(e) {
       btn.disabled = false;
       btn.style.opacity = '1';
