@@ -496,8 +496,8 @@ tr:hover td{background:var(--bg2)}
 <div id="toast"></div>
 
 <script>
-const SC = 'https://script.google.com/macros/s/AKfycby9Be0SzaDVwLvpCakQfjaWlPZq8wd9910dXg09bea7enTihWmBzhcBOPxyQa7a4g69aQ/exec';
-const PWD = '1111';
+const SC = 'https://script.google.com/macros/s/AKfycbzNqPr--7w3-90pKeGAhId4MA0UvU1vtAbrWHjWdUdp-recigwKuZ-KW_CBEHnlKRP9Xg/exec';
+const PWD = 'famhealth2025';
 
 // ── AUTH ──
 function doLogin() {
@@ -557,21 +557,40 @@ function av(n) {
 }
 
 // ── FETCH ──
+function jsonp(url) {
+  return new Promise((resolve, reject) => {
+    const cb = 'cb_' + Date.now();
+    const script = document.createElement('script');
+    window[cb] = (data) => { resolve(data); delete window[cb]; script.remove(); };
+    script.onerror = () => { reject(new Error('JSONP error')); delete window[cb]; script.remove(); };
+    script.src = url + '&callback=' + cb;
+    document.head.appendChild(script);
+  });
+}
+
 async function get(action, extra) {
   try {
     let url = SC + '?action=' + action;
     if (extra) url += '&' + extra;
-    const r = await fetch(url);
-    const j = await r.json();
-    return j.data || j || {};
+    const j = await jsonp(url);
+    return j || {};
   } catch (e) { return {}; }
 }
 
+let posting = false;
 async function post(data) {
+  if (posting) return false;
+  posting = true;
   try {
-    await fetch(SC, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    await fetch(SC, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
     return true;
   } catch (e) { return false; }
+  finally { setTimeout(() => { posting = false; }, 3000); }
 }
 
 // ── FILTER ──
