@@ -803,16 +803,18 @@
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // Form submit con Formspree
+  // Envío a Google Apps Script
   async function submitForm(tipo) {
     const form = document.getElementById('form-' + tipo);
     const success = document.getElementById('success-' + tipo);
     const btn = form.querySelector('.form-submit');
+    const originalText = btn.textContent;
     const inputs = form.querySelectorAll('input, select');
 
-    // Validación
+    // 1. Validación de campos (obligatorios excepto f-paciente)
     let valido = true;
     const datos = {};
+
     inputs.forEach(input => {
       input.style.borderColor = '';
       if (!input.value.trim() && input.id !== 'f-paciente') {
@@ -825,41 +827,50 @@
     if (!valido) {
       const primero = form.querySelector('input[style*="E07A5F"], select[style*="E07A5F"]');
       if (primero) primero.focus();
+      alert("Por favor, completa los campos marcados en rojo.");
       return;
     }
 
-    // Deshabilitar botón durante envío
+    // Agregamos el tipo ('familias' o 'profesionales')
+    datos.tipo = tipo;
+
+    // 2. Estado de carga UX
     btn.disabled = true;
     btn.textContent = 'Enviando...';
     btn.style.opacity = '0.7';
 
-    const endpoints = {
-      familias:      'https://formspree.io/f/meendapv',
-      profesionales: 'https://formspree.io/f/mgodqapq'
-    };
+    // 3. Conexión con tu Google Apps Script
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzLaHqQwABOPlOi6kbFIFjVERpKLjdawQhmXsxbSfsG8SR4RRpniZqRsvpPFI3toNIFRA/exec';
 
     try {
-      const res = await fetch(endpoints[tipo], {
+      const response = await fetch(scriptURL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ ...datos, tipo, _subject: 'Nuevo registro FamHealth — ' + tipo })
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8',
+        },
+        body: JSON.stringify(datos)
       });
 
-      if (res.ok) {
+      const result = await response.json();
+
+      // 4. Manejo del éxito
+      if (result.status === 'ok') {
         form.style.display = 'none';
         success.style.display = 'block';
       } else {
-        throw new Error('Error');
+        throw new Error(result.message || 'Error en el servidor');
       }
-    } catch(e) {
+
+    } catch (error) {
+      console.error('Error:', error);
       btn.disabled = false;
       btn.style.opacity = '1';
-      btn.textContent = tipo === 'familias' ? 'Buscar profesional →' : 'Registrar mi perfil →';
-      alert('Hubo un problema al enviar. Por favor intenta de nuevo.');
+      btn.textContent = originalText;
+      alert('Hubo un problema al enviar tus datos. Por favor, intenta nuevamente.');
     }
   }
 
-  // Formato RUT chileno
+  // Formato RUT chileno automático
   const rutInput = document.getElementById('p-rut');
   if (rutInput) {
     rutInput.addEventListener('input', function() {
