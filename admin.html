@@ -294,10 +294,9 @@ tr:hover td{background:var(--bg2)}
     <div class="nsec">Principal</div>
     <button class="nb on" onclick="sp('dashboard',this)"><i class="ti ti-layout-dashboard" aria-hidden="true"></i><span class="nb-text">Dashboard</span></button>
     <div class="nsec">Registros</div>
-    <button class="nb" onclick="sp('familias',this);loadFamilias()"><i class="ti ti-users" aria-hidden="true"></i><span class="nb-text">Familias</span></button>
+    <button class="nb" onclick="sp('pacientes',this);loadPacientes()"><i class="ti ti-file-text" aria-hidden="true"></i><span class="nb-text">Pacientes</span></button>
     <button class="nb" onclick="sp('profesionales',this);loadProfesionales()"><i class="ti ti-stethoscope" aria-hidden="true"></i><span class="nb-text">Profesionales</span></button>
     <div class="nsec">Clínico</div>
-    <button class="nb" onclick="sp('pacientes',this);loadPacientes()"><i class="ti ti-file-text" aria-hidden="true"></i><span class="nb-text">Fichas de pacientes</span></button>
     <button class="nb" onclick="sp('atenciones',this);loadAtenciones()"><i class="ti ti-history" aria-hidden="true"></i><span class="nb-text">Historial atenciones</span></button>
     <button class="nb" onclick="sp('recetas',this);loadRecetas()"><i class="ti ti-pill" aria-hidden="true"></i><span class="nb-text">Recetas entregadas</span></button>
     <button class="nb" onclick="sp('alertas',this);loadAlertas()"><i class="ti ti-bell" aria-hidden="true"></i><span class="nb-text">Alertas</span><span class="chip" id="achip"></span></button>
@@ -317,38 +316,18 @@ tr:hover td{background:var(--bg2)}
     <div id="pg-dashboard" class="pg on">
       <div class="ph"><h1>Dashboard</h1><p id="dash-fecha">Cargando...</p></div>
       <div class="mets">
-        <div class="met"><div class="ml">Familias</div><div class="mv" id="m-fam">—</div><div class="md">Total acumulado</div></div>
+        <div class="met"><div class="ml">Pacientes</div><div class="mv" id="m-pac">—</div><div class="md">Total registrados</div></div>
         <div class="met"><div class="ml">Prof. aprobados</div><div class="mv" id="m-pa">—</div><div class="md">Activos</div></div>
-        <div class="met"><div class="ml">Pacientes activos</div><div class="mv" id="m-pac">—</div><div class="md">En fichas</div></div>
+        <div class="met"><div class="ml">Leads</div><div class="mv" id="m-fam">—</div><div class="md">Por contactar</div></div>
         <div class="met warn"><div class="ml">Pendientes verificar</div><div class="mv" id="m-pend">—</div><div class="md" style="color:var(--amber)">Requieren atención</div></div>
       </div>
       <div class="two">
-        <div class="card"><div class="ch"><span class="ct">Últimas familias</span></div><div id="dash-fam"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
+        <div class="card"><div class="ch"><span class="ct">Últimos pacientes</span></div><div id="dash-fam"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
         <div class="card"><div class="ch"><span class="ct">Especialidades más buscadas</span></div><div id="dash-esp"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
       </div>
       <div class="two">
         <div class="card"><div class="ch"><span class="ct">Alertas activas recientes</span><button class="btn btn-sm" onclick="sp('alertas',document.querySelectorAll('.nb')[8])">Ver todas</button></div><div id="dash-alertas"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
         <div class="card"><div class="ch"><span class="ct">Atenciones recientes</span></div><div id="dash-atenciones"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
-      </div>
-    </div>
-
-    <!-- FAMILIAS -->
-    <div id="pg-familias" class="pg">
-      <div class="ph"><h1>Familias registradas</h1><p id="fam-count">Cargando...</p></div>
-      <div class="card">
-        <div class="filt">
-          <input type="text" id="sf" placeholder="Buscar nombre, email o comuna..." oninput="ft('fam-body',this.value,'')">
-          <select onchange="ft('fam-body','',this.value)">
-            <option value="">Todas las especialidades</option>
-            <option>Kinesiología</option><option>Geriatría</option><option>Enfermería</option>
-            <option>Fonoaudiología</option><option>Psicología</option><option>Nutrición</option>
-          </select>
-          <button class="btn btn-p btn-sm" onclick="loadFamilias()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
-        </div>
-        <div style="overflow-x:auto"><table>
-          <thead><tr><th style="width:18%">Nombre</th><th style="width:18%">Email</th><th style="width:12%">WhatsApp</th><th style="width:13%">Especialidad</th><th style="width:10%">Comuna</th><th style="width:13%">Urgencia</th><th style="width:8%">Estado</th><th style="width:8%">Fecha</th></tr></thead>
-          <tbody id="fam-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
-        </table></div>
       </div>
     </div>
 
@@ -371,9 +350,9 @@ tr:hover td{background:var(--bg2)}
       </div>
     </div>
 
-    <!-- FICHAS DE PACIENTES -->
+    <!-- PACIENTES -->
     <div id="pg-pacientes" class="pg">
-      <div class="ph"><h1>Fichas de pacientes</h1><p id="pac-count">Cargando...</p></div>
+      <div class="ph"><h1>Pacientes</h1><p id="pac-count">Cargando...</p></div>
       <div class="card">
         <div class="ch">
           <div class="filt" style="margin:0;flex:1">
@@ -508,23 +487,44 @@ tr:hover td{background:var(--bg2)}
 <div class="modal-bg" id="modal-paciente">
   <div class="modal">
     <div class="modal-header">
-      <span class="modal-title">Nueva ficha de paciente</span>
+      <span class="modal-title">Nuevo paciente</span>
       <button class="modal-close" onclick="closeModal('modal-paciente')"><i class="ti ti-x" aria-hidden="true"></i></button>
     </div>
     <div class="form-grid">
       <div class="fg"><label>Nombre completo *</label><input type="text" id="pac-nombre" placeholder="María González"/></div>
       <div class="fg"><label>RUT *</label><input type="text" id="pac-rut" placeholder="12.345.678-9"/></div>
       <div class="fg"><label>Fecha de nacimiento</label><input type="date" id="pac-fnac"/></div>
+      <div class="fg"><label>Modo de gestión</label>
+        <select id="pac-modo">
+          <option value="">Seleccionar...</option>
+          <option>Autónomo</option>
+          <option>Familiar</option>
+          <option>Híbrido</option>
+        </select>
+      </div>
+      <div class="fg"><label>Nombre coordinador</label><input type="text" id="pac-coord-nombre" placeholder="Carlos González"/></div>
+      <div class="fg"><label>Relación con el paciente</label>
+        <select id="pac-coord-relacion">
+          <option value="">Seleccionar...</option>
+          <option>Hijo/a</option><option>Cónyuge</option><option>Padre/Madre</option>
+          <option>Hermano/a</option><option>Amigo/a</option><option>Cuidador/a</option><option>Otro</option>
+        </select>
+      </div>
+      <div class="fg"><label>Email coordinador</label><input type="email" id="pac-coord-email" placeholder="coordinador@mail.com"/></div>
+      <div class="fg"><label>WhatsApp coordinador</label><input type="tel" id="pac-coord-wa" placeholder="+56 9 XXXX XXXX"/></div>
       <div class="fg"><label>Profesional asignado</label><input type="text" id="pac-prof" placeholder="Dr. Pérez"/></div>
-      <div class="fg"><label>Familia vinculada</label><input type="text" id="pac-fam" placeholder="Familia Torres"/></div>
-      <div class="fg"><label>Contacto familiar</label><input type="text" id="pac-contacto" placeholder="+56 9 XXXX XXXX"/></div>
+      <div class="fg"><label>Estado</label>
+        <select id="pac-estado">
+          <option>Activo</option><option>En espera</option><option>Inactivo</option>
+        </select>
+      </div>
       <div class="fg full"><label>Diagnóstico principal</label><textarea id="pac-diag" placeholder="Artrosis de rodilla, HTA..."></textarea></div>
       <div class="fg full"><label>Medicamentos actuales</label><textarea id="pac-meds" placeholder="Losartán 50mg, Metformina 500mg..."></textarea></div>
       <div class="fg full"><label>Alergias conocidas</label><input type="text" id="pac-alergias" placeholder="Penicilina, AINEs..."/></div>
     </div>
     <div style="display:flex;gap:8px;justify-content:flex-end">
       <button class="btn" onclick="closeModal('modal-paciente')">Cancelar</button>
-      <button class="btn btn-p" onclick="savePaciente()"><i class="ti ti-check" aria-hidden="true"></i> Guardar ficha</button>
+      <button class="btn btn-p" onclick="savePaciente()"><i class="ti ti-check" aria-hidden="true"></i> Guardar</button>
     </div>
   </div>
 </div>
@@ -633,7 +633,7 @@ tr:hover td{background:var(--bg2)}
 <div id="toast"></div>
 
 <script>
-const SC = 'https://script.google.com/macros/s/AKfycbzvW9UMkQ7XeqeXY17996KkOtb0t7yvPAWk1QzHoDJcD_jgN7Q-fnD5X0cqEHrjmoVEig/exec';
+const SC = 'https://script.google.com/macros/s/AKfycbwWAdmVKu6balwpGZAMzFHOhbEIOLfxsSfi2uBEgOZMRtpFWPFUdRwa8J_Sc32HqUk/exec';
 const PWD = '1111';
 
 // ── SIDEBAR TOGGLE ──
@@ -661,9 +661,9 @@ function toggleDesktop() {
 }
 
 const pageNames = {
-  dashboard: 'Dashboard', familias: 'Familias', profesionales: 'Profesionales',
-  pacientes: 'Fichas de pacientes', atenciones: 'Historial', recetas: 'Recetas',
-  alertas: 'Alertas', leads: 'Leads', citas: 'Citas', verificacion: 'Verificación RNPI'
+  dashboard: 'Dashboard', pacientes: 'Pacientes', profesionales: 'Profesionales',
+  atenciones: 'Historial', recetas: 'Recetas', alertas: 'Alertas',
+  leads: 'Leads', citas: 'Citas', verificacion: 'Verificación RNPI'
 };
 let currentPage = 'dashboard';
 
@@ -776,20 +776,20 @@ function ft(id, q, esp) {
 async function loadDashboard() {
   const now = new Date();
   document.getElementById('dash-fecha').textContent = now.toLocaleDateString('es-CL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-  const [fam, prof, pac, al] = await Promise.all([
-    get('getFamilias'), get('getProfesionales'), get('getPacientes'), get('getAlertas')
+  const [prof, pac, al] = await Promise.all([
+    get('getProfesionales'), get('getPacientes'), get('getAlertas')
   ]);
-  const famArr  = fam.data  || [];
   const profArr = prof.data || [];
   const pacArr  = pac.data  || [];
   const alArr   = al.data   || [];
 
   const act  = profArr.filter(p => p.estado === 'Aprobado').length;
   const pend = profArr.filter(p => p.estado === 'Pendiente').length;
+  const leadsPend = (await get('getLeads')).data?.filter(l => l.estado === 'Por contactar').length || 0;
 
-  document.getElementById('m-fam').textContent  = famArr.length;
-  document.getElementById('m-pa').textContent   = act;
   document.getElementById('m-pac').textContent  = pacArr.length;
+  document.getElementById('m-pa').textContent   = act;
+  document.getElementById('m-fam').textContent  = leadsPend;
   document.getElementById('m-pend').textContent = pend;
 
   const vc = document.getElementById('vchip');
@@ -798,16 +798,16 @@ async function loadDashboard() {
   const activas = alArr.filter(a => a.estado === 'Activa').length;
   if (activas > 0) { ac.style.display = 'inline'; ac.textContent = activas; }
 
-  // Últimas familias
-  const ul = famArr.slice(-5).reverse();
-  let h = ul.length ? '<table><tbody>' + ul.map(f =>
-    `<tr><td><span class="av">${av(f.nombre)}</span>${f.nombre || '—'}</td><td style="color:var(--gris)">${f.especialidad || '—'}</td><td>${badge(f.estado)}</td></tr>`
-  ).join('') + '</tbody></table>' : '<div class="empty">Sin registros aún</div>';
+  // Últimos pacientes
+  const ul = pacArr.slice(-5).reverse();
+  let h = ul.length ? '<table><tbody>' + ul.map(p =>
+    `<tr><td><span class="av">${av(p.nombre)}</span>${p.nombre||'—'}</td><td style="color:var(--gris)">${p.modo||'Autónomo'}</td><td>${badge(p.estado)}</td></tr>`
+  ).join('') + '</tbody></table>' : '<div class="empty">Sin pacientes aún</div>';
   document.getElementById('dash-fam').innerHTML = h;
 
-  // Especialidades
+  // Profesionales por especialidad
   const cnt = {};
-  famArr.forEach(f => { if (f.especialidad) cnt[f.especialidad] = (cnt[f.especialidad] || 0) + 1; });
+  profArr.forEach(p => { if (p.especialidad) cnt[p.especialidad] = (cnt[p.especialidad] || 0) + 1; });
   const s = Object.entries(cnt).sort((a, b) => b[1] - a[1]);
   const mx = s[0] ? s[0][1] : 1;
   document.getElementById('dash-esp').innerHTML = s.length ? s.map(([e, n]) =>
@@ -1033,17 +1033,23 @@ async function savePaciente() {
   const n = document.getElementById('pac-nombre').value;
   const r = document.getElementById('pac-rut').value;
   if (!n || !r) { toast('Nombre y RUT son obligatorios', false); return; }
-  await post({ tipo: 'paciente', nombre: n, rut: r,
+  await post({
+    tipo: 'paciente',
+    nombre: n, rut: r,
     fechaNac: document.getElementById('pac-fnac').value,
+    modo: document.getElementById('pac-modo').value,
+    coordNombre: document.getElementById('pac-coord-nombre').value,
+    coordRelacion: document.getElementById('pac-coord-relacion').value,
+    coordEmail: document.getElementById('pac-coord-email').value,
+    coordWa: document.getElementById('pac-coord-wa').value,
     diagnostico: document.getElementById('pac-diag').value,
     medicamentos: document.getElementById('pac-meds').value,
     alergias: document.getElementById('pac-alergias').value,
     profesional: document.getElementById('pac-prof').value,
-    familia: document.getElementById('pac-fam').value,
-    contactoFamiliar: document.getElementById('pac-contacto').value
+    estado: document.getElementById('pac-estado').value
   });
   closeModal('modal-paciente');
-  toast('✓ Ficha guardada correctamente');
+  toast('✓ Paciente guardado correctamente');
   setTimeout(loadPacientes, 1500);
 }
 
