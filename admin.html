@@ -842,7 +842,7 @@ tr:hover td{background:var(--bg2)}
 <div id="toast"></div>
 
 <script>
-const SC = 'https://script.google.com/macros/s/AKfycbwSHt9Po8b4JEBP5hN7ij3Ai0v7PZR1UAGj8UMZnbqCD84f2p8AA0gLm6kFB5ajY0NpIQ/exec';
+const SC = 'https://script.google.com/macros/s/AKfycbwgadQkTyY0990LGoaV17RTfVP0-K-kk1VOmwUhhwq_WhuyNnfDOQTDClQvirovIjbK8Q/exec';
 const PWD = '1111';
 
 // ── SIDEBAR TOGGLE ──
@@ -1082,7 +1082,7 @@ let currentProfFila = null;
 let formacionItems = [];
 let experienciaItems = [];
 
-function verFichaProf(p) {
+async function verFichaProf(p) {
   currentProfFila = p.fila;
   document.getElementById('prof-ficha-titulo').textContent = p.nombre || 'Ficha del profesional';
   document.getElementById('pf-nombre').value      = p.nombre || '';
@@ -1107,11 +1107,32 @@ function verFichaProf(p) {
   document.getElementById('pf-isapre').value      = p.isapre || 'Sí';
   document.getElementById('pf-fonasa').value      = p.fonasa || 'Sí';
   document.getElementById('pf-particular').value  = p.particular || 'Sí';
-  document.getElementById('pf-bio-text').value    = p.bio || '';
-  formacionItems = []; experienciaItems = [];
-  renderFormacion(); renderExperiencia();
+
   showTab('pf-basicos', document.querySelector('#modal-prof-ficha .tab'));
   openModal('modal-prof-ficha');
+
+  // Cargar formación y bio en paralelo
+  formacionItems = []; experienciaItems = [];
+  renderFormacion(); renderExperiencia();
+  document.getElementById('pf-bio-text').value = '...cargando...';
+
+  const rut = p.rut;
+  const [formResp, bioResp] = await Promise.all([
+    get('getFormacionProf', `rut=${encodeURIComponent(rut)}`),
+    get('getBioProf', `rut=${encodeURIComponent(rut)}`)
+  ]);
+
+  // Formación
+  formacionItems = (formResp.data || []).map(f => ({
+    tipo: f.tipo || 'Título profesional',
+    titulo: f.titulo || '',
+    universidad: f.universidad || '',
+    año: f.año || ''
+  }));
+  renderFormacion();
+
+  // Bio
+  document.getElementById('pf-bio-text').value = bioResp.data?.bio || p.bio || '';
 }
 
 function addFormacion() {
