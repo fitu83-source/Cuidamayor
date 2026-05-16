@@ -336,16 +336,26 @@ tr:hover td{background:var(--bg2)}
       <div class="ph"><h1>Profesionales</h1><p id="prof-count">Cargando...</p></div>
       <div class="card">
         <div class="filt">
-          <input type="text" id="sp2" placeholder="Buscar nombre, RUT o especialidad..." oninput="ft('prof-body',this.value,'')">
-          <select onchange="ft('prof-body','',this.value)">
+          <input type="text" id="sp2" placeholder="Buscar nombre, RUT o especialidad..." oninput="ft('prof-body',this.value,document.getElementById('flt-prof').value)">
+          <select id="flt-prof" onchange="ft('prof-body',document.getElementById('sp2').value,this.value)">
             <option value="">Todos los estados</option>
             <option>Aprobado</option><option>Pendiente</option><option>Rechazado</option>
           </select>
           <button class="btn btn-p btn-sm" onclick="loadProfesionales()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
         </div>
-        <div style="overflow-x:auto"><table>
-          <thead><tr><th style="width:17%">Nombre</th><th style="width:11%">RUT</th><th style="width:13%">Especialidad</th><th style="width:13%">Comunas</th><th style="width:12%">Modalidad</th><th style="width:10%">RNPI</th><th style="width:9%">Estado</th><th style="width:15%">Acciones</th></tr></thead>
-          <tbody id="prof-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
+        <div class="tbl-scroll"><table>
+          <thead><tr>
+            <th style="width:16%">Nombre</th>
+            <th style="width:10%">RUT</th>
+            <th style="width:13%">Especialidad</th>
+            <th style="width:12%">Comunas</th>
+            <th style="width:11%">Modalidad</th>
+            <th style="width:8%">RNPI</th>
+            <th style="width:8%">Estado</th>
+            <th style="width:8%">Público</th>
+            <th style="width:14%">Acciones</th>
+          </tr></thead>
+          <tbody id="prof-body"><tr><td colspan="9" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
         </table></div>
       </div>
     </div>
@@ -546,6 +556,133 @@ tr:hover td{background:var(--bg2)}
   </div>
 </div>
 
+<!-- MODAL FICHA PROFESIONAL -->
+<div class="modal-bg" id="modal-prof-ficha">
+  <div class="modal" style="width:680px">
+    <div class="modal-header">
+      <span class="modal-title" id="prof-ficha-titulo">Ficha del profesional</span>
+      <button class="modal-close" onclick="closeModal('modal-prof-ficha')"><i class="ti ti-x" aria-hidden="true"></i></button>
+    </div>
+    <div class="tabs">
+      <button class="tab on" onclick="showTab('pf-basicos',this)">Datos básicos</button>
+      <button class="tab" onclick="showTab('pf-formacion',this)">Formación</button>
+      <button class="tab" onclick="showTab('pf-experiencia',this)">Experiencia</button>
+      <button class="tab" onclick="showTab('pf-practica',this)">Práctica clínica</button>
+      <button class="tab" onclick="showTab('pf-bio',this)">Sobre mí</button>
+    </div>
+
+    <!-- TAB DATOS BÁSICOS -->
+    <div id="pf-basicos" class="tab-pane on">
+      <div class="form-grid">
+        <div class="fg"><label>Nombre completo</label><input type="text" id="pf-nombre" placeholder="María González"/></div>
+        <div class="fg"><label>RUT</label><input type="text" id="pf-rut" placeholder="12.345.678-9"/></div>
+        <div class="fg"><label>Especialidad</label>
+          <select id="pf-especialidad">
+            <option>Kinesiología</option><option>Geriatría</option><option>Enfermería</option>
+            <option>Fonoaudiología</option><option>Psicología</option><option>Nutrición</option><option>Medicina General</option>
+          </select>
+        </div>
+        <div class="fg"><label>Edad</label><input type="number" id="pf-edad" placeholder="Ej: 42" min="22" max="80"/></div>
+        <div class="fg"><label>Género</label>
+          <select id="pf-genero">
+            <option value="">Seleccionar...</option>
+            <option>Femenino</option><option>Masculino</option><option>No binario</option><option>Prefiero no indicar</option>
+          </select>
+        </div>
+        <div class="fg"><label>Idiomas</label><input type="text" id="pf-idiomas" placeholder="Español, Inglés..."/></div>
+        <div class="fg"><label>Email</label><input type="email" id="pf-email" placeholder="correo@mail.com"/></div>
+        <div class="fg"><label>WhatsApp</label><input type="tel" id="pf-wa" placeholder="+56 9 XXXX XXXX"/></div>
+        <div class="fg"><label>Comunas que atiende</label><input type="text" id="pf-comunas" placeholder="Providencia, Las Condes..."/></div>
+        <div class="fg"><label>Modalidad</label>
+          <select id="pf-modalidad">
+            <option>Domicilio</option><option>Teleconsulta</option><option>Presencial</option>
+            <option>Domicilio y teleconsulta</option><option>Todas las anteriores</option>
+          </select>
+        </div>
+        <div class="fg"><label>Registro MINSAL</label>
+          <select id="pf-registro">
+            <option>Sí, vigente</option><option>En trámite</option>
+          </select>
+        </div>
+        <div class="fg"><label>Estado</label>
+          <select id="pf-estado">
+            <option>Aprobado</option><option>Pendiente</option><option>Rechazado</option>
+          </select>
+        </div>
+        <div class="fg"><label>Perfil público</label>
+          <select id="pf-publico">
+            <option value="Sí">Sí — visible en búsquedas</option>
+            <option value="No">No — oculto</option>
+          </select>
+        </div>
+        <div class="fg"><label>Destacado</label>
+          <select id="pf-destacado">
+            <option value="No">No</option>
+            <option value="Sí">Sí — aparece primero</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB FORMACIÓN -->
+    <div id="pf-formacion" class="tab-pane">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+        <span style="font-size:13px;font-weight:500">Títulos y estudios</span>
+        <button class="btn btn-p btn-sm" onclick="addFormacion()"><i class="ti ti-plus" aria-hidden="true"></i> Agregar</button>
+      </div>
+      <div id="formacion-list"></div>
+      <p style="font-size:11px;color:var(--gris);margin-top:.5rem">Agrega título profesional, postgrados, especializaciones, diplomados y cursos relevantes.</p>
+    </div>
+
+    <!-- TAB EXPERIENCIA -->
+    <div id="pf-experiencia" class="tab-pane">
+      <div class="form-grid">
+        <div class="fg"><label>Años de experiencia total</label><input type="number" id="pf-exp-total" placeholder="Ej: 12" min="0" max="50"/></div>
+        <div class="fg"><label>Años con adulto mayor</label><input type="number" id="pf-exp-am" placeholder="Ej: 8" min="0" max="50"/></div>
+      </div>
+      <div style="margin-top:.5rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+          <span style="font-size:13px;font-weight:500">Experiencia laboral</span>
+          <button class="btn btn-p btn-sm" onclick="addExperiencia()"><i class="ti ti-plus" aria-hidden="true"></i> Agregar</button>
+        </div>
+        <div id="experiencia-list"></div>
+      </div>
+    </div>
+
+    <!-- TAB PRÁCTICA CLÍNICA -->
+    <div id="pf-practica" class="tab-pane">
+      <div class="form-grid">
+        <div class="fg"><label>Precio consulta (CLP)</label><input type="number" id="pf-precio" placeholder="Ej: 35000"/></div>
+        <div class="fg"><label>Duración sesión (min)</label><input type="number" id="pf-duracion" placeholder="Ej: 60"/></div>
+        <div class="fg"><label>Link Cal.com</label><input type="text" id="pf-calcom" placeholder="cal.com/mi-usuario"/></div>
+        <div class="fg"><label>Acepta ISAPRE</label>
+          <select id="pf-isapre"><option value="Sí">Sí</option><option value="No">No</option></select>
+        </div>
+        <div class="fg"><label>Acepta FONASA</label>
+          <select id="pf-fonasa"><option value="Sí">Sí</option><option value="No">No</option></select>
+        </div>
+        <div class="fg"><label>Acepta Particular</label>
+          <select id="pf-particular"><option value="Sí">Sí</option><option value="No">No</option></select>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB BIO -->
+    <div id="pf-bio" class="tab-pane">
+      <div class="fg">
+        <label>Descripción libre — "Sobre mí"</label>
+        <textarea id="pf-bio-text" style="min-height:180px" placeholder="Describe tu enfoque clínico, tu experiencia con el adulto mayor, lo que te diferencia como profesional..."></textarea>
+      </div>
+      <p style="font-size:11px;color:var(--gris);margin-top:.5rem">Este texto aparecerá en el perfil público del profesional visible para las familias.</p>
+    </div>
+
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:1rem;padding-top:.75rem;border-top:0.5px solid var(--bdr)">
+      <button class="btn" onclick="closeModal('modal-prof-ficha')">Cancelar</button>
+      <button class="btn btn-p" onclick="saveProficha()"><i class="ti ti-check" aria-hidden="true"></i> Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
 <!-- VERIFICACIÓN -->
     <div id="pg-verificacion" class="pg">
       <div class="ph"><h1>Verificación RNPI</h1><p id="ver-count">Cargando...</p></div>
@@ -705,7 +842,7 @@ tr:hover td{background:var(--bg2)}
 <div id="toast"></div>
 
 <script>
-const SC = 'https://script.google.com/macros/s/AKfycbxukd01CeOV5uZJG1PvQXZnOVI5t1q0dZNaLLSPD35do-VlKolIJY_cNJxaE8E3Z4FDHQ/exec';
+const SC = 'https://script.google.com/macros/s/AKfycbwSHt9Po8b4JEBP5hN7ij3Ai0v7PZR1UAGj8UMZnbqCD84f2p8AA0gLm6kFB5ajY0NpIQ/exec';
 const PWD = '1111';
 
 // ── SIDEBAR TOGGLE ──
@@ -917,23 +1054,121 @@ async function loadFamilias() {
 
 // ── PROFESIONALES ──
 async function loadProfesionales() {
-  document.getElementById('prof-body').innerHTML = '<tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr>';
+  document.getElementById('prof-body').innerHTML = '<tr><td colspan="9" class="loading"><span class="spin"></span>Cargando...</td></tr>';
   const d = (await get('getProfesionales')).data || [];
   const act = d.filter(p => p.estado === 'Aprobado').length;
   const pend = d.filter(p => p.estado === 'Pendiente').length;
   document.getElementById('prof-count').textContent = `${d.length} registrados · ${act} aprobados · ${pend} pendientes`;
   document.getElementById('prof-body').innerHTML = d.length ? d.map(p =>
-    `<tr><td><span class="av">${av(p.nombre)}</span>${p.nombre || '—'}</td><td style="font-size:11px">${p.rut || '—'}</td><td>${p.especialidad || '—'}</td><td style="color:var(--gris)">${p.comunas || '—'}</td><td>${p.modalidad || '—'}</td>
-    <td><span class="badge ${p.registro === 'Sí, vigente' ? 'bg' : 'ba'}">${p.registro || '—'}</span></td>
-    <td>${badge(p.estado)}</td>
-    <td>${p.estado === 'Pendiente' ?
-      `<button class="btn btn-p" onclick="aprobar(${p.fila},'Aprobado')">Aprobar</button><button class="btn btn-d" onclick="aprobar(${p.fila},'Rechazado')">Rechazar</button>` :
-      `<button class="btn" onclick="window.open('https://rnpi.superdesalud.gob.cl','_blank')">RNPI</button>`
-    }</td></tr>`
-  ).join('') : '<tr><td colspan="8" class="empty">Sin registros aún</td></tr>';
+    `<tr>
+      <td><span class="av">${av(p.nombre)}</span>${p.nombre||'—'}</td>
+      <td style="font-size:11px">${p.rut||'—'}</td>
+      <td>${p.especialidad||'—'}</td>
+      <td style="color:var(--gris)">${p.comunas||'—'}</td>
+      <td>${p.modalidad||'—'}</td>
+      <td><span class="badge ${p.registro==='Sí, vigente'?'bg':'ba'}">${p.registro||'—'}</span></td>
+      <td>${badge(p.estado)}</td>
+      <td><span class="badge ${p.publico==='Sí'?'bg':'bgr'}">${p.publico||'No'}</span></td>
+      <td>
+        <button class="btn btn-p btn-sm" onclick='verFichaProf(${JSON.stringify(p)})'>Ver ficha</button>
+        ${p.estado==='Pendiente'?`<button class="btn btn-sm" onclick="aprobar(${p.fila},'Aprobado')">✓</button>`:''}
+      </td>
+    </tr>`
+  ).join('') : '<tr><td colspan="9" class="empty">Sin registros aún</td></tr>';
 }
 
-// ── PACIENTES ──
+// ── FICHA PROFESIONAL ──
+let currentProfFila = null;
+let formacionItems = [];
+let experienciaItems = [];
+
+function verFichaProf(p) {
+  currentProfFila = p.fila;
+  document.getElementById('prof-ficha-titulo').textContent = p.nombre || 'Ficha del profesional';
+  document.getElementById('pf-nombre').value      = p.nombre || '';
+  document.getElementById('pf-rut').value         = p.rut || '';
+  document.getElementById('pf-especialidad').value = p.especialidad || '';
+  document.getElementById('pf-edad').value        = p.edad || '';
+  document.getElementById('pf-genero').value      = p.genero || '';
+  document.getElementById('pf-idiomas').value     = p.idiomas || '';
+  document.getElementById('pf-email').value       = p.email || '';
+  document.getElementById('pf-wa').value          = p.whatsapp || '';
+  document.getElementById('pf-comunas').value     = p.comunas || '';
+  document.getElementById('pf-modalidad').value   = p.modalidad || '';
+  document.getElementById('pf-registro').value    = p.registro || 'Sí, vigente';
+  document.getElementById('pf-estado').value      = p.estado || 'Pendiente';
+  document.getElementById('pf-publico').value     = p.publico || 'No';
+  document.getElementById('pf-destacado').value   = p.destacado || 'No';
+  document.getElementById('pf-exp-total').value   = p.expTotal || '';
+  document.getElementById('pf-exp-am').value      = p.expAm || '';
+  document.getElementById('pf-precio').value      = p.precio || '';
+  document.getElementById('pf-duracion').value    = p.duracion || '';
+  document.getElementById('pf-calcom').value      = p.calLink || '';
+  document.getElementById('pf-isapre').value      = p.isapre || 'Sí';
+  document.getElementById('pf-fonasa').value      = p.fonasa || 'Sí';
+  document.getElementById('pf-particular').value  = p.particular || 'Sí';
+  document.getElementById('pf-bio-text').value    = p.bio || '';
+  formacionItems = []; experienciaItems = [];
+  renderFormacion(); renderExperiencia();
+  showTab('pf-basicos', document.querySelector('#modal-prof-ficha .tab'));
+  openModal('modal-prof-ficha');
+}
+
+function addFormacion() {
+  formacionItems.push({ tipo: 'Título profesional', titulo: '', universidad: '', año: '' });
+  renderFormacion();
+}
+
+function renderFormacion() {
+  document.getElementById('formacion-list').innerHTML = formacionItems.length ?
+    formacionItems.map((f, i) => `
+      <div style="background:var(--bg2);border-radius:8px;padding:.75rem;margin-bottom:.5rem">
+        <div class="form-grid" style="margin-bottom:.5rem">
+          <div class="fg"><label>Tipo</label>
+            <select onchange="formacionItems[${i}].tipo=this.value">
+              ${['Título profesional','Postgrado','Especialización','Diplomado','Curso'].map(t=>`<option ${f.tipo===t?'selected':''}>${t}</option>`).join('')}
+            </select>
+          </div>
+          <div class="fg"><label>Título / Nombre</label><input type="text" value="${f.titulo}" placeholder="Ej: Kinesiología" oninput="formacionItems[${i}].titulo=this.value"/></div>
+          <div class="fg"><label>Universidad / Institución</label><input type="text" value="${f.universidad}" placeholder="Ej: U. de Chile" oninput="formacionItems[${i}].universidad=this.value"/></div>
+          <div class="fg"><label>Año</label><input type="number" value="${f.año}" placeholder="2010" min="1970" max="2026" oninput="formacionItems[${i}].año=this.value"/></div>
+        </div>
+        <button class="btn btn-d btn-sm" onclick="formacionItems.splice(${i},1);renderFormacion()"><i class="ti ti-trash" aria-hidden="true"></i> Eliminar</button>
+      </div>`
+    ).join('') : '<div class="empty" style="padding:1rem">Sin estudios — toca Agregar</div>';
+}
+
+function addExperiencia() {
+  experienciaItems.push({ cargo: '', institucion: '', desde: '', hasta: '' });
+  renderExperiencia();
+}
+
+function renderExperiencia() {
+  document.getElementById('experiencia-list').innerHTML = experienciaItems.length ?
+    experienciaItems.map((e, i) => `
+      <div style="background:var(--bg2);border-radius:8px;padding:.75rem;margin-bottom:.5rem">
+        <div class="form-grid" style="margin-bottom:.5rem">
+          <div class="fg"><label>Cargo / Rol</label><input type="text" value="${e.cargo}" placeholder="Kinesiólogo domiciliario" oninput="experienciaItems[${i}].cargo=this.value"/></div>
+          <div class="fg"><label>Institución</label><input type="text" value="${e.institucion}" placeholder="Clínica Las Condes" oninput="experienciaItems[${i}].institucion=this.value"/></div>
+          <div class="fg"><label>Desde</label><input type="number" value="${e.desde}" placeholder="2018" min="1970" max="2026" oninput="experienciaItems[${i}].desde=this.value"/></div>
+          <div class="fg"><label>Hasta (vacío = actual)</label><input type="number" value="${e.hasta}" placeholder="2023" min="1970" max="2026" oninput="experienciaItems[${i}].hasta=this.value"/></div>
+        </div>
+        <button class="btn btn-d btn-sm" onclick="experienciaItems.splice(${i},1);renderExperiencia()"><i class="ti ti-trash" aria-hidden="true"></i> Eliminar</button>
+      </div>`
+    ).join('') : '<div class="empty" style="padding:1rem">Sin experiencia — toca Agregar</div>';
+}
+
+async function saveProficha() {
+  if (!currentProfFila) return;
+  toast('Guardando...');
+  const params = `fila=${currentProfFila}&nombre=${encodeURIComponent(document.getElementById('pf-nombre').value)}&rut=${encodeURIComponent(document.getElementById('pf-rut').value)}&especialidad=${encodeURIComponent(document.getElementById('pf-especialidad').value)}&edad=${document.getElementById('pf-edad').value}&genero=${encodeURIComponent(document.getElementById('pf-genero').value)}&idiomas=${encodeURIComponent(document.getElementById('pf-idiomas').value)}&email=${encodeURIComponent(document.getElementById('pf-email').value)}&whatsapp=${encodeURIComponent(document.getElementById('pf-wa').value)}&comunas=${encodeURIComponent(document.getElementById('pf-comunas').value)}&modalidad=${encodeURIComponent(document.getElementById('pf-modalidad').value)}&registro=${encodeURIComponent(document.getElementById('pf-registro').value)}&estado=${encodeURIComponent(document.getElementById('pf-estado').value)}&publico=${encodeURIComponent(document.getElementById('pf-publico').value)}&destacado=${encodeURIComponent(document.getElementById('pf-destacado').value)}&expTotal=${document.getElementById('pf-exp-total').value}&expAm=${document.getElementById('pf-exp-am').value}&precio=${document.getElementById('pf-precio').value}&duracion=${document.getElementById('pf-duracion').value}&calLink=${encodeURIComponent(document.getElementById('pf-calcom').value)}&isapre=${document.getElementById('pf-isapre').value}&fonasa=${document.getElementById('pf-fonasa').value}&particular=${document.getElementById('pf-particular').value}&bio=${encodeURIComponent(document.getElementById('pf-bio-text').value)}&formacion=${encodeURIComponent(JSON.stringify(formacionItems))}&experiencia=${encodeURIComponent(JSON.stringify(experienciaItems))}`;
+  await get('updateProfFicha', params);
+  closeModal('modal-prof-ficha');
+  toast('✓ Ficha guardada correctamente');
+  setTimeout(loadProfesionales, 1500);
+}
+
+
 async function loadPacientes() {
   document.getElementById('pac-body').innerHTML = '<tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr>';
   const d = (await get('getPacientes')).data || [];
