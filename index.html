@@ -363,15 +363,21 @@
       transition: border-color .2s;
     }
     .buscador-filtros select:focus, .buscador-filtros input:focus { border-color: var(--verde); }
-    .btn-buscar {
-      background: var(--verde); color: white;
-      border: none; border-radius: 10px;
-      padding: 10px 24px; font-size: 14px;
-      font-weight: 600; font-family: var(--font);
-      cursor: pointer; transition: background .2s; white-space: nowrap;
+    
+    /* ── CONTENEDOR CON SCROLL (Límite visual de ~5 profesionales) ── */
+    .prof-lista { 
+      display: flex; flex-direction: column; gap: 12px; 
+      max-height: 520px; /* Esto da espacio para unos 4 o 5 perfiles */
+      overflow-y: auto;
+      padding-right: 8px; /* Espacio para que el scrollbar no pise el contenido */
     }
-    .btn-buscar:hover { background: #1f5239; }
-    .prof-lista { display: flex; flex-direction: column; gap: 12px; }
+    
+    /* Estilo elegante para el Scrollbar */
+    .prof-lista::-webkit-scrollbar { width: 6px; }
+    .prof-lista::-webkit-scrollbar-track { background: var(--crema); border-radius: 10px; }
+    .prof-lista::-webkit-scrollbar-thumb { background: var(--arena); border-radius: 10px; }
+    .prof-lista::-webkit-scrollbar-thumb:hover { background: var(--verde-claro); }
+
     .prof-item {
       background: var(--crema);
       border: 1px solid var(--arena);
@@ -420,23 +426,21 @@
       .btn-agendar { width: 100%; text-align: center; }
     }
 
-    /* ── FORMULARIOS ── */
+    /* ── FORMULARIOS (Solo Profesionales) ── */
     .forms-section { background: var(--crema); }
-    .forms-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
+    .forms-wrapper {
+      display: flex;
+      justify-content: center;
       margin-top: 3rem;
     }
-    @media(max-width:768px){ .forms-grid { grid-template-columns: 1fr; } }
-
     .form-card {
       background: var(--blanco);
       border-radius: 24px;
       padding: 2.5rem;
       box-shadow: var(--sombra);
+      max-width: 600px;
+      width: 100%;
     }
-    .form-card.destacado { border: 2px solid var(--verde); }
     .form-tag {
       display: inline-block;
       background: var(--verde-suave); color: var(--verde);
@@ -548,7 +552,7 @@
   <ul class="nav-links">
     <li><a href="#como-funciona">Cómo funciona</a></li>
     <li><a href="#profesionales">Para profesionales</a></li>
-    <li><a href="#registro" class="nav-cta">Comenzar gratis</a></li>
+    <li><a href="#buscador" class="nav-cta">Buscar profesional</a></li>
   </ul>
 </nav>
 
@@ -558,7 +562,7 @@
     <h1>El profesional de salud <em>ideal</em> para tu familiar mayor</h1>
     <p>Conectamos familias con profesionales verificados en kinesiología, enfermería, fonoaudiología y más. Sin búsquedas en Google. Sin incertidumbre.</p>
     <div class="hero-ctas">
-      <a href="#registro" class="btn-primary">🔍 Buscar profesional</a>
+      <a href="#buscador" class="btn-primary">🔍 Buscar profesional</a>
       <a href="#profesionales" class="btn-secondary">Soy profesional →</a>
     </div>
     <div class="hero-stats">
@@ -635,18 +639,18 @@
   <div class="pasos">
     <div class="paso reveal">
       <div class="paso-num">01</div>
-      <h3>Regístrate gratis</h3>
-      <p>Crea el perfil de tu familiar en 3 minutos. Solo lo esencial: nombre, edad y necesidades principales.</p>
+      <h3>Busca y filtra</h3>
+      <p>Encuentra al profesional indicado filtrando por especialidad, comuna y modalidad de atención.</p>
     </div>
     <div class="paso reveal">
       <div class="paso-num">02</div>
-      <h3>Encuentra al profesional indicado</h3>
-      <p>Filtra por especialidad, comuna y modalidad. Todos con credenciales comprobadas y reseñas reales.</p>
+      <h3>Compara perfiles</h3>
+      <p>Revisa credenciales comprobadas, años de experiencia con adulto mayor y precios totalmente transparentes.</p>
     </div>
     <div class="paso reveal">
       <div class="paso-num">03</div>
       <h3>Agenda directamente</h3>
-      <p>Sin intermediarios. Sin llamadas. Confirmación inmediata por WhatsApp y email.</p>
+      <p>Sin intermediarios ni registros previos obligatorios. Agenda su disponibilidad en línea de inmediato.</p>
     </div>
   </div>
 
@@ -669,7 +673,7 @@
       <p class="section-label reveal">Para profesionales</p>
       <h2 class="section-title reveal">Llega a familias que te buscan activamente</h2>
       <p class="section-sub reveal">Gratis durante todo el período de lanzamiento. Sin comisiones ocultas.</p>
-      <a href="#registro-prof" class="btn-primary reveal" style="display:inline-flex;margin-top:.5rem">Registrar mi perfil →</a>
+      <a href="#registro" class="btn-primary reveal" style="display:inline-flex;margin-top:.5rem">Registrar mi perfil →</a>
     </div>
     <div>
       <ul class="beneficio-list">
@@ -724,6 +728,7 @@
       </select>
       <input type="text" id="filtro-comuna" placeholder="🔍 Buscar por nombre o comuna..." oninput="buscarProfesionales()">
     </div>
+    
     <div class="prof-lista" id="prof-lista">
       <div class="buscador-loading">Cargando profesionales disponibles...</div>
     </div>
@@ -731,91 +736,14 @@
 </section>
 
 <section class="section forms-section" id="registro">
-  <p class="section-label reveal">Únete ahora</p>
-  <h2 class="section-title reveal">¿Qué describes mejor tu situación?</h2>
-  <p class="section-sub reveal">En menos de 24 horas te contactamos por WhatsApp. Sin compromiso.</p>
+  <p class="section-label reveal">Únete a nuestra red</p>
+  <h2 class="section-title reveal" style="text-align: center;">Registra tu perfil profesional</h2>
+  <p class="section-sub reveal" style="margin-left: auto; margin-right: auto; text-align: center;">Gratis durante el lanzamiento. Revisamos tus credenciales y activamos tu perfil en 48 horas.</p>
 
-  <div class="forms-grid">
-
-    <div class="form-card destacado reveal">
-      <span class="form-tag">🏥 Busco atención médica</span>
-      <h3>Encuentra el profesional ideal</h3>
-      <p>Cuéntanos qué necesitas y te conectamos con el profesional indicado en tu comuna.</p>
-
-      <div id="form-familias">
-        <div class="form-group">
-          <label for="f-nombre">Tu nombre completo</label>
-          <input type="text" id="f-nombre" placeholder="Ej: Carlos Pérez" autocomplete="given-name" />
-        </div>
-        <div class="form-group">
-          <label for="f-email">Tu email</label>
-          <input type="email" id="f-email" placeholder="correo@email.com" autocomplete="email" />
-        </div>
-        <div class="form-group">
-          <label for="f-whatsapp">Tu WhatsApp</label>
-          <input type="tel" id="f-whatsapp" placeholder="+56 9 XXXX XXXX" autocomplete="tel" />
-        </div>
-        <div class="form-group">
-          <label for="f-para-quien">¿La atención es para...?</label>
-          <select id="f-para-quien" onchange="toggleParentesco()">
-            <option value="">Selecciona una opción</option>
-            <option value="yo">Para mí mismo/a</option>
-            <option value="familiar">Para un familiar</option>
-          </select>
-        </div>
-        <div class="form-group" id="grupo-parentesco" style="display:none">
-          <label for="f-parentesco">¿Qué parentesco tiene contigo?</label>
-          <select id="f-parentesco">
-            <option value="">Selecciona...</option>
-            <option>Madre</option>
-            <option>Padre</option>
-            <option>Abuelo/a</option>
-            <option>Suegro/a</option>
-            <option>Tío/a</option>
-            <option>Otro familiar</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="f-especialidad">Especialidad que necesitas</label>
-          <select id="f-especialidad">
-            <option value="">Selecciona una especialidad</option>
-            <option>Kinesiología</option>
-            <option>Geriatría</option>
-            <option>Enfermería</option>
-            <option>Fonoaudiología</option>
-            <option>Medicina General</option>
-            <option>Psicología</option>
-            <option>Nutrición</option>
-            <option>Otra</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="f-comuna">¿En qué comuna?</label>
-          <input type="text" id="f-comuna" placeholder="Ej: Providencia" />
-        </div>
-        <div class="form-group">
-          <label for="f-urgencia">¿Cuándo necesitas la atención?</label>
-          <select id="f-urgencia">
-            <option value="">Selecciona una opción</option>
-            <option>Esta semana</option>
-            <option>Este mes</option>
-            <option>Solo estoy explorando</option>
-          </select>
-        </div>
-        <button class="form-submit" onclick="submitForm('familias')">Buscar profesional →</button>
-        <p class="form-note">🔒 Tus datos no se comparten con terceros</p>
-      </div>
-      <div class="success-msg" id="success-familias">
-        <div class="success-icon">✅</div>
-        <h4>¡Recibimos tu solicitud!</h4>
-        <p>En menos de 24 horas te contactamos por WhatsApp con opciones disponibles en tu comuna.</p>
-      </div>
-    </div>
-
+  <div class="forms-wrapper">
     <div class="form-card reveal" id="registro-prof">
       <span class="form-tag">👩‍⚕️ Para profesionales</span>
-      <h3>Quiero registrar mi perfil profesional</h3>
-      <p>Gratis durante el lanzamiento. Revisamos tus credenciales y activamos tu perfil en 48 horas.</p>
+      <h3>Datos del especialista</h3>
 
       <div id="form-profesionales">
         <div class="form-group">
@@ -880,7 +808,6 @@
         <p>Revisaremos tus credenciales y te contactamos en 48 horas para activar tu perfil. ¡Bienvenido/a a la plataforma!</p>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -895,7 +822,7 @@
       <div class="footer-links">
         <a href="#como-funciona">Cómo funciona</a>
         <a href="#profesionales">Para profesionales</a>
-        <a href="#registro">Registrarse</a>
+        <a href="#registro">Unirse como profesional</a>
       </div>
     </div>
     <div>
@@ -919,7 +846,7 @@
     });
   }, { threshold: 0.05 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-  // Fallback: activar todos después de 800ms por si el observer no dispara
+  // Fallback
   setTimeout(() => {
     document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
   }, 800);
@@ -950,7 +877,7 @@
       buscarProfesionales();
     } catch(e) {
       const el = document.getElementById('prof-lista');
-      if (el) el.innerHTML = '<div class="buscador-empty">Cargando profesionales... <a href="#registro" style="color:var(--verde)">Regístrate mientras tanto</a></div>';
+      if (el) el.innerHTML = '<div class="buscador-empty">Cargando profesionales...</div>';
     }
   }
 
@@ -996,34 +923,26 @@
           <div class="prof-item-accion">
             ${calLink
               ? `<a href="${calLink}" target="_blank" class="btn-agendar">Agendar hora →</a>`
-              : `<button class="btn-agendar sin-agenda" onclick="document.getElementById('registro').scrollIntoView({behavior:'smooth'})">Solicitar hora</button>`
+              : `<button class="btn-agendar sin-agenda" onclick="document.getElementById('registro').scrollIntoView({behavior:'smooth'})">Solicitar información</button>`
             }
           </div>
         </div>`;
     }).join('');
   }
 
-  // Cargar profesionales sin bloquear el render
   setTimeout(cargarProfesionales, 100);
 
-  function toggleParentesco() {
-    const val = document.getElementById('f-para-quien').value;
-    document.getElementById('grupo-parentesco').style.display = val === 'familiar' ? 'block' : 'none';
-  }
-
-  // Form submit con Google Apps Script
+  // Form submit con Google Apps Script (Solo Profesionales ahora)
   async function submitForm(tipo) {
     const form = document.getElementById('form-' + tipo);
     const success = document.getElementById('success-' + tipo);
     const btn = form.querySelector('.form-submit');
     const inputs = form.querySelectorAll('input, select');
 
-    // Validación
     let valido = true;
     inputs.forEach(input => {
       input.style.borderColor = '';
-      const skip = ['f-parentesco'].includes(input.id);
-      if (!input.value.trim() && !skip) {
+      if (!input.value.trim()) {
         input.style.borderColor = '#E07A5F';
         valido = false;
       }
@@ -1041,23 +960,8 @@
 
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyn1kqivlJKUt-7bhJyk60As9bFaMCC6sMWF_OORTQd1bRcMIZ4Fl6lm9DmpQPQFMXoBA/exec';
 
-    let data = {};
-    if (tipo === 'familias') {
-      data = {
-        tipo: 'lead',
-        nombre:      document.getElementById('f-nombre').value,
-        email:       document.getElementById('f-email').value,
-        whatsapp:    document.getElementById('f-whatsapp').value,
-        paraQuien:   document.getElementById('f-para-quien').value,
-        parentesco:  document.getElementById('f-parentesco')?.value || '',
-        especialidad: document.getElementById('f-especialidad').value,
-        comuna:      document.getElementById('f-comuna').value,
-        urgencia:    document.getElementById('f-urgencia').value
-      };
-    } else {
-      inputs.forEach(input => { data[input.id] = input.value; });
-      data.tipo = tipo;
-    }
+    let data = { tipo: tipo };
+    inputs.forEach(input => { data[input.id] = input.value; });
 
     try {
       await fetch(SCRIPT_URL, {
@@ -1071,7 +975,7 @@
     } catch(e) {
       btn.disabled = false;
       btn.style.opacity = '1';
-      btn.textContent = tipo === 'familias' ? 'Buscar profesional →' : 'Registrar mi perfil →';
+      btn.textContent = 'Registrar mi perfil →';
       alert('Hubo un problema al enviar. Por favor intenta de nuevo.');
     }
   }
