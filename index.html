@@ -338,6 +338,88 @@
       background: var(--verde-suave); color: var(--verde);
     }
 
+    /* ── BUSCADOR ── */
+    .buscador-section { background: var(--crema); }
+    .buscador-box {
+      background: var(--blanco);
+      border: 1px solid var(--arena);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .buscador-filtros {
+      display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 1.5rem;
+    }
+    .buscador-filtros select, .buscador-filtros input {
+      flex: 1; min-width: 160px;
+      padding: 10px 14px;
+      border: 1.5px solid var(--arena);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: var(--font);
+      background: var(--crema);
+      color: var(--texto);
+      outline: none;
+      transition: border-color .2s;
+    }
+    .buscador-filtros select:focus, .buscador-filtros input:focus { border-color: var(--verde); }
+    .btn-buscar {
+      background: var(--verde); color: white;
+      border: none; border-radius: 10px;
+      padding: 10px 24px; font-size: 14px;
+      font-weight: 600; font-family: var(--font);
+      cursor: pointer; transition: background .2s; white-space: nowrap;
+    }
+    .btn-buscar:hover { background: #1f5239; }
+    .prof-lista { display: flex; flex-direction: column; gap: 12px; }
+    .prof-item {
+      background: var(--crema);
+      border: 1px solid var(--arena);
+      border-radius: 14px;
+      padding: 1rem 1.25rem;
+      display: flex; align-items: center; gap: 16px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .prof-item:hover { border-color: var(--verde); box-shadow: 0 4px 16px rgba(45,106,79,.08); }
+    .prof-item-av {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--verde-suave); color: var(--verde);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 700; flex-shrink: 0;
+    }
+    .prof-item-info { flex: 1; min-width: 0; }
+    .prof-item-nombre { font-size: 15px; font-weight: 600; color: var(--texto); margin-bottom: 2px; }
+    .prof-item-meta { font-size: 13px; color: var(--texto-suave); }
+    .prof-item-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+    .prof-badge {
+      font-size: 11px; font-weight: 600; padding: 2px 8px;
+      border-radius: 20px; background: var(--verde-suave); color: var(--verde);
+    }
+    .prof-badge.precio { background: #E6F1FB; color: #185FA5; }
+    .prof-badge.modalidad { background: var(--arena); color: var(--texto-suave); }
+    .prof-item-accion { flex-shrink: 0; }
+    .btn-agendar {
+      background: var(--verde); color: white;
+      border: none; border-radius: 10px;
+      padding: 8px 18px; font-size: 13px;
+      font-weight: 600; font-family: var(--font);
+      cursor: pointer; transition: background .2s; white-space: nowrap;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-agendar:hover { background: #1f5239; }
+    .btn-agendar.sin-agenda {
+      background: none; color: var(--verde);
+      border: 1.5px solid var(--verde); 
+    }
+    .btn-agendar.sin-agenda:hover { background: var(--verde-suave); }
+    .buscador-empty { text-align: center; padding: 2rem; color: var(--texto-suave); font-size: 14px; }
+    .buscador-loading { text-align: center; padding: 2rem; color: var(--texto-suave); font-size: 14px; }
+    @media(max-width:640px){
+      .prof-item { flex-wrap: wrap; gap: 10px; }
+      .prof-item-accion { width: 100%; }
+      .btn-agendar { width: 100%; text-align: center; }
+    }
+
     /* ── FORMULARIOS ── */
     .forms-section { background: var(--crema); }
     .forms-grid {
@@ -521,7 +603,7 @@
         <span class="slot-icon">⏰</span>
         <span class="slot-text">Próxima hora: <strong>Hoy 16:00</strong></span>
       </div>
-      <button class="hero-card-btn">Agendar hora →</button>
+      <button class="hero-card-btn" onclick="document.getElementById('buscador').scrollIntoView({behavior:'smooth'})">Agendar hora →</button>
     </div>
   </div>
 </section>
@@ -621,6 +703,38 @@
           </div>
         </li>
       </ul>
+    </div>
+  </div>
+</section>
+
+<!-- BUSCADOR DE PROFESIONALES -->
+<section class="section buscador-section" id="buscador">
+  <p class="section-label reveal">Encuentra tu profesional</p>
+  <h2 class="section-title reveal">Busca, filtra y agenda</h2>
+  <p class="section-sub reveal">Todos nuestros profesionales están verificados por el Registro Nacional de Prestadores Individuales (RNPI) del Ministerio de Salud.</p>
+
+  <div class="buscador-box reveal">
+    <div class="buscador-filtros">
+      <select id="filtro-esp" onchange="buscarProfesionales()">
+        <option value="">Todas las especialidades</option>
+        <option>Kinesiología</option>
+        <option>Geriatría</option>
+        <option>Enfermería</option>
+        <option>Fonoaudiología</option>
+        <option>Psicología</option>
+        <option>Nutrición</option>
+        <option>Medicina General</option>
+      </select>
+      <select id="filtro-modalidad" onchange="buscarProfesionales()">
+        <option value="">Cualquier modalidad</option>
+        <option>Domicilio</option>
+        <option>Teleconsulta</option>
+        <option>Presencial</option>
+      </select>
+      <input type="text" id="filtro-comuna" placeholder="🔍 Buscar por nombre o comuna..." oninput="buscarProfesionales()">
+    </div>
+    <div class="prof-lista" id="prof-lista">
+      <div class="buscador-loading">Cargando profesionales disponibles...</div>
     </div>
   </div>
 </section>
@@ -819,7 +933,87 @@
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  function toggleParentesco() {
+  // ── BUSCADOR DE PROFESIONALES ──
+  const SCRIPT_BUSCAR = 'https://script.google.com/macros/s/AKfycbyn1kqivlJKUt-7bhJyk60As9bFaMCC6sMWF_OORTQd1bRcMIZ4Fl6lm9DmpQPQFMXoBA/exec';
+  let todosLosProfesionales = [];
+
+  function initials(nombre) {
+    if (!nombre) return '??';
+    const p = nombre.trim().split(' ');
+    return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase();
+  }
+
+  function formatPrecio(precio) {
+    if (!precio) return null;
+    const n = parseInt(precio);
+    if (isNaN(n) || n === 0) return null;
+    return '$' + n.toLocaleString('es-CL');
+  }
+
+  async function cargarProfesionales() {
+    try {
+      const r = await fetch(`${SCRIPT_BUSCAR}?action=getProfesionales`);
+      const j = await r.json();
+      todosLosProfesionales = (j.data || []).filter(p => p.estado === 'Aprobado' && p.publico === 'Sí');
+      buscarProfesionales();
+    } catch(e) {
+      document.getElementById('prof-lista').innerHTML = '<div class="buscador-empty">No pudimos cargar los profesionales. Intenta más tarde.</div>';
+    }
+  }
+
+  function buscarProfesionales() {
+    const esp      = document.getElementById('filtro-esp').value.toLowerCase();
+    const modal    = document.getElementById('filtro-modalidad').value.toLowerCase();
+    const query    = document.getElementById('filtro-comuna').value.toLowerCase();
+
+    const filtrados = todosLosProfesionales.filter(p => {
+      const matchEsp   = !esp    || (p.especialidad||'').toLowerCase().includes(esp);
+      const matchMod   = !modal  || (p.modalidad||'').toLowerCase().includes(modal);
+      const matchQuery = !query  || (p.nombre||'').toLowerCase().includes(query) || (p.comunas||'').toLowerCase().includes(query);
+      return matchEsp && matchMod && matchQuery;
+    });
+
+    renderProfesionales(filtrados);
+  }
+
+  function renderProfesionales(lista) {
+    const el = document.getElementById('prof-lista');
+    if (!lista.length) {
+      el.innerHTML = '<div class="buscador-empty">No encontramos profesionales con esos filtros.<br>Prueba cambiando la especialidad o la comuna.</div>';
+      return;
+    }
+    el.innerHTML = lista.map(p => {
+      const precio  = formatPrecio(p.precio);
+      const calLink = p.calLink ? (p.calLink.startsWith('http') ? p.calLink : 'https://' + p.calLink) : null;
+      const expAm   = p.expAm ? `${p.expAm} años con adulto mayor` : null;
+      return `
+        <div class="prof-item">
+          <div class="prof-item-av">${initials(p.nombre)}</div>
+          <div class="prof-item-info">
+            <div class="prof-item-nombre">${p.nombre || '—'} <span style="font-size:11px;color:var(--verde);font-weight:500">✓ Verificado</span></div>
+            <div class="prof-item-meta">${p.especialidad || ''} · ${p.comunas || ''}</div>
+            <div class="prof-item-badges">
+              ${p.modalidad ? `<span class="prof-badge modalidad">📍 ${p.modalidad}</span>` : ''}
+              ${precio ? `<span class="prof-badge precio">💰 ${precio}/sesión</span>` : ''}
+              ${expAm ? `<span class="prof-badge">👴 ${expAm}</span>` : ''}
+              ${p.fonasa === 'Sí' ? `<span class="prof-badge">FONASA</span>` : ''}
+              ${p.isapre === 'Sí' ? `<span class="prof-badge">ISAPRE</span>` : ''}
+            </div>
+          </div>
+          <div class="prof-item-accion">
+            ${calLink
+              ? `<a href="${calLink}" target="_blank" class="btn-agendar">Agendar hora →</a>`
+              : `<button class="btn-agendar sin-agenda" onclick="document.getElementById('registro').scrollIntoView({behavior:'smooth'})">Solicitar hora</button>`
+            }
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  // Cargar al iniciar
+  cargarProfesionales();
+
+
     const val = document.getElementById('f-para-quien').value;
     document.getElementById('grupo-parentesco').style.display = val === 'familiar' ? 'block' : 'none';
   }
