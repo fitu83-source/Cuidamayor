@@ -633,15 +633,15 @@
 
   <div class="forms-grid">
 
-    <!-- FORMULARIO FAMILIAS -->
+    <!-- FORMULARIO UNIFICADO — LEAD -->
     <div class="form-card destacado reveal">
-      <span class="form-tag">👨‍👩‍👧 Para familias</span>
-      <h3>Busco un profesional para mi familiar</h3>
-      <p>Cuéntanos qué necesitas y te conectamos con el profesional ideal en tu comuna.</p>
+      <span class="form-tag">🏥 Busco atención médica</span>
+      <h3>Encuentra el profesional ideal</h3>
+      <p>Cuéntanos qué necesitas y te conectamos con el profesional indicado en tu comuna.</p>
 
       <div id="form-familias">
         <div class="form-group">
-          <label for="f-nombre">Tu nombre</label>
+          <label for="f-nombre">Tu nombre completo</label>
           <input type="text" id="f-nombre" placeholder="Ej: Carlos Pérez" autocomplete="given-name" />
         </div>
         <div class="form-group">
@@ -653,11 +653,27 @@
           <input type="tel" id="f-whatsapp" placeholder="+56 9 XXXX XXXX" autocomplete="tel" />
         </div>
         <div class="form-group">
-          <label for="f-paciente">¿Para quién buscas atención?</label>
-          <input type="text" id="f-paciente" placeholder="Ej: mi mamá de 74 años" />
+          <label for="f-para-quien">¿La atención es para...?</label>
+          <select id="f-para-quien" onchange="toggleParentesco()">
+            <option value="">Selecciona una opción</option>
+            <option value="yo">Para mí mismo/a</option>
+            <option value="familiar">Para un familiar</option>
+          </select>
+        </div>
+        <div class="form-group" id="grupo-parentesco" style="display:none">
+          <label for="f-parentesco">¿Qué parentesco tiene contigo?</label>
+          <select id="f-parentesco">
+            <option value="">Selecciona...</option>
+            <option>Madre</option>
+            <option>Padre</option>
+            <option>Abuelo/a</option>
+            <option>Suegro/a</option>
+            <option>Tío/a</option>
+            <option>Otro familiar</option>
+          </select>
         </div>
         <div class="form-group">
-          <label for="f-especialidad">Tipo de profesional que necesitas</label>
+          <label for="f-especialidad">Especialidad que necesitas</label>
           <select id="f-especialidad">
             <option value="">Selecciona una especialidad</option>
             <option>Kinesiología</option>
@@ -689,7 +705,7 @@
       <div class="success-msg" id="success-familias">
         <div class="success-icon">✅</div>
         <h4>¡Recibimos tu solicitud!</h4>
-        <p>En menos de 24 horas te contactamos por WhatsApp con opciones de profesionales disponibles en tu comuna.</p>
+        <p>En menos de 24 horas te contactamos por WhatsApp con opciones disponibles en tu comuna.</p>
       </div>
     </div>
 
@@ -803,7 +819,12 @@
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // Form submit con Formspree
+  function toggleParentesco() {
+    const val = document.getElementById('f-para-quien').value;
+    document.getElementById('grupo-parentesco').style.display = val === 'familiar' ? 'block' : 'none';
+  }
+
+  // Form submit con Google Apps Script
   async function submitForm(tipo) {
     const form = document.getElementById('form-' + tipo);
     const success = document.getElementById('success-' + tipo);
@@ -812,14 +833,13 @@
 
     // Validación
     let valido = true;
-    const datos = {};
     inputs.forEach(input => {
       input.style.borderColor = '';
-      if (!input.value.trim() && input.id !== 'f-paciente') {
+      const skip = ['f-parentesco'].includes(input.id);
+      if (!input.value.trim() && !skip) {
         input.style.borderColor = '#E07A5F';
         valido = false;
       }
-      datos[input.id] = input.value;
     });
 
     if (!valido) {
@@ -828,25 +848,39 @@
       return;
     }
 
-    // Deshabilitar botón durante envío
     btn.disabled = true;
     btn.textContent = 'Enviando...';
     btn.style.opacity = '0.7';
 
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzLaHqQwABOPlOi6kbFIFjVERpKLjdawQhmXsxbSfsG8SR4RRpniZqRsvpPFI3toNIFRA/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvW9UMkQ7XeqeXY17996KkOtb0t7yvPAWk1QzHoDJcD_jgN7Q-fnD5X0cqEHrjmoVEig/exec';
+
+    let data = {};
+    if (tipo === 'familias') {
+      data = {
+        tipo: 'lead',
+        nombre:      document.getElementById('f-nombre').value,
+        email:       document.getElementById('f-email').value,
+        whatsapp:    document.getElementById('f-whatsapp').value,
+        paraQuien:   document.getElementById('f-para-quien').value,
+        parentesco:  document.getElementById('f-parentesco')?.value || '',
+        especialidad: document.getElementById('f-especialidad').value,
+        comuna:      document.getElementById('f-comuna').value,
+        urgencia:    document.getElementById('f-urgencia').value
+      };
+    } else {
+      inputs.forEach(input => { data[input.id] = input.value; });
+      data.tipo = tipo;
+    }
 
     try {
       await fetch(SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...datos, tipo })
+        body: JSON.stringify(data)
       });
-
-      // no-cors no devuelve respuesta — asumimos éxito
       form.style.display = 'none';
       success.style.display = 'block';
-
     } catch(e) {
       btn.disabled = false;
       btn.style.opacity = '1';

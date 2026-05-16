@@ -302,6 +302,7 @@ tr:hover td{background:var(--bg2)}
     <button class="nb" onclick="sp('recetas',this);loadRecetas()"><i class="ti ti-pill" aria-hidden="true"></i><span class="nb-text">Recetas entregadas</span></button>
     <button class="nb" onclick="sp('alertas',this);loadAlertas()"><i class="ti ti-bell" aria-hidden="true"></i><span class="nb-text">Alertas</span><span class="chip" id="achip"></span></button>
     <div class="nsec">Gestión</div>
+    <button class="nb" onclick="sp('leads',this);loadLeads()"><i class="ti ti-users-group" aria-hidden="true"></i><span class="nb-text">Leads</span><span class="chip" id="lchip"></span></button>
     <button class="nb" onclick="sp('citas',this);loadCitas()"><i class="ti ti-calendar" aria-hidden="true"></i><span class="nb-text">Citas agendadas</span></button>
     <button class="nb" onclick="sp('verificacion',this);loadVerificacion()"><i class="ti ti-shield-check" aria-hidden="true"></i><span class="nb-text">Verificación RNPI</span><span class="chip" id="vchip"></span></button>
     <div class="sfoot">
@@ -447,6 +448,25 @@ tr:hover td{background:var(--bg2)}
         <div style="overflow-x:auto"><table>
           <thead><tr><th style="width:14%">Paciente</th><th style="width:11%">RUT</th><th style="width:10%">Tipo</th><th style="width:24%">Mensaje</th><th style="width:12%">Frecuencia</th><th style="width:10%">Canal</th><th style="width:9%">Estado</th><th style="width:10%">Acciones</th></tr></thead>
           <tbody id="al-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- LEADS -->
+    <div id="pg-leads" class="pg">
+      <div class="ph"><h1>Leads</h1><p id="lead-count">Cargando...</p></div>
+      <div class="card">
+        <div class="filt">
+          <input type="text" id="sl" placeholder="Buscar nombre, email o comuna..." oninput="ft('lead-body',this.value,'')">
+          <select onchange="ft('lead-body','',this.value)">
+            <option value="">Todos los estados</option>
+            <option>Por contactar</option><option>Contactado</option><option>Activado</option>
+          </select>
+          <button class="btn btn-p btn-sm" onclick="loadLeads()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
+        </div>
+        <div class="tbl-scroll"><table>
+          <thead><tr><th style="width:14%">Nombre</th><th style="width:14%">Email</th><th style="width:11%">WhatsApp</th><th style="width:10%">Para quién</th><th style="width:10%">Parentesco</th><th style="width:12%">Especialidad</th><th style="width:9%">Comuna</th><th style="width:9%">Urgencia</th><th style="width:7%">Estado</th><th style="width:4%">Acción</th></tr></thead>
+          <tbody id="lead-body"><tr><td colspan="10" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
         </table></div>
       </div>
     </div>
@@ -643,7 +663,7 @@ function toggleDesktop() {
 const pageNames = {
   dashboard: 'Dashboard', familias: 'Familias', profesionales: 'Profesionales',
   pacientes: 'Fichas de pacientes', atenciones: 'Historial', recetas: 'Recetas',
-  alertas: 'Alertas', citas: 'Citas', verificacion: 'Verificación RNPI'
+  alertas: 'Alertas', leads: 'Leads', citas: 'Citas', verificacion: 'Verificación RNPI'
 };
 let currentPage = 'dashboard';
 
@@ -887,6 +907,40 @@ async function loadAlertas() {
       `<button class="btn btn-p" onclick="updateAlerta(${a.fila},'Activa')">Activar</button>`
     }</td></tr>`
   ).join('') : '<tr><td colspan="8" class="empty">Sin alertas configuradas aún</td></tr>';
+}
+
+// ── LEADS ──
+async function loadLeads() {
+  document.getElementById('lead-body').innerHTML = '<tr><td colspan="10" class="loading"><span class="spin"></span>Cargando...</td></tr>';
+  const d = (await get('getLeads')).data || [];
+  const porContactar = d.filter(l => l.estado === 'Por contactar').length;
+  document.getElementById('lead-count').textContent = `${d.length} leads registrados · ${porContactar} por contactar`;
+  const lc = document.getElementById('lchip');
+  if (porContactar > 0) { lc.style.display = 'inline'; lc.textContent = porContactar; } else { lc.style.display = 'none'; }
+  document.getElementById('lead-body').innerHTML = d.length ? d.map(l =>
+    `<tr>
+      <td><span class="av">${av(l.nombre)}</span>${l.nombre||'—'}</td>
+      <td style="color:var(--gris)">${l.email||'—'}</td>
+      <td>${l.whatsapp||'—'}</td>
+      <td>${l.paraQuien||'—'}</td>
+      <td>${l.parentesco||'—'}</td>
+      <td>${l.especialidad||'—'}</td>
+      <td>${l.comuna||'—'}</td>
+      <td>${l.urgencia||'—'}</td>
+      <td>${badge(l.estado)}</td>
+      <td>${l.estado !== 'Activado' ?
+        `<button class="btn btn-p" onclick="activarLead(${l.fila},'${l.nombre}')">Activar</button>` :
+        `<span class="badge bg">✓</span>`
+      }</td>
+    </tr>`
+  ).join('') : '<tr><td colspan="10" class="empty">Sin leads aún</td></tr>';
+}
+
+async function activarLead(fila, nombre) {
+  toast('Activando lead...');
+  await get('activarLead', `fila=${fila}`);
+  toast(`✓ ${nombre} activado como paciente`);
+  setTimeout(loadLeads, 1000);
 }
 
 // ── CITAS ──
