@@ -92,11 +92,14 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:14px;color:var(
   background:var(--blanco);
   border-bottom:0.5px solid var(--bdr);
   padding:10px 1rem;
-  align-items:center;gap:12px;
+  align-items:center;gap:10px;
+  min-height:48px;
 }
 .topbar-logo{font-size:15px;font-weight:500;color:var(--verde);flex:1}
 .topbar-logo span{color:var(--vc)}
-.menu-btn{background:none;border:none;cursor:pointer;color:var(--gris);padding:4px;font-size:20px;line-height:1}
+.topbar-title{font-size:15px;font-weight:500;color:var(--texto);flex:1;display:none}
+.menu-btn,.back-btn{background:none;border:none;cursor:pointer;color:var(--gris);padding:4px;font-size:20px;line-height:1;display:flex;align-items:center;gap:4px}
+.back-btn{font-size:14px;font-weight:500;color:var(--verde);display:none}
 
 /* TOGGLE SIDEBAR DESKTOP */
 .toggle-btn{
@@ -142,11 +145,11 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:14px;color:var(
 .ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;gap:8px;flex-wrap:wrap}
 .ct{font-size:13px;font-weight:500}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
-@media(max-width:640px){.two{grid-template-columns:1fr}}
+@media(max-width:768px){.two{grid-template-columns:1fr}}
 
 /* TABLE — mobile scrollable */
 .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed;min-width:500px}
+table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed;min-width:480px}
 th{text-align:left;padding:6px 8px;font-size:10px;font-weight:500;color:var(--gris);border-bottom:0.5px solid var(--bdr);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
 td{padding:8px;border-bottom:0.5px solid var(--bg2);color:var(--texto);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
 tr:last-child td{border-bottom:none}
@@ -154,12 +157,17 @@ tr:hover td{background:var(--bg2)}
 
 /* MOBILE CARDS para tablas */
 @media(max-width:640px){
-  .use-cards table,.use-cards thead{display:none}
-  .use-cards .mobile-card{display:block!important}
+  .use-cards .tbl-scroll{display:none}
+  .use-cards .mobile-list{display:block!important}
 }
-.mobile-card{display:none;background:var(--blanco);border:0.5px solid var(--bdr);border-radius:10px;padding:.85rem;margin-bottom:.5rem}
-.mc-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:12px}
+.mobile-list{display:none}
+.mc{background:var(--blanco);border:0.5px solid var(--bdr);border-radius:10px;padding:.85rem;margin-bottom:.5rem}
+.mc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.mc-name{font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px}
+.mc-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:3px 0;border-bottom:0.5px solid var(--bg2)}
+.mc-row:last-child{border-bottom:none}
 .mc-label{color:var(--gris);font-size:11px}
+.mc-val{font-weight:500;text-align:right;max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* BADGES */
 .badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px}
@@ -267,8 +275,10 @@ tr:hover td{background:var(--bg2)}
 <div id="app">
   <!-- TOPBAR MOBILE -->
   <div class="topbar">
-    <button class="menu-btn" onclick="toggleSidebar()" aria-label="Menú"><i class="ti ti-menu-2" aria-hidden="true"></i></button>
-    <div class="topbar-logo">Fam<span>Health</span></div>
+    <button class="back-btn" id="back-btn" onclick="goBack()"><i class="ti ti-chevron-left" aria-hidden="true"></i> Atrás</button>
+    <button class="menu-btn" id="menu-btn" onclick="toggleSidebar()" aria-label="Menú"><i class="ti ti-menu-2" aria-hidden="true"></i></button>
+    <div class="topbar-logo" id="topbar-logo">Fam<span>Health</span></div>
+    <div class="topbar-title" id="topbar-title"></div>
   </div>
 
   <aside class="sidebar" id="sidebar">
@@ -630,16 +640,12 @@ function toggleDesktop() {
   icon.className = sidebarMini ? 'ti ti-chevron-right' : 'ti ti-chevron-left';
 }
 
-// ── AUTH ──
-function doLogin() {
-  if (document.getElementById('pwd').value === PWD) {
-    document.getElementById('ls').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    loadDashboard();
-  } else {
-    document.getElementById('lerr').style.display = 'block';
-  }
-}
+const pageNames = {
+  dashboard: 'Dashboard', familias: 'Familias', profesionales: 'Profesionales',
+  pacientes: 'Fichas de pacientes', atenciones: 'Historial', recetas: 'Recetas',
+  alertas: 'Alertas', citas: 'Citas', verificacion: 'Verificación RNPI'
+};
+let currentPage = 'dashboard';
 
 // ── NAV ──
 function sp(id, btn) {
@@ -648,6 +654,28 @@ function sp(id, btn) {
   document.getElementById('pg-' + id).classList.add('on');
   if (btn) btn.classList.add('on');
   closeSidebar();
+  currentPage = id;
+  // Topbar mobile
+  const isDash = id === 'dashboard';
+  document.getElementById('back-btn').style.display = isDash ? 'none' : 'flex';
+  document.getElementById('menu-btn').style.display = isDash ? 'flex' : 'none';
+  document.getElementById('topbar-logo').style.display = isDash ? 'block' : 'none';
+  document.getElementById('topbar-title').style.display = isDash ? 'none' : 'block';
+  document.getElementById('topbar-title').textContent = pageNames[id] || '';
+}
+
+function goBack() {
+  const dashBtn = document.querySelector('.nb.on') || document.querySelector('.nb');
+  sp('dashboard', document.querySelectorAll('.nb')[0]);
+}
+function doLogin() {
+  if (document.getElementById('pwd').value === PWD) {
+    document.getElementById('ls').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadDashboard();
+  } else {
+    document.getElementById('lerr').style.display = 'block';
+  }
 }
 
 // ── TOAST ──
