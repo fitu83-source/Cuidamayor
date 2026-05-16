@@ -453,28 +453,100 @@ tr:hover td{background:var(--bg2)}
     <!-- CITAS -->
     <div id="pg-citas" class="pg">
       <div class="ph"><h1>Citas agendadas</h1><p id="cit-count">Cargando...</p></div>
+
+      <!-- MÉTRICAS CITAS -->
+      <div class="mets" id="cit-mets">
+        <div class="met"><div class="ml">Total histórico</div><div class="mv" id="cm-total">—</div><div class="md">Todas las citas</div></div>
+        <div class="met"><div class="ml">% Aprobación</div><div class="mv" id="cm-pct" style="color:var(--verde)">—</div><div class="md">Confirmadas / Total</div></div>
+        <div class="met warn"><div class="ml">Pendientes</div><div class="mv" id="cm-pend">—</div><div class="md" style="color:var(--amber)">Sin confirmar</div></div>
+        <div class="met"><div class="ml">Rechazadas</div><div class="mv" id="cm-rech" style="color:var(--rojo)">—</div><div class="md">Por profesional</div></div>
+      </div>
+
+      <!-- TABLA CITAS -->
       <div class="card">
-        <div class="filt">
-          <input type="text" id="sp7" placeholder="Buscar familia o profesional..." oninput="ft('cit-body',this.value,'')">
-          <select onchange="ft('cit-body','',this.value)">
-            <option value="">Todos los estados</option>
-            <option>Confirmada</option><option>Pendiente</option><option>Cancelada</option>
-          </select>
-          <button class="btn btn-p btn-sm" onclick="loadCitas()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
+        <div class="ch">
+          <div class="filt" style="margin:0;flex:1">
+            <input type="text" id="sp7" placeholder="Buscar paciente o profesional..." oninput="ft('cit-body',this.value,document.getElementById('flt-cit').value)">
+            <select id="flt-cit" onchange="ft('cit-body',document.getElementById('sp7').value,this.value)">
+              <option value="">Todos los estados</option>
+              <option>Pendiente</option><option>Confirmada</option><option>Rechazada</option><option>Completada</option>
+            </select>
+            <button class="btn btn-p btn-sm" onclick="loadCitas()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
+          </div>
+          <button class="btn btn-p btn-sm" onclick="openModal('modal-cita')"><i class="ti ti-plus" aria-hidden="true"></i> Nueva cita</button>
         </div>
-        <div style="overflow-x:auto"><table>
-          <thead><tr><th style="width:10%">Fecha</th><th style="width:9%">Hora</th><th style="width:15%">Familia</th><th style="width:15%">Profesional</th><th style="width:13%">Especialidad</th><th style="width:11%">Modalidad</th><th style="width:9%">Estado</th><th style="width:18%">Acciones</th></tr></thead>
-          <tbody id="cit-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
+        <div class="tbl-scroll"><table>
+          <thead><tr>
+            <th style="width:10%">Fecha cita</th>
+            <th style="width:7%">Hora</th>
+            <th style="width:14%">Paciente</th>
+            <th style="width:14%">Profesional</th>
+            <th style="width:12%">Especialidad</th>
+            <th style="width:10%">Modalidad</th>
+            <th style="width:7%">Origen</th>
+            <th style="width:8%">Estado</th>
+            <th style="width:8%">Ficha</th>
+            <th style="width:10%">Acciones</th>
+          </tr></thead>
+          <tbody id="cit-body"><tr><td colspan="10" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
         </table></div>
       </div>
-      <div class="card" style="margin-top:.75rem">
-        <div class="ch"><span class="ct"><i class="ti ti-calendar-plus" aria-hidden="true"></i> Configurar agendamiento Cal.com por profesional</span></div>
-        <p style="font-size:12px;color:var(--gris);margin-bottom:.75rem">Agrega el link de Cal.com de cada profesional para mostrar su calendario en la plataforma.</p>
-        <div id="cal-list"><div class="loading"><span class="spin"></span>Cargando profesionales...</div></div>
+
+      <!-- % APROBACIÓN POR PROFESIONAL -->
+      <div class="two">
+        <div class="card">
+          <div class="ch"><span class="ct">% Aprobación por profesional</span></div>
+          <div id="cit-por-prof"><div class="loading"><span class="spin"></span>Cargando...</div></div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ct">Citas por especialidad</span></div>
+          <div id="cit-por-esp"><div class="loading"><span class="spin"></span>Cargando...</div></div>
+        </div>
+      </div>
+
+      <!-- CAL.COM CONFIG -->
+      <div class="card">
+        <div class="ch"><span class="ct"><i class="ti ti-calendar-plus" aria-hidden="true"></i> Cal.com por profesional</span></div>
+        <p style="font-size:12px;color:var(--gris);margin-bottom:.75rem">Link de agendamiento Cal.com de cada profesional aprobado.</p>
+        <div id="cal-list"><div class="loading"><span class="spin"></span>Cargando...</div></div>
       </div>
     </div>
 
-    <!-- VERIFICACIÓN -->
+<!-- MODAL NUEVA CITA -->
+<div class="modal-bg" id="modal-cita">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Nueva cita manual</span>
+      <button class="modal-close" onclick="closeModal('modal-cita')"><i class="ti ti-x" aria-hidden="true"></i></button>
+    </div>
+    <div class="form-grid">
+      <div class="fg"><label>Paciente *</label><input type="text" id="cit-pac" placeholder="Nombre del paciente"/></div>
+      <div class="fg"><label>Profesional *</label><input type="text" id="cit-prof" placeholder="Nombre del profesional"/></div>
+      <div class="fg"><label>Email profesional</label><input type="email" id="cit-email-prof" placeholder="para notificación"/></div>
+      <div class="fg"><label>WhatsApp profesional</label><input type="tel" id="cit-wa-prof" placeholder="+56 9 XXXX XXXX"/></div>
+      <div class="fg"><label>Especialidad</label>
+        <select id="cit-esp">
+          <option value="">Seleccionar...</option>
+          <option>Kinesiología</option><option>Geriatría</option><option>Enfermería</option>
+          <option>Fonoaudiología</option><option>Psicología</option><option>Nutrición</option><option>Medicina General</option>
+        </select>
+      </div>
+      <div class="fg"><label>Modalidad</label>
+        <select id="cit-mod">
+          <option>Domicilio</option><option>Teleconsulta</option><option>Presencial</option>
+        </select>
+      </div>
+      <div class="fg"><label>Fecha de la cita *</label><input type="date" id="cit-fecha"/></div>
+      <div class="fg"><label>Hora *</label><input type="time" id="cit-hora"/></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn" onclick="closeModal('modal-cita')">Cancelar</button>
+      <button class="btn btn-p" onclick="saveCita()"><i class="ti ti-check" aria-hidden="true"></i> Crear cita y notificar</button>
+    </div>
+  </div>
+</div>
+
+<!-- VERIFICACIÓN -->
     <div id="pg-verificacion" class="pg">
       <div class="ph"><h1>Verificación RNPI</h1><p id="ver-count">Cargando...</p></div>
       <div id="ver-list"><div class="loading"><span class="spin"></span>Cargando...</div></div>
@@ -633,7 +705,7 @@ tr:hover td{background:var(--bg2)}
 <div id="toast"></div>
 
 <script>
-const SC = 'https://script.google.com/macros/s/AKfycbw2UIX1zNDwkVgzuo3n6Gbgh4SLIqlYExpwlIIqNRcDhqKtPFtVBRiRltuTWi4H-19I-Q/exec';
+const SC = 'https://script.google.com/macros/s/AKfycbxukd01CeOV5uZJG1PvQXZnOVI5t1q0dZNaLLSPD35do-VlKolIJY_cNJxaE8E3Z4FDHQ/exec';
 const PWD = '1111';
 
 // ── SIDEBAR TOGGLE ──
@@ -945,21 +1017,107 @@ async function activarLead(fila, nombre) {
 
 // ── CITAS ──
 async function loadCitas() {
-  document.getElementById('cit-body').innerHTML = '<tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr>';
-  document.getElementById('cit-count').textContent = 'Las citas se gestionan via Cal.com';
-  document.getElementById('cit-body').innerHTML = '<tr><td colspan="8" class="empty">Integración Cal.com — las citas agendadas aparecerán aquí</td></tr>';
+  document.getElementById('cit-body').innerHTML = '<tr><td colspan="10" class="loading"><span class="spin"></span>Cargando...</td></tr>';
 
-  // Cal.com config por profesional
-  const d = (await get('getProfesionales')).data || [];
-  const aprobados = d.filter(p => p.estado === 'Aprobado');
+  const [citas, metricas, prof] = await Promise.all([
+    get('getCitas'), get('getMetricasCitas'), get('getProfesionales')
+  ]);
+
+  const d = citas.data || [];
+  const m = metricas.data || {};
+
+  // Métricas
+  document.getElementById('cit-count').textContent = `${d.length} citas registradas`;
+  document.getElementById('cm-total').textContent = m.total || 0;
+  document.getElementById('cm-pct').textContent = (m.pctAprobacion || 0) + '%';
+  document.getElementById('cm-pend').textContent = m.pendientes || 0;
+  document.getElementById('cm-rech').textContent = m.rechazadas || 0;
+
+  // Tabla
+  document.getElementById('cit-body').innerHTML = d.length ? d.map(c =>
+    `<tr>
+      <td>${c.fechaCita||'—'}</td>
+      <td>${c.hora||'—'}</td>
+      <td><span class="av">${av(c.paciente)}</span>${c.paciente||'—'}</td>
+      <td>${c.profesional||'—'}</td>
+      <td>${c.especialidad||'—'}</td>
+      <td>${c.modalidad||'—'}</td>
+      <td><span class="badge ${c.origen==='Cal.com'?'bb':'bgr'}">${c.origen||'—'}</span></td>
+      <td>${badge(c.estado)}</td>
+      <td><span class="badge ${c.fichaGenerada==='Sí'?'bg':'bgr'}">${c.fichaGenerada||'No'}</span></td>
+      <td>${c.estado==='Pendiente'?
+        `<button class="btn btn-p" onclick="updateCita(${c.fila},'Confirmada')">✓ Confirmar</button><button class="btn btn-d" onclick="updateCita(${c.fila},'Rechazada')">✕</button>`:
+        c.estado==='Confirmada'?`<button class="btn" onclick="updateCita(${c.fila},'Completada')">Completar</button>`:'—'
+      }</td>
+    </tr>`
+  ).join('') : '<tr><td colspan="10" class="empty">Sin citas registradas aún</td></tr>';
+
+  // % Aprobación por profesional
+  const porProf = m.porProfesional || {};
+  const profRows = Object.entries(porProf).sort((a,b) => b[1].total - a[1].total).slice(0,8);
+  document.getElementById('cit-por-prof').innerHTML = profRows.length ? profRows.map(([nombre, datos]) => {
+    const pct = datos.total > 0 ? Math.round(datos.confirmadas/datos.total*100) : 0;
+    return `<div class="bar-row">
+      <span class="bar-lbl" style="width:120px">${nombre.split(' ')[0]} ${(nombre.split(' ')[1]||'')[0]||''}.</span>
+      <div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:${pct>=80?'var(--vc)':pct>=50?'var(--amber)':'var(--rojo)'}"></div></div>
+      <span class="bar-val">${pct}%</span>
+    </div>`;
+  }).join('') : '<div class="empty">Sin datos aún</div>';
+
+  // Por especialidad
+  const porEsp = m.porEspecialidad || {};
+  const espRows = Object.entries(porEsp).sort((a,b) => b[1]-a[1]);
+  const maxEsp = espRows[0] ? espRows[0][1] : 1;
+  document.getElementById('cit-por-esp').innerHTML = espRows.length ? espRows.map(([esp, n]) =>
+    `<div class="bar-row"><span class="bar-lbl">${esp}</span><div class="bar-wrap"><div class="bar-fill" style="width:${Math.round(n/maxEsp*100)}%"></div></div><span class="bar-val">${n}</span></div>`
+  ).join('') : '<div class="empty">Sin datos aún</div>';
+
+  // Cal.com config
+  const aprobados = (prof.data||[]).filter(p => p.estado === 'Aprobado');
   document.getElementById('cal-list').innerHTML = aprobados.length ? aprobados.map(p =>
     `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--bdr)">
       <span class="av">${av(p.nombre)}</span>
-      <div style="flex:1"><div style="font-size:13px;font-weight:500">${p.nombre}</div><div style="font-size:11px;color:var(--gris)">${p.especialidad} · ${p.comunas}</div></div>
-      <input type="text" placeholder="cal.com/tu-usuario" style="font-size:12px;padding:4px 8px;border:0.5px solid var(--bdr);border-radius:6px;background:var(--bg2);color:var(--texto);width:200px;font-family:'DM Sans',sans-serif;outline:none"/>
+      <div style="flex:1"><div style="font-size:13px;font-weight:500">${p.nombre}</div><div style="font-size:11px;color:var(--gris)">${p.especialidad}</div></div>
+      <input type="text" placeholder="cal.com/usuario" style="font-size:12px;padding:5px 8px;border:0.5px solid var(--bdr);border-radius:6px;background:var(--bg2);color:var(--texto);width:180px;font-family:'DM Sans',sans-serif;outline:none"/>
       <button class="btn btn-p btn-sm">Guardar</button>
     </div>`
   ).join('') : '<div class="empty">Sin profesionales aprobados aún</div>';
+}
+
+async function saveCita() {
+  const pac  = document.getElementById('cit-pac').value;
+  const prof = document.getElementById('cit-prof').value;
+  const fech = document.getElementById('cit-fecha').value;
+  const hora = document.getElementById('cit-hora').value;
+  if (!pac || !prof || !fech || !hora) { toast('Completa los campos obligatorios', false); return; }
+
+  const params = new URLSearchParams({
+    action: 'createCita',
+    paciente: pac,
+    profesional: prof,
+    especialidad: document.getElementById('cit-esp').value,
+    fechaCita: fech,
+    hora: hora,
+    modalidad: document.getElementById('cit-mod').value,
+    origen: 'Manual',
+    emailProf: document.getElementById('cit-email-prof').value,
+    waProf: document.getElementById('cit-wa-prof').value
+  });
+
+  toast('Creando cita y notificando al profesional...');
+  await get('createCita', params.toString().replace('action=createCita&',''));
+  closeModal('modal-cita');
+  toast('✓ Cita creada — profesional notificado por email');
+  setTimeout(loadCitas, 1500);
+}
+
+async function updateCita(fila, estado) {
+  toast('Actualizando...');
+  await get('updateCita', `fila=${fila}&estado=${estado}`);
+  const msg = estado === 'Confirmada' ? '✓ Cita confirmada — ficha de atención generada automáticamente' :
+              estado === 'Rechazada'  ? 'Cita rechazada' : '✓ Cita completada';
+  toast(msg);
+  setTimeout(loadCitas, 1000);
 }
 
 // ── VERIFICACIÓN ──
