@@ -35,48 +35,30 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:14px;color:var(
 .lbtn:hover{background:#1f5239}
 .le{color:var(--rojo);font-size:12px;margin-top:8px;display:none}
 
-/* LAYOUT */
+/* LAYOUT & SIDEBAR */
 #app{display:none;height:100vh;overflow:hidden}
-
-/* SIDEBAR */
-.sidebar{
-  position:fixed;left:0;top:0;bottom:0;
-  width:var(--sb);
-  background:var(--blanco);
-  border-right:0.5px solid var(--bdr);
-  display:flex;flex-direction:column;
-  z-index:200;overflow-y:auto;
-  transition:width .2s ease;
-}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sb);background:var(--blanco);border-right:0.5px solid var(--bdr);display:flex;flex-direction:column;z-index:200;transition:width .2s ease;overflow-y:auto}
 .sidebar.mini{width:var(--sb-mini)}
-.sidebar.mini .slogo-text{display:none}
-.sidebar.mini .nsec{display:none}
-.sidebar.mini .nb-text{display:none}
-.sidebar.mini .chip{display:none!important}
-.sidebar.mini .sfoot{display:none}
+.sidebar.mini .slogo-text,.sidebar.mini .nsec,.sidebar.mini .nb-text,.sidebar.mini .chip,.sidebar.mini .sfoot{display:none}
 .sidebar.mini .nb{justify-content:center;padding:10px 0}
 .sidebar.mini .nb i{font-size:18px}
-
 @media(max-width:768px){
-  .sidebar{width:80vw;max-width:280px;transform:translateX(-100%);transition:transform .25s ease;box-shadow:4px 0 20px rgba(0,0,0,.2);background:var(--blanco);z-index:300;}
+  .sidebar{width:80vw;max-width:280px;transform:translateX(-100%);transition:transform .25s ease;box-shadow:4px 0 20px rgba(0,0,0,.2);z-index:300}
   .sidebar.open{transform:translateX(0)}
-  .sidebar.mini{width:80vw;max-width:280px;transform:translateX(-100%)}
   .main{margin-left:0!important}
   .topbar{display:flex!important}
-  .toggle-btn{display:none}
 }
-
-#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:250;backdrop-filter:blur(1px);}
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:250;backdrop-filter:blur(1px)}
 #overlay.show{display:block}
 
-.topbar{display:none;position:sticky;top:0;z-index:100;background:var(--blanco);border-bottom:0.5px solid var(--bdr);padding:10px 1rem;align-items:center;gap:10px;min-height:48px;}
+/* TOPBAR */
+.topbar{display:none;position:sticky;top:0;z-index:100;background:var(--blanco);border-bottom:0.5px solid var(--bdr);padding:10px 1rem;align-items:center;gap:10px;min-height:48px}
 .topbar-logo{font-size:15px;font-weight:500;color:var(--verde);flex:1}
 .topbar-logo span{color:var(--vc)}
 .topbar-title{font-size:15px;font-weight:500;color:var(--texto);flex:1;display:none}
-.menu-btn,.back-btn{background:none;border:none;cursor:pointer;color:var(--gris);padding:4px;font-size:20px;line-height:1;display:flex;align-items:center;gap:4px}
-.back-btn{font-size:14px;font-weight:500;color:var(--verde);display:none}
+.menu-btn,.back-btn{background:none;border:none;cursor:pointer;color:var(--gris);padding:4px;font-size:20px;display:flex;align-items:center;gap:4px}
 
-.toggle-btn{position:absolute;top:14px;right:-14px;width:28px;height:28px;border-radius:50%;background:var(--blanco);border:0.5px solid var(--bdr);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--gris);z-index:10;transition:all .2s;}
+.toggle-btn{position:absolute;top:14px;right:-14px;width:28px;height:28px;border-radius:50%;background:var(--blanco);border:0.5px solid var(--bdr);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--gris);z-index:10}
 .toggle-btn:hover{background:var(--bg2);color:var(--verde)}
 
 .slogo{padding:14px 16px;font-size:15px;font-weight:500;color:var(--texto);border-bottom:0.5px solid var(--bdr);position:relative;display:flex;align-items:center;gap:8px}
@@ -98,6 +80,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:14px;color:var(
 .ph h1{font-size:18px;font-weight:500;margin-bottom:2px}
 .ph p{font-size:12px;color:var(--gris);margin-bottom:1rem}
 
+/* CARDS & METRICS */
 .mets{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1rem}
 @media(max-width:640px){.mets{grid-template-columns:repeat(2,1fr)}}
 .met{background:var(--bg2);border-radius:8px;padding:12px}
@@ -112,14 +95,15 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:14px;color:var(
 .two{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
 @media(max-width:768px){.two{grid-template-columns:1fr}}
 
+/* TABLES */
 .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed;min-width:480px}
-th{text-align:left;padding:6px 8px;font-size:10px;font-weight:500;color:var(--gris);border-bottom:0.5px solid var(--bdr);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;cursor:pointer;user-select:none;transition:background .2s}
+th{text-align:left;padding:6px 8px;font-size:10px;font-weight:500;color:var(--gris);border-bottom:0.5px solid var(--bdr);text-transform:uppercase;cursor:pointer;user-select:none}
 th:hover{background:var(--bg2)}
 td{padding:8px;border-bottom:0.5px solid var(--bg2);color:var(--texto);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
-tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--bg2)}
 
+/* COMPONENTS */
 .badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px}
 .bg{background:var(--vs);color:var(--verde)}
 .ba{background:var(--as);color:var(--amber)}
@@ -133,9 +117,7 @@ tr:hover td{background:var(--bg2)}
 .btn-p{background:var(--verde);color:#fff;border-color:var(--verde)}
 .btn-p:hover{background:#1f5239}
 .btn-d{color:#A32D2D;border-color:#F7C1C1}
-.btn-d:hover{background:var(--rs)}
 .btn-sm{font-size:11px;padding:3px 8px}
-@media(max-width:640px){.btn{padding:6px 12px;font-size:12px}}
 
 .filt{display:flex;gap:6px;margin-bottom:.75rem;flex-wrap:wrap}
 .filt input,.filt select{font-size:12px;padding:5px 8px;border:0.5px solid var(--bdr);border-radius:8px;background:var(--bg2);color:var(--texto);font-family:'DM Sans',sans-serif;outline:none}
@@ -147,7 +129,6 @@ tr:hover td{background:var(--bg2)}
 .fg{display:flex;flex-direction:column;gap:4px}
 .fg label{font-size:11px;font-weight:500;color:var(--gris)}
 .fg input,.fg select,.fg textarea{font-size:14px;padding:9px 10px;border:0.5px solid var(--bdr);border-radius:8px;background:var(--bg2);color:var(--texto);font-family:'DM Sans',sans-serif;outline:none}
-.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--vc)}
 .fg textarea{resize:vertical;min-height:70px}
 .fg.full{grid-column:1/-1}
 
@@ -167,620 +148,4 @@ tr:hover td{background:var(--bg2)}
 .tab-pane.on{display:block}
 
 .av{width:26px;height:26px;border-radius:50%;background:var(--vs);color:var(--verde);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;margin-right:6px;vertical-align:middle;flex-shrink:0}
-.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--bdr);border-top-color:var(--verde);border-radius:50%;animation:sp .8s linear infinite;vertical-align:middle;margin-right:6px}
-@keyframes sp{to{transform:rotate(360deg)}}
-.loading{text-align:center;padding:2rem;color:var(--gris);font-size:12px}
-.empty{text-align:center;padding:2rem;color:var(--gris);font-size:12px}
-
-.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.bar-lbl{font-size:11px;color:var(--gris);width:90px;flex-shrink:0}
-.bar-wrap{flex:1;height:5px;background:var(--bg2);border-radius:3px;overflow:hidden}
-.bar-fill{height:100%;background:var(--vc);border-radius:3px}
-.bar-val{font-size:11px;font-weight:500;min-width:18px;text-align:right}
-
-#toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--verde);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;transform:translateY(100px);opacity:0;transition:all .3s;z-index:999}
-#toast.show{transform:translateY(0);opacity:1}
-</style>
-</head>
-<body>
-
-<div id="ls">
-  <div class="lb">
-    <div class="ll">Fam<span>Health</span></div>
-    <div class="ls">Panel de Administración</div>
-    <label>Contraseña</label>
-    <input type="password" id="pwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/>
-    <button class="lbtn" onclick="doLogin()">Ingresar</button>
-    <div class="le" id="lerr">Contraseña incorrecta</div>
-  </div>
-</div>
-
-<div id="overlay" onclick="closeSidebar()"></div>
-
-<div id="app">
-  <div class="topbar">
-    <button class="back-btn" id="back-btn" onclick="goBack()"><i class="ti ti-chevron-left" aria-hidden="true"></i> Atrás</button>
-    <button class="menu-btn" id="menu-btn" onclick="toggleSidebar()"><i class="ti ti-menu-2" aria-hidden="true"></i></button>
-    <div class="topbar-logo" id="topbar-logo">Fam<span>Health</span></div>
-    <div class="topbar-title" id="topbar-title"></div>
-  </div>
-
-  <aside class="sidebar" id="sidebar">
-    <div class="slogo">
-      <div class="slogo-text">Fam<span>Health</span><small>Panel Admin</small></div>
-      <button class="toggle-btn" id="toggle-btn" onclick="toggleDesktop()"><i class="ti ti-chevron-left" id="toggle-icon" aria-hidden="true"></i></button>
-    </div>
-    <div class="nsec">Principal</div>
-    <button class="nb on" onclick="sp('dashboard',this)"><i class="ti ti-layout-dashboard" aria-hidden="true"></i><span class="nb-text">Dashboard</span></button>
-    <div class="nsec">Registros</div>
-    <button class="nb" onclick="sp('pacientes',this);loadPacientes()"><i class="ti ti-file-text" aria-hidden="true"></i><span class="nb-text">Pacientes</span></button>
-    <button class="nb" onclick="sp('profesionales',this);loadProfesionales()"><i class="ti ti-stethoscope" aria-hidden="true"></i><span class="nb-text">Profesionales</span></button>
-    <div class="nsec">Clínico</div>
-    <button class="nb" onclick="sp('atenciones',this);loadAtenciones()"><i class="ti ti-history" aria-hidden="true"></i><span class="nb-text">Historial atenciones</span></button>
-    <button class="nb" onclick="sp('recetas',this);loadRecetas()"><i class="ti ti-pill" aria-hidden="true"></i><span class="nb-text">Recetas entregadas</span></button>
-    <button class="nb" onclick="sp('alertas',this);loadAlertas()"><i class="ti ti-bell" aria-hidden="true"></i><span class="nb-text">Alertas</span><span class="chip" id="achip"></span></button>
-    <div class="nsec">Gestión</div>
-    <button class="nb" onclick="sp('solicitudes',this);loadSolicitudes()"><i class="ti ti-inbox" aria-hidden="true"></i><span class="nb-text">Solicitudes Especiales</span><span class="chip" id="lchip"></span></button>
-    <button class="nb" onclick="sp('citas',this);loadCitas()"><i class="ti ti-calendar" aria-hidden="true"></i><span class="nb-text">Citas agendadas</span></button>
-    <button class="nb" onclick="sp('verificacion',this);loadVerificacion()"><i class="ti ti-shield-check" aria-hidden="true"></i><span class="nb-text">Verificación RNPI</span><span class="chip" id="vchip"></span></button>
-    <div class="nsec">Sistema</div>
-    <button class="nb" onclick="sp('usuarios',this);loadUsuarios()"><i class="ti ti-users-group" aria-hidden="true"></i><span class="nb-text">Usuarios y Roles</span></button>
-    
-    <div class="sfoot">
-      famhealthcl@gmail.com<br>
-      <a href="https://docs.google.com/spreadsheets/d/1zL7by07oR7yqBZPiMcPcH18_OfGhahuahq43ChwNW_Q/edit" target="_blank">Google Sheets →</a>
-    </div>
-  </aside>
-
-  <main class="main">
-
-    <div id="pg-dashboard" class="pg on">
-      <div class="ph"><h1>Dashboard</h1><p id="dash-fecha">Cargando...</p></div>
-      <div class="mets">
-        <div class="met"><div class="ml">Pacientes</div><div class="mv" id="m-pac">—</div><div class="md">Total registrados</div></div>
-        <div class="met"><div class="ml">Prof. aprobados</div><div class="mv" id="m-pa">—</div><div class="md">Activos</div></div>
-        <div class="met"><div class="ml">Solicitudes</div><div class="mv" id="m-fam">—</div><div class="md">Por revisar</div></div>
-        <div class="met warn"><div class="ml">Pendientes verificar</div><div class="mv" id="m-pend">—</div><div class="md" style="color:var(--amber)">Requieren atención</div></div>
-      </div>
-      <div class="two">
-        <div class="card"><div class="ch"><span class="ct">Últimos pacientes</span></div><div id="dash-fam"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
-        <div class="card"><div class="ch"><span class="ct">Especialidades más buscadas</span></div><div id="dash-esp"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
-      </div>
-      <div class="two">
-        <div class="card"><div class="ch"><span class="ct">Alertas activas recientes</span></div><div id="dash-alertas"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
-        <div class="card"><div class="ch"><span class="ct">Atenciones recientes</span></div><div id="dash-atenciones"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
-      </div>
-    </div>
-
-    <div id="pg-profesionales" class="pg">
-      <div class="ph"><h1>Profesionales</h1><p id="prof-count">Cargando...</p></div>
-      <div class="two" style="margin-bottom:1rem">
-        <div class="card"><div class="ch"><span class="ct">Por Especialidad</span></div><div id="prof-dash-esp"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
-        <div class="card"><div class="ch"><span class="ct">Por Estado</span></div><div id="prof-dash-est"><div class="loading"><span class="spin"></span>Cargando...</div></div></div>
-      </div>
-      <div class="card">
-        <div class="filt">
-          <input type="text" id="sp2" placeholder="Buscar nombre, RUT o especialidad..." oninput="ft('prof-body',this.value,document.getElementById('flt-prof').value)">
-          <select id="flt-prof" onchange="ft('prof-body',document.getElementById('sp2').value,this.value)"><option value="">Todos los estados</option><option>Aprobado</option><option>Pendiente</option><option>Rechazado</option></select>
-          <button class="btn btn-p btn-sm" onclick="loadProfesionales()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
-        </div>
-        <div class="tbl-scroll"><table>
-          <thead><tr>
-            <th style="width:14%" onclick="sortTable(this, 0)">Nombre</th><th style="width:10%" onclick="sortTable(this, 1)">RUT</th><th style="width:13%" onclick="sortTable(this, 2)">Especialidad</th><th style="width:12%" onclick="sortTable(this, 3)">Comunas</th><th style="width:10%" onclick="sortTable(this, 4)">Modalidad</th><th style="width:8%" onclick="sortTable(this, 5)">Estado</th><th style="width:10%" onclick="sortTable(this, 6)">Fecha Alta</th><th style="width:8%" onclick="sortTable(this, 7)">Público</th><th style="width:15%">Acciones</th>
-          </tr></thead>
-          <tbody id="prof-body"><tr><td colspan="9" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
-        </table></div>
-      </div>
-    </div>
-
-    <div id="pg-pacientes" class="pg">
-      <div class="ph"><h1>Pacientes</h1><p id="pac-count">Cargando...</p></div>
-      <div class="card">
-        <div class="ch">
-          <div class="filt" style="margin:0;flex:1"><input type="text" id="sp3" placeholder="Buscar por nombre, RUT o profesional..." oninput="ft('pac-body',this.value,'')"><button class="btn btn-p btn-sm" onclick="loadPacientes()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button></div>
-          <button class="btn btn-p btn-sm" onclick="openModal('modal-paciente')"><i class="ti ti-plus" aria-hidden="true"></i> Nueva ficha</button>
-        </div>
-        <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:16%" onclick="sortTable(this, 0)">Nombre</th><th style="width:11%" onclick="sortTable(this, 1)">RUT</th><th style="width:16%" onclick="sortTable(this, 2)">Diagnóstico</th><th style="width:18%" onclick="sortTable(this, 3)">Medicamentos</th><th style="width:13%" onclick="sortTable(this, 4)">Profesional</th><th style="width:11%" onclick="sortTable(this, 5)">Modo Gestión</th><th style="width:7%" onclick="sortTable(this, 6)">Estado</th><th style="width:8%">Acciones</th></tr></thead>
-          <tbody id="pac-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
-        </table></div>
-      </div>
-    </div>
-
-    <div id="pg-atenciones" class="pg">
-      <div class="ph"><h1>Historial de atenciones</h1><p id="at-count">Cargando...</p></div>
-      
-      <div class="two" style="margin-bottom:1rem">
-        <div class="card">
-          <div class="ch"><span class="ct">Flujo de Atenciones Clínicas</span></div>
-          <div class="mets" style="grid-template-columns:1fr 1fr; margin-bottom:0">
-            <div class="met"><div class="ml" style="color:var(--verde)">Últimas 4 Semanas</div><div class="mv" id="at-pasadas">...</div><div class="md">Ejecutadas</div></div>
-            <div class="met warn"><div class="ml">Próximas 10 Semanas</div><div class="mv" id="at-futuras">...</div><div class="md">Agendadas a futuro</div></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="ch"><span class="ct">Atenciones por Especialidad</span></div>
-          <div class="filt" style="margin-bottom:8px">
-            <input type="date" id="at-date-from" onchange="renderAtencionesEsp()" title="Desde">
-            <input type="date" id="at-date-to" onchange="renderAtencionesEsp()" title="Hasta">
-          </div>
-          <div id="at-dash-esp"><div class="loading"><span class="spin"></span>Cargando...</div></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="ch">
-          <div class="filt" style="margin:0;flex:1"><input type="text" id="sp4" placeholder="Buscar paciente, profesional o notas..." oninput="ft('at-body',this.value,'')"><button class="btn btn-p btn-sm" onclick="loadAtenciones()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button></div>
-          <button class="btn btn-p btn-sm" onclick="openModal('modal-atencion')"><i class="ti ti-plus" aria-hidden="true"></i> Registrar atención</button>
-        </div>
-        <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:12%" onclick="sortTable(this, 0, true)">Fecha sesión</th><th style="width:16%" onclick="sortTable(this, 1)">Paciente</th><th style="width:11%" onclick="sortTable(this, 2)">RUT</th><th style="width:16%" onclick="sortTable(this, 3)">Profesional</th><th style="width:14%" onclick="sortTable(this, 4)">Especialidad</th><th style="width:22%">Notas</th><th style="width:9%" onclick="sortTable(this, 6, true)">Próx. sesión</th></tr></thead>
-          <tbody id="at-body"><tr><td colspan="7" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
-        </table></div>
-      </div>
-    </div>
-
-    <div id="pg-recetas" class="pg">
-      <div class="ph"><h1>Recetas entregadas</h1><p id="rec-count">Cargando...</p></div>
-      <div class="card">
-        <div class="ch">
-          <div class="filt" style="margin:0;flex:1"><input type="text" id="sp5" placeholder="Buscar paciente, medicamento o profesional..." oninput="ft('rec-body',this.value,'')"><button class="btn btn-p btn-sm" onclick="loadRecetas()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button></div>
-          <button class="btn btn-p btn-sm" onclick="openModal('modal-receta')"><i class="ti ti-plus" aria-hidden="true"></i> Nueva receta</button>
-        </div>
-        <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:11%" onclick="sortTable(this, 0, true)">Fecha</th><th style="width:15%" onclick="sortTable(this, 1)">Paciente</th><th style="width:11%" onclick="sortTable(this, 2)">RUT</th><th style="width:15%" onclick="sortTable(this, 3)">Profesional</th><th style="width:16%" onclick="sortTable(this, 4)">Medicamento</th><th style="width:12%">Dosis</th><th style="width:10%" onclick="sortTable(this, 6)">Duración</th><th style="width:10%">Acción</th></tr></thead>
-          <tbody id="rec-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
-        </table></div>
-      </div>
-    </div>
-
-    <div id="pg-alertas" class="pg">
-      <div class="ph"><h1>Módulo de alertas</h1><p id="al-count">Cargando...</p></div>
-      <div class="card">
-        <div class="ch">
-          <span class="ct">Alertas configuradas</span><button class="btn btn-p btn-sm" onclick="openModal('modal-alerta')"><i class="ti ti-plus" aria-hidden="true"></i> Nueva alerta</button>
-        </div>
-        <div class="filt">
-          <input type="text" id="sp6" placeholder="Buscar paciente o RUT..." oninput="ft('al-body',this.value,'')">
-          <select onchange="ft('al-body','',this.value)"><option value="">Todos los tipos</option><option>Medicamento</option><option>Cita</option><option>Examen</option><option>Control</option></select>
-          <select onchange="ft('al-body','',this.value)"><option value="">Todos los estados</option><option>Activa</option><option>Pausada</option><option>Completada</option></select>
-          <button class="btn btn-p btn-sm" onclick="loadAlertas()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
-        </div>
-        <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:14%" onclick="sortTable(this, 0)">Paciente</th><th style="width:11%" onclick="sortTable(this, 1)">RUT</th><th style="width:10%" onclick="sortTable(this, 2)">Tipo</th><th style="width:24%">Mensaje</th><th style="width:12%" onclick="sortTable(this, 4)">Frecuencia</th><th style="width:10%" onclick="sortTable(this, 5)">Canal</th><th style="width:9%" onclick="sortTable(this, 6)">Estado</th><th style="width:10%">Acciones</th></tr></thead>
-          <tbody id="al-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
-        </table></div>
-      </div>
-    </div>
-
-    <div id="pg-solicitudes" class="pg">
-      <div class="ph"><h1>Solicitudes Especiales (Concierge)</h1><p id="sol-count">Cargando...</p></div>
-      <div class="card">
-        <div class="filt">
-          <input type="text" id="sl" placeholder="Buscar nombre, urgencia o especialidad..." oninput="ft('sol-body',this.value,'')">
-          <select onchange="ft('sol-body','',this.value)"><option value="">Todos los estados</option><option>Por contactar</option><option>Activado</option></select>
-          <button class="btn btn-p btn-sm" onclick="loadSolicitudes()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
-        </div>
-        <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:10%" onclick="sortTable(this, 0, true)">Fecha</th><th style="width:14%" onclick="sortTable(this, 1)">Solicitante</th><th style="width:11%" onclick="sortTable(this, 2)">WhatsApp</th><th style="width:12%" onclick="sortTable(this, 3)">Busca</th><th style="width:10%" onclick="sortTable(this, 4)">Comuna</th><th style="width:9%" onclick="sortTable(this, 5)">Urgencia</th><th style="width:7%" onclick="sortTable(this, 6)">Estado</th><th style="width:8%">Acción</th></tr></thead>
-          <tbody id="sol-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
-        </table></div>
-      </div>
-    </div>
-
-    <div id="pg-citas" class="pg">
-      <div class="ph"><h1>Citas agendadas</h1><p id="cit-count">Cargando...</p></div>
-      <div class="mets" id="cit-mets">
-        <div class="met"><div class="ml">Total histórico</div><div class="mv" id="cm-total">—</div></div>
-        <div class="met"><div class="ml">% Aprobación</div><div class="mv" id="cm-pct" style="color:var(--verde)">—</div></div>
-        <div class="met warn"><div class="ml">Pendientes</div><div class="mv" id="cm-pend">—</div></div>
-        <div class="met"><div class="ml">Rechazadas</div><div class="mv" id="cm-rech" style="color:var(--rojo)">—</div></div>
-      </div>
-      <div class="card">
-        <div class="ch">
-          <div class="filt" style="margin:0;flex:1">
-            <input type="text" id="sp7" placeholder="Buscar paciente o profesional..." oninput="ft('cit-body',this.value,document.getElementById('flt-cit').value)">
-            <select id="flt-cit" onchange="ft('cit-body',document.getElementById('sp7').value,this.value)"><option value="">Todos los estados</option><option>Pendiente</option><option>Confirmada</option><option>Rechazada</option><option>Completada</option></select>
-            <button class="btn btn-p btn-sm" onclick="loadCitas()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
-          </div>
-          <button class="btn btn-p btn-sm" onclick="openModal('modal-cita')"><i class="ti ti-plus" aria-hidden="true"></i> Nueva cita</button>
-        </div>
-        <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:10%" onclick="sortTable(this, 0, true)">Fecha cita</th><th style="width:7%" onclick="sortTable(this, 1)">Hora</th><th style="width:14%" onclick="sortTable(this, 2)">Paciente</th><th style="width:14%" onclick="sortTable(this, 3)">Profesional</th><th style="width:12%" onclick="sortTable(this, 4)">Especialidad</th><th style="width:10%" onclick="sortTable(this, 5)">Modalidad</th><th style="width:7%" onclick="sortTable(this, 6)">Origen</th><th style="width:8%" onclick="sortTable(this, 7)">Estado</th><th style="width:10%">Acciones</th></tr></thead>
-          <tbody id="cit-body"><tr><td colspan="9" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
-        </table></div>
-      </div>
-    </div>
-
-    <div id="pg-verificacion" class="pg">
-      <div class="ph"><h1>Verificación RNPI</h1><p id="ver-count">Cargando...</p></div>
-      <div id="ver-list"><div class="loading"><span class="spin"></span>Cargando...</div></div>
-    </div>
-
-    <div id="pg-usuarios" class="pg">
-      <div class="ph"><h1>Gestión de Usuarios y Accesos</h1><p id="usr-count">Cargando...</p></div>
-      <div class="card">
-        <div class="ch">
-          <div class="filt" style="margin:0;flex:1">
-            <input type="text" id="su" placeholder="Buscar por nombre, email o rol..." oninput="ft('usr-body',this.value,'')">
-            <button class="btn btn-p btn-sm" onclick="loadUsuarios()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
-          </div>
-          <button class="btn btn-p btn-sm" onclick="openModal('modal-usuario')"><i class="ti ti-plus" aria-hidden="true"></i> Nuevo Usuario</button>
-        </div>
-        <div class="tbl-scroll"><table>
-          <thead><tr>
-            <th style="width:20%" onclick="sortTable(this, 0)">Nombre</th>
-            <th style="width:25%" onclick="sortTable(this, 1)">Email de acceso</th>
-            <th style="width:15%" onclick="sortTable(this, 2)">Rol del Sistema</th>
-            <th style="width:15%" onclick="sortTable(this, 3)">Estado</th>
-            <th style="width:15%" onclick="sortTable(this, 4, true)">Fecha de Creación</th>
-          </tr></thead>
-          <tbody id="usr-body"><tr><td colspan="5" class="loading"><span class="spin"></span>Cargando...</td></tr></tbody>
-        </table></div>
-      </div>
-    </div>
-
-  </main>
-</div>
-
-<div class="modal-bg" id="modal-cita">
-  <div class="modal">
-    <div class="modal-header"><span class="modal-title">Nueva cita manual</span><button class="modal-close" onclick="closeModal('modal-cita')"><i class="ti ti-x"></i></button></div>
-    <div class="form-grid">
-      <div class="fg"><label>Paciente *</label><input type="text" id="cit-pac"/></div>
-      <div class="fg"><label>Profesional *</label><input type="text" id="cit-prof"/></div>
-      <div class="fg"><label>Email profesional</label><input type="email" id="cit-email-prof"/></div>
-      <div class="fg"><label>WhatsApp profesional</label><input type="tel" id="cit-wa-prof"/></div>
-      <div class="fg"><label>Especialidad</label><select id="cit-esp"><option value="">Seleccionar...</option><option>Kinesiología</option><option>Geriatría</option><option>Enfermería</option><option>Fonoaudiología</option><option>Psicología</option><option>Nutrición</option><option>Medicina General</option></select></div>
-      <div class="fg"><label>Modalidad</label><select id="cit-mod"><option>Domicilio</option><option>Teleconsulta</option><option>Presencial</option></select></div>
-      <div class="fg"><label>Fecha *</label><input type="date" id="cit-fecha"/></div>
-      <div class="fg"><label>Hora *</label><input type="time" id="cit-hora"/></div>
-    </div>
-    <div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn" onclick="closeModal('modal-cita')">Cancelar</button><button class="btn btn-p" onclick="saveCita()">Crear cita</button></div>
-  </div>
-</div>
-
-<div class="modal-bg" id="modal-prof-ficha">
-  <div class="modal" style="width:680px">
-    <div class="modal-header"><span class="modal-title" id="prof-ficha-titulo">Ficha del profesional</span><button class="modal-close" onclick="closeModal('modal-prof-ficha')"><i class="ti ti-x"></i></button></div>
-    <div class="tabs">
-      <button class="tab on" onclick="showTab('pf-basicos',this)">Datos básicos</button>
-      <button class="tab" onclick="showTab('pf-formacion',this)">Formación</button>
-      <button class="tab" onclick="showTab('pf-experiencia',this)">Experiencia</button>
-      <button class="tab" onclick="showTab('pf-practica',this)">Práctica clínica</button>
-      <button class="tab" onclick="showTab('pf-bio',this)">Sobre mí</button>
-    </div>
-    <div id="pf-basicos" class="tab-pane on"><div class="form-grid"><div class="fg"><label>Nombre completo</label><input type="text" id="pf-nombre"/></div><div class="fg"><label>RUT</label><input type="text" id="pf-rut"/></div><div class="fg"><label>Especialidad</label><select id="pf-especialidad"><option>Kinesiología</option><option>Geriatría</option><option>Enfermería</option><option>Fonoaudiología</option><option>Psicología</option><option>Nutrición</option><option>Medicina General</option><option>Otra</option></select></div><div class="fg"><label>Edad</label><input type="number" id="pf-edad"/></div><div class="fg"><label>Género</label><select id="pf-genero"><option value="">Seleccionar...</option><option>Femenino</option><option>Masculino</option><option>No binario</option><option>Prefiero no indicar</option></select></div><div class="fg"><label>Idiomas</label><input type="text" id="pf-idiomas"/></div><div class="fg"><label>Email</label><input type="email" id="pf-email"/></div><div class="fg"><label>WhatsApp</label><input type="tel" id="pf-wa"/></div><div class="fg"><label>Comunas que atiende</label><input type="text" id="pf-comunas"/></div><div class="fg"><label>Modalidad</label><select id="pf-modalidad"><option>Domicilio</option><option>Teleconsulta</option><option>Presencial en clínica</option><option>Domicilio y teleconsulta</option><option>Todas</option></select></div><div class="fg"><label>Registro MINSAL</label><select id="pf-registro"><option>Sí, vigente</option><option>En trámite</option></select></div><div class="fg"><label>Estado</label><select id="pf-estado"><option>Aprobado</option><option>Pendiente</option><option>Rechazado</option></select></div><div class="fg"><label>Perfil público</label><select id="pf-publico"><option value="Sí">Sí — visible</option><option value="No">No — oculto</option></select></div><div class="fg"><label>Destacado</label><select id="pf-destacado"><option value="No">No</option><option value="Sí">Sí</option></select></div></div></div>
-    <div id="pf-formacion" class="tab-pane"><div style="display:flex;justify-content:space-between;margin-bottom:.75rem"><span style="font-weight:500">Títulos y estudios</span><button class="btn btn-p btn-sm" onclick="addFormacion()">Agregar</button></div><div id="formacion-list"></div></div>
-    <div id="pf-experiencia" class="tab-pane"><div class="form-grid"><div class="fg"><label>Años exp. total</label><input type="number" id="pf-exp-total"/></div><div class="fg"><label>Años con adulto mayor</label><input type="number" id="pf-exp-am"/></div></div><div style="margin-top:.5rem"><div style="display:flex;justify-content:space-between;margin-bottom:.75rem"><span style="font-weight:500">Experiencia laboral</span><button class="btn btn-p btn-sm" onclick="addExperiencia()">Agregar</button></div><div id="experiencia-list"></div></div></div>
-    <div id="pf-practica" class="tab-pane"><div class="form-grid"><div class="fg"><label>Precio consulta (CLP)</label><input type="number" id="pf-precio"/></div><div class="fg"><label>Duración sesión (min)</label><input type="number" id="pf-duracion"/></div><div class="fg"><label>Link Cal.com</label><input type="text" id="pf-calcom"/></div><div class="fg"><label>Acepta ISAPRE</label><select id="pf-isapre"><option value="Sí">Sí</option><option value="No">No</option></select></div><div class="fg"><label>Acepta FONASA</label><select id="pf-fonasa"><option value="Sí">Sí</option><option value="No">No</option></select></div><div class="fg"><label>Acepta Particular</label><select id="pf-particular"><option value="Sí">Sí</option><option value="No">No</option></select></div></div></div>
-    <div id="pf-bio" class="tab-pane"><div class="fg"><label>Sobre mí</label><textarea id="pf-bio-text" style="min-height:180px"></textarea></div></div>
-    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:1rem;padding-top:.75rem;border-top:0.5px solid var(--bdr)"><button class="btn" onclick="closeModal('modal-prof-ficha')">Cancelar</button><button class="btn btn-p" onclick="saveProficha()"><i class="ti ti-check"></i> Guardar cambios</button></div>
-  </div>
-</div>
-
-<div class="modal-bg" id="modal-paciente">
-  <div class="modal">
-    <div class="modal-header"><span class="modal-title">Nuevo paciente</span><button class="modal-close" onclick="closeModal('modal-paciente')"><i class="ti ti-x"></i></button></div>
-    <div class="form-grid">
-      <div class="fg"><label>Nombre completo *</label><input type="text" id="pac-nombre"/></div>
-      <div class="fg"><label>RUT *</label><input type="text" id="pac-rut"/></div>
-      <div class="fg"><label>Fecha de nacimiento</label><input type="date" id="pac-fnac"/></div>
-      <div class="fg"><label>Modo de gestión</label><select id="pac-modo"><option value="">Seleccionar...</option><option>Autónomo</option><option>Familiar</option><option>Híbrido</option></select></div>
-      <div class="fg"><label>Nombre coordinador</label><input type="text" id="pac-coord-nombre"/></div>
-      <div class="fg"><label>Relación con paciente</label><select id="pac-coord-relacion"><option value="">Seleccionar...</option><option>Hijo/a</option><option>Cónyuge</option><option>Otro</option></select></div>
-      <div class="fg"><label>Email coordinador</label><input type="email" id="pac-coord-email"/></div>
-      <div class="fg"><label>WhatsApp coordinador</label><input type="tel" id="pac-coord-wa"/></div>
-      <div class="fg"><label>Profesional asignado</label><input type="text" id="pac-prof"/></div>
-      <div class="fg"><label>Estado</label><select id="pac-estado"><option>Activo</option><option>En espera</option><option>Inactivo</option></select></div>
-      <div class="fg full"><label>Diagnóstico</label><textarea id="pac-diag"></textarea></div>
-      <div class="fg full"><label>Medicamentos</label><textarea id="pac-meds"></textarea></div>
-      <div class="fg full"><label>Alergias</label><input type="text" id="pac-alergias"/></div>
-    </div>
-    <div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn" onclick="closeModal('modal-paciente')">Cancelar</button><button class="btn btn-p" onclick="savePaciente()">Guardar</button></div>
-  </div>
-</div>
-
-<div class="modal-bg" id="modal-atencion">
-  <div class="modal">
-    <div class="modal-header"><span class="modal-title">Registrar atención</span><button class="modal-close" onclick="closeModal('modal-atencion')"><i class="ti ti-x"></i></button></div>
-    <div class="form-grid">
-      <div class="fg"><label>Paciente *</label><input type="text" id="at-pac"/></div>
-      <div class="fg"><label>RUT *</label><input type="text" id="at-rut"/></div>
-      <div class="fg"><label>Profesional *</label><input type="text" id="at-prof"/></div>
-      <div class="fg"><label>Especialidad</label><input type="text" id="at-esp"/></div>
-      <div class="fg full"><label>Notas de la sesión</label><textarea id="at-notas"></textarea></div>
-      <div class="fg"><label>Fecha de esta sesión</label><input type="date" id="at-fecha-sesion"/></div>
-      <div class="fg"><label>Fecha Próx. sesión</label><input type="date" id="at-prox"/></div>
-    </div>
-    <div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn" onclick="closeModal('modal-atencion')">Cancelar</button><button class="btn btn-p" onclick="saveAtencion()">Registrar</button></div>
-  </div>
-</div>
-
-<div class="modal-bg" id="modal-receta">
-  <div class="modal">
-    <div class="modal-header"><span class="modal-title">Registrar receta entregada</span><button class="modal-close" onclick="closeModal('modal-receta')"><i class="ti ti-x"></i></button></div>
-    <div class="form-grid">
-      <div class="fg"><label>Paciente *</label><input type="text" id="rec-pac"/></div><div class="fg"><label>RUT *</label><input type="text" id="rec-rut"/></div>
-      <div class="fg"><label>Profesional *</label><input type="text" id="rec-prof"/></div><div class="fg"><label>Medicamento *</label><input type="text" id="rec-med"/></div>
-      <div class="fg"><label>Dosis</label><input type="text" id="rec-dosis"/></div><div class="fg"><label>Duración</label><input type="text" id="rec-dur"/></div>
-      <div class="fg full"><label>Comentarios adicionales del profesional</label><textarea id="rec-comentarios" placeholder="Indicaciones especiales..."></textarea></div>
-    </div>
-    <div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn" onclick="closeModal('modal-receta')">Cancelar</button><button class="btn btn-p" onclick="saveReceta()">Guardar receta</button></div>
-  </div>
-</div>
-
-<div class="modal-bg" id="modal-receta-detalle">
-  <div class="modal">
-    <div class="modal-header"><span class="modal-title" style="color:var(--verde)">Detalle de Receta Médica</span><button class="modal-close" onclick="closeModal('modal-receta-detalle')"><i class="ti ti-x"></i></button></div>
-    <div style="background:var(--bg2); padding:1.5rem; border-radius:12px; border:1px solid var(--bdr);">
-      <div style="display:flex; justify-content:space-between; margin-bottom:1rem; border-bottom:1px solid var(--bdr); padding-bottom:.5rem;">
-        <div><div style="font-size:11px;color:var(--gris);">Fecha emisión</div><div style="font-weight:600" id="rd-fecha"></div></div>
-        <div style="text-align:right;"><div style="font-size:11px;color:var(--gris);">Emitida por</div><div style="font-weight:600" id="rd-prof"></div></div>
-      </div>
-      <div class="form-grid" style="margin-bottom:1rem;">
-        <div class="fg"><label>Paciente</label><div id="rd-pac" style="font-size:15px; font-weight:500;"></div></div>
-        <div class="fg"><label>RUT</label><div id="rd-rut"></div></div>
-      </div>
-      <div class="form-grid" style="margin-bottom:1rem; background:var(--blanco); padding:1rem; border-radius:8px; border:1px solid var(--bdr);">
-        <div class="fg full"><label>Medicamento prescrito</label><div id="rd-med" style="font-size:16px; font-weight:600; color:var(--verde);"></div></div>
-        <div class="fg"><label>Dosis</label><div id="rd-dosis"></div></div>
-        <div class="fg"><label>Duración del tratamiento</label><div id="rd-dur"></div></div>
-      </div>
-      <div class="fg full"><label>Comentarios / Indicaciones adicionales</label><div id="rd-comentarios" style="background:var(--blanco); padding:1rem; border-radius:8px; border:1px solid var(--bdr); min-height:80px; white-space:pre-wrap;"></div></div>
-    </div>
-    <div style="display:flex;justify-content:flex-end; margin-top:1rem;"><button class="btn" onclick="closeModal('modal-receta-detalle')">Cerrar detalle</button></div>
-  </div>
-</div>
-
-<div class="modal-bg" id="modal-alerta">
-  <div class="modal">
-    <div class="modal-header"><span class="modal-title">Configurar nueva alerta</span><button class="modal-close" onclick="closeModal('modal-alerta')"><i class="ti ti-x"></i></button></div>
-    <div class="form-grid">
-      <div class="fg"><label>Paciente *</label><input type="text" id="al-pac"/></div><div class="fg"><label>RUT *</label><input type="text" id="al-rut"/></div>
-      <div class="fg"><label>Tipo de alerta *</label><select id="al-tipo"><option value="">Seleccionar...</option><option>Medicamento</option><option>Cita</option><option>Examen</option><option>Control</option></select></div>
-      <div class="fg"><label>Canal</label><select id="al-canal"><option>WhatsApp</option><option>Email</option><option>SMS</option></select></div>
-      <div class="fg"><label>Frecuencia</label><select id="al-frec"><option>Diario</option><option>Cada 8 horas</option><option>Cada 12 horas</option><option>Semanal</option><option>Mensual</option><option>Una vez</option></select></div>
-      <div class="fg"><label>Hora de envío</label><input type="time" id="al-hora" value="09:00"/></div>
-      <div class="fg full"><label>Mensaje personalizado *</label><textarea id="al-msg"></textarea></div>
-    </div>
-    <div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn" onclick="closeModal('modal-alerta')">Cancelar</button><button class="btn btn-p" onclick="saveAlerta()">Activar alerta</button></div>
-  </div>
-</div>
-
-<div class="modal-bg" id="modal-usuario">
-  <div class="modal">
-    <div class="modal-header"><span class="modal-title">Crear Usuario del Sistema</span><button class="modal-close" onclick="closeModal('modal-usuario')"><i class="ti ti-x"></i></button></div>
-    <div class="form-grid">
-      <div class="fg full"><label>Nombre Completo *</label><input type="text" id="u-nombre" placeholder="Ej: Juan Pérez"/></div>
-      <div class="fg full"><label>Email de acceso *</label><input type="email" id="u-email" placeholder="correo@famhealth.cl"/></div>
-      <div class="fg"><label>Rol en Plataforma</label>
-        <select id="u-rol">
-          <option>Admin</option><option>Profesional</option><option>Paciente / Familiar</option>
-        </select>
-      </div>
-      <div class="fg"><label>Estado Inicial</label>
-        <select id="u-estado"><option>Activo</option><option>Pausado</option></select>
-      </div>
-    </div>
-    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:1rem">
-      <button class="btn" onclick="closeModal('modal-usuario')">Cancelar</button>
-      <button class="btn btn-p" onclick="saveUsuario()">Crear Usuario</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-bg" id="modal-detalle">
-  <div class="modal" style="width:680px">
-    <div class="modal-header"><span class="modal-title" id="det-titulo">Ficha del paciente</span><button class="modal-close" onclick="closeModal('modal-detalle')"><i class="ti ti-x"></i></button></div>
-    <div class="tabs">
-      <button class="tab on" onclick="showTab('det-ficha',this)">Ficha</button>
-      <button class="tab" onclick="showTab('det-atenciones',this)">Atenciones</button>
-      <button class="tab" onclick="showTab('det-recetas',this)">Recetas</button>
-      <button class="tab" onclick="showTab('det-alertas',this)">Alertas</button>
-    </div>
-    <div id="det-ficha" class="tab-pane on"><div class="loading"><span class="spin"></span></div></div>
-    <div id="det-atenciones" class="tab-pane"><div class="loading"><span class="spin"></span></div></div>
-    <div id="det-recetas" class="tab-pane"><div class="loading"><span class="spin"></span></div></div>
-    <div id="det-alertas" class="tab-pane"><div class="loading"><span class="spin"></span></div></div>
-  </div>
-</div>
-
-<div id="toast"></div>
-
-<script>
-const SC = 'https://script.google.com/macros/s/AKfycbyn1kqivlJKUt-7bhJyk60As9bFaMCC6sMWF_OORTQd1bRcMIZ4Fl6lm9DmpQPQFMXoBA/exec';
-const PWD = '1111';
-
-window.profData = []; window.pacData = []; window.solData = []; window.recData = []; window.atData = [];
-
-// SORT
-let sortCol = -1; let sortAsc = true;
-function sortTable(th, colIdx, isDate=false) {
-  const table = th.closest('table'); const tbody = table.querySelector('tbody'); const rows = Array.from(tbody.querySelectorAll('tr'));
-  if (rows.length === 0 || rows[0].querySelector('td.empty') || rows[0].querySelector('td.loading')) return;
-  sortAsc = (sortCol === colIdx) ? !sortAsc : true; sortCol = colIdx;
-  rows.sort((a, b) => {
-    let v1 = a.cells[colIdx].innerText.trim(); let v2 = b.cells[colIdx].innerText.trim();
-    if (isDate) {
-      const d1 = v1.split('-'); const d2 = v2.split('-');
-      if (d1.length===3 && d2.length===3) { v1 = `${d1[2]}${d1[1]}${d1[0]}`; v2 = `${d2[2]}${d2[1]}${d2[0]}`; }
-    } else {
-      if (!isNaN(v1) && !isNaN(v2) && v1!=='' && v2!=='') { v1=parseFloat(v1); v2=parseFloat(v2); }
-    }
-    return v1 > v2 ? (sortAsc ? 1 : -1) : v1 < v2 ? (sortAsc ? -1 : 1) : 0;
-  });
-  tbody.append(...rows);
-  table.querySelectorAll('th i.sort-icon').forEach(i => i.remove());
-  th.innerHTML += `<i class="sort-icon ti ti-chevron-${sortAsc?'up':'down'}" style="margin-left:4px;font-size:11px;color:var(--verde)"></i>`;
-}
-
-// UI HELPERS
-function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('show'); }
-function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
-let sidebarMini = false; function toggleDesktop() { sidebarMini = !sidebarMini; document.getElementById('sidebar').classList.toggle('mini', sidebarMini); document.querySelector('.main').classList.toggle('mini', sidebarMini); document.getElementById('toggle-icon').className = sidebarMini ? 'ti ti-chevron-right' : 'ti ti-chevron-left'; }
-
-const pageNames = { dashboard: 'Dashboard', pacientes: 'Pacientes', profesionales: 'Profesionales', atenciones: 'Historial', recetas: 'Recetas', alertas: 'Alertas', solicitudes: 'Solicitudes', citas: 'Citas', verificacion: 'Verificación RNPI', usuarios: 'Usuarios del Sistema' };
-function sp(id, btn) { document.querySelectorAll('.pg').forEach(p => p.classList.remove('on')); document.querySelectorAll('.nb').forEach(b => b.classList.remove('on')); document.getElementById('pg-' + id).classList.add('on'); if (btn) btn.classList.add('on'); closeSidebar(); const isDash = id === 'dashboard'; document.getElementById('back-btn').style.display = isDash ? 'none' : 'flex'; document.getElementById('menu-btn').style.display = isDash ? 'flex' : 'none'; document.getElementById('topbar-logo').style.display = isDash ? 'block' : 'none'; document.getElementById('topbar-title').style.display = isDash ? 'none' : 'block'; document.getElementById('topbar-title').textContent = pageNames[id] || ''; }
-function goBack() { sp('dashboard', document.querySelectorAll('.nb')[0]); }
-function doLogin() { if (document.getElementById('pwd').value === PWD) { document.getElementById('ls').style.display = 'none'; document.getElementById('app').style.display = 'block'; loadDashboard(); } else { document.getElementById('lerr').style.display = 'block'; } }
-function toast(msg, ok) { const t = document.getElementById('toast'); t.textContent = msg; t.style.background = ok === false ? '#E07A5F' : '#2D6A4F'; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-function showTab(id, btn) { document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('on')); document.querySelectorAll('.tab').forEach(b => b.classList.remove('on')); document.getElementById(id).classList.add('on'); if (btn) btn.classList.add('on'); }
-
-function badge(e) { if (!e) e = 'Sin estado'; const m = { 'Aprobado': 'bg', 'Activo': 'bg', 'Activa': 'bg', 'Confirmada': 'bg', 'Activado': 'bg', 'Pendiente': 'ba', 'Por contactar': 'ba', 'Pausada': 'ba', 'Rechazado': 'br', 'Cancelada': 'br', 'Nuevo': 'bb', 'Completada': 'bgr', 'Medicamento': 'bpu', 'Cita': 'bb', 'Examen': 'ba', 'Control médico': 'bg', 'Admin':'bpu', 'Profesional':'bg', 'Paciente / Familiar':'bb' }; return `<span class="badge ${m[e] || 'bgr'}">${e}</span>`; }
-function av(n) { if (!n) return '??'; const p = n.trim().split(' '); return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase(); }
-
-async function get(action, extra) { try { let url = SC + '?action=' + action; if (extra) url += '&' + extra; const r = await fetch(url); return await r.json() || {}; } catch (e) { return {}; } }
-let posting = false; async function post(data) { if (posting) return false; posting = true; try { await fetch(SC, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); return true; } catch (e) { return false; } finally { setTimeout(() => { posting = false; }, 3000); } }
-function ft(id, q, esp) { q = q.toLowerCase(); esp = esp.toLowerCase(); document.querySelectorAll('#' + id + ' tr').forEach(r => { const t = r.textContent.toLowerCase(); r.style.display = (!q || t.includes(q)) && (!esp || t.includes(esp)) ? '' : 'none'; }); }
-
-// PARSE DATE FORMATS (DD-MM-YYYY HH:mm:ss or YYYY-MM-DD)
-function parseCLDate(str) {
-  if(!str) return new Date(0);
-  const s = str.split(' ')[0]; // Quitar hora si la trae
-  if(s.includes('-')) {
-    const p = s.split('-');
-    if(p[0].length === 2) return new Date(p[2], p[1]-1, p[0]); // DD-MM-YYYY
-    if(p[0].length === 4) return new Date(p[0], p[1]-1, p[2]); // YYYY-MM-DD
-  }
-  return new Date(s);
-}
-
-// ── DASHBOARD ──
-async function loadDashboard() {
-  const now = new Date(); document.getElementById('dash-fecha').textContent = now.toLocaleDateString('es-CL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-  const [prof, pac, al] = await Promise.all([ get('getProfesionales'), get('getPacientes'), get('getAlertas') ]);
-  const profArr = prof.data || []; const pacArr = pac.data || []; const alArr = al.data || [];
-  document.getElementById('m-pac').textContent  = pacArr.length; document.getElementById('m-pa').textContent   = profArr.filter(p => p.estado === 'Aprobado').length;
-  const pend = profArr.filter(p => p.estado === 'Pendiente').length; document.getElementById('m-pend').textContent = pend;
-  const leadsPend = (await get('getLeads')).data?.filter(l => l.estado === 'Por contactar').length || 0; document.getElementById('m-fam').textContent  = leadsPend;
-  const vc = document.getElementById('vchip'); if (pend > 0) { vc.style.display = 'inline'; vc.textContent = pend; }
-  const ac = document.getElementById('achip'); const activas = alArr.filter(a => a.estado === 'Activa').length; if (activas > 0) { ac.style.display = 'inline'; ac.textContent = activas; }
-  const lc = document.getElementById('lchip'); if (leadsPend > 0) { lc.style.display = 'inline'; lc.textContent = leadsPend; }
-  const ul = pacArr.slice(-5).reverse(); document.getElementById('dash-fam').innerHTML = ul.length ? '<table><tbody>' + ul.map(p => `<tr><td><span class="av">${av(p.nombre)}</span>${p.nombre||'—'}</td><td style="color:var(--gris)">${p.modo||'Autónomo'}</td><td>${badge(p.estado)}</td></tr>`).join('') + '</tbody></table>' : '<div class="empty">Sin pacientes aún</div>';
-  const cnt = {}; profArr.forEach(p => { if (p.especialidad) cnt[p.especialidad] = (cnt[p.especialidad] || 0) + 1; });
-  const s = Object.entries(cnt).sort((a, b) => b[1] - a[1]); const mx = s[0] ? s[0][1] : 1; document.getElementById('dash-esp').innerHTML = s.length ? s.map(([e, n]) => `<div class="bar-row"><span class="bar-lbl">${e}</span><div class="bar-wrap"><div class="bar-fill" style="width:${Math.round(n/mx*100)}%"></div></div><span class="bar-val">${n}</span></div>`).join('') : '<div class="empty">Sin datos aún</div>';
-  const ala = alArr.filter(a => a.estado === 'Activa').slice(0, 4); const iconMap = { 'Medicamento': 'ti-pill', 'Cita': 'ti-calendar', 'Examen': 'ti-microscope', 'Control médico': 'ti-stethoscope' }; document.getElementById('dash-alertas').innerHTML = ala.length ? ala.map(a => `<div class="alerta-card"><div class="alerta-icon" style="background:var(--as)"><i class="ti ${iconMap[a.tipo] || 'ti-bell'}" style="color:var(--amber)"></i></div><div class="alerta-info"><div class="an">${a.paciente} — ${a.tipo}</div><div class="ad">${a.mensaje} · ${a.frecuencia}</div></div>${badge('Activa')}</div>`).join('') : '<div class="empty">Sin alertas activas</div>';
-  const atArr = (await get('getAtenciones')).data || []; const atu = atArr.slice(-4).reverse(); document.getElementById('dash-atenciones').innerHTML = atu.length ? '<table><tbody>' + atu.map(a => `<tr><td><span class="av">${av(a.paciente)}</span>${a.paciente || '—'}</td><td style="color:var(--gris)">${a.profesional || '—'}</td><td style="color:var(--gris);font-size:11px">${(a.fecha || '').substring(0, 10)}</td></tr>`).join('') + '</tbody></table>' : '<div class="empty">Sin atenciones registradas aún</div>';
-}
-
-// ── ATENCIONES CON DASHBOARD INTEGRADO ──
-async function loadAtenciones() {
-  document.getElementById('at-body').innerHTML = '<tr><td colspan="7" class="loading"><span class="spin"></span>Cargando...</td></tr>';
-  const d = (await get('getAtenciones')).data || []; window.atData = d;
-  document.getElementById('at-count').textContent = d.length + ' atenciones registradas';
-  
-  // Llenar tabla
-  document.getElementById('at-body').innerHTML = d.length ? d.map(a => `<tr><td style="font-size:11px">${(a.fecha || '').substring(0, 10)}</td><td><span class="av">${av(a.paciente)}</span>${a.paciente || '—'}</td><td style="font-size:11px">${a.rut || '—'}</td><td>${a.profesional || '—'}</td><td>${a.especialidad || '—'}</td><td style="color:var(--gris)">${a.notas || '—'}</td><td style="font-size:11px">${a.proximaSesion || '—'}</td></tr>`).join('') : '<tr><td colspan="7" class="empty">Sin atenciones registradas aún</td></tr>';
-
-  // Analítica de Fechas
-  const now = new Date();
-  const past4W = new Date(now.getTime() - 28*24*60*60*1000);
-  const future10W = new Date(now.getTime() + 70*24*60*60*1000);
-  let pastCount = 0; let futureCount = 0;
-
-  d.forEach(a => {
-    const dStr = (a.fecha||'').substring(0,10); const dt = parseCLDate(dStr);
-    if(dt >= past4W && dt <= now) pastCount++;
-    const pStr = (a.proximaSesion||'').substring(0,10); const pt = parseCLDate(pStr);
-    if(pt > now && pt <= future10W) futureCount++;
-  });
-  document.getElementById('at-pasadas').textContent = pastCount;
-  document.getElementById('at-futuras').textContent = futureCount;
-
-  // Setear fechas por defecto para el gráfico (Últimos 30 días) si están vacíos
-  if(!document.getElementById('at-date-to').value) {
-    document.getElementById('at-date-to').value = now.toISOString().substring(0,10);
-    document.getElementById('at-date-from').value = new Date(now.getTime() - 30*24*60*60*1000).toISOString().substring(0,10);
-  }
-  renderAtencionesEsp();
-}
-
-function renderAtencionesEsp() {
-  const fromStr = document.getElementById('at-date-from').value;
-  const toStr = document.getElementById('at-date-to').value;
-  if(!fromStr || !toStr) return;
-
-  const from = new Date(fromStr); const to = new Date(toStr); to.setHours(23,59,59);
-  const espCount = {};
-
-  window.atData.forEach(a => {
-    const dt = parseCLDate((a.fecha||'').substring(0,10));
-    if (dt >= from && dt <= to) {
-       const e = a.especialidad || 'Sin especialidad';
-       espCount[e] = (espCount[e] || 0) + 1;
-    }
-  });
-  const eArr = Object.entries(espCount).sort((a,b)=>b[1]-a[1]); const eMx = eArr[0]?eArr[0][1]:1;
-  document.getElementById('at-dash-esp').innerHTML = eArr.length ? eArr.map(([e,n])=>`<div class="bar-row"><span class="bar-lbl">${e}</span><div class="bar-wrap"><div class="bar-fill" style="width:${Math.round(n/eMx*100)}%"></div></div><span class="bar-val">${n}</span></div>`).join('') : '<div class="empty">No hay atenciones registradas en el período seleccionado.</div>';
-}
-
-// ── USUARIOS ──
-async function loadUsuarios() {
-  document.getElementById('usr-body').innerHTML = '<tr><td colspan="5" class="loading"><span class="spin"></span>Cargando...</td></tr>';
-  const d = (await get('getUsuarios')).data || [];
-  document.getElementById('usr-count').textContent = d.length + ' usuarios registrados';
-  document.getElementById('usr-body').innerHTML = d.length ? d.map(u => 
-    `<tr>
-      <td><span class="av">${av(u.nombre)}</span>${u.nombre||'—'}</td>
-      <td>${u.email||'—'}</td>
-      <td>${badge(u.rol)}</td>
-      <td><span style="color:${u.estado==='Activo'?'var(--verde)':'var(--gris)'}">●</span> ${u.estado||'—'}</td>
-      <td style="font-size:11px;color:var(--gris)">${(u.fecha||'').substring(0,10)}</td>
-    </tr>`
-  ).join('') : '<tr><td colspan="5" class="empty">Sin usuarios. Agrega el primero.</td></tr>';
-}
-
-async function saveUsuario() {
-  const n = document.getElementById('u-nombre').value; const e = document.getElementById('u-email').value;
-  if (!n || !e) { toast('Nombre y Email son obligatorios', false); return; }
-  toast('Creando usuario...');
-  const r = document.getElementById('u-rol').value; const s = document.getElementById('u-estado').value;
-  await get('saveUsuario', `nombre=${encodeURIComponent(n)}&email=${encodeURIComponent(e)}&rol=${encodeURIComponent(r)}&estado=${encodeURIComponent(s)}`);
-  closeModal('modal-usuario'); toast('✓ Usuario creado exitosamente'); setTimeout(loadUsuarios, 1500);
-}
-
-// ── SOLICITUDES, PACIENTES, PROFESIONALES, RECETAS, ETC. (Lógica intacta ya implementada) ──
-async function loadSolicitudes() { document.getElementById('sol-body').innerHTML = '<tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr>'; const d = (await get('getLeads')).data || []; window.solData = d; const porContactar = d.filter(l => l.estado === 'Por contactar').length; document.getElementById('sol-count').textContent = `${d.length} solicitudes registradas · ${porContactar} por contactar`; const lc = document.getElementById('lchip'); if (porContactar > 0) { lc.style.display = 'inline'; lc.textContent = porContactar; } else { lc.style.display = 'none'; } document.getElementById('sol-body').innerHTML = d.length ? d.map(l => `<tr><td style="font-size:11px">${(l.fecha||'').substring(0,10)}</td><td><span class="av">${av(l.nombre)}</span>${l.nombre||'—'}</td><td>${l.whatsapp||'—'}</td><td style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${l.especialidad||'—'}">${l.especialidad||'—'}</td><td>${l.comuna||'—'}</td><td>${l.urgencia||'—'}</td><td>${badge(l.estado)}</td><td>${l.estado !== 'Activado' ? `<button class="btn btn-p btn-sm" onclick="activarSolicitud(${l.fila}, '${l.nombre.replace(/'/g, "\\'")}')">Marcar Resuelta</button>` : `<span class="badge bg">✓</span>`}</td></tr>`).join('') : '<tr><td colspan="8" class="empty">Sin solicitudes aún</td></tr>'; }
-async function activarSolicitud(fila, nombre) { toast('Actualizando...'); await get('activarLead', `fila=${fila}`); toast(`✓ Solicitud de ${nombre} resuelta`); setTimeout(loadSolicitudes, 1000); setTimeout(loadDashboard, 1500); }
-
-async function loadPacientes() { document.getElementById('pac-body').innerHTML = '<tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr>'; const d = (await get('getPacientes')).data || []; window.pacData = d; document.getElementById('pac-count').textContent = d.length + ' fichas de pacientes'; document.getElementById('pac-body').innerHTML = d.length ? d.map(p => `<tr><td><span class="av">${av(p.nombre)}</span>${p.nombre || '—'}</td><td style="font-size:11px">${p.rut || '—'}</td><td style="color:var(--gris)">${p.diagnostico || '—'}</td><td style="color:var(--gris)">${p.medicamentos || '—'}</td><td>${p.profesional || '—'}</td><td><span class="badge ${p.modo==='Autónomo'?'bg':p.modo==='Familiar'?'bpu':'bb'}">${p.modo || '—'}</span></td><td>${badge(p.estado)}</td><td><button class="btn btn-p btn-sm" onclick="verDetalle('${p.rut}')">Ver ficha</button></td></tr>`).join('') : '<tr><td colspan="8" class="empty">Sin fichas aún</td></tr>'; }
-async function verDetalle(rut) { const pData = window.pacData.find(x => x.rut === rut); document.getElementById('det-titulo').textContent = 'Ficha — ' + (pData ? pData.nombre : 'Paciente'); openModal('modal-detalle'); ['det-ficha', 'det-atenciones', 'det-recetas', 'det-alertas'].forEach(id => { document.getElementById(id).innerHTML = '<div class="loading"><span class="spin"></span></div>'; }); const d = await get('getPacienteDetalle', 'rut=' + encodeURIComponent(rut)); const p = d.paciente || {}; document.getElementById('det-ficha').innerHTML = `<div class="form-grid" style="font-size:13px"><div><div style="font-size:11px;color:var(--gris)">Nombre</div>${p.nombre || '—'}</div><div><div style="font-size:11px;color:var(--gris)">RUT</div>${p.rut || '—'}</div><div><div style="font-size:11px;color:var(--gris)">Fecha de nacimiento</div>${p.fechaNac || '—'}</div><div><div style="font-size:11px;color:var(--gris)">Estado</div>${badge(p.estado)}</div><div class="full"><div style="font-size:11px;color:var(--gris)">Diagnóstico</div>${p.diagnostico || '—'}</div><div class="full"><div style="font-size:11px;color:var(--gris)">Medicamentos</div>${p.medicamentos || '—'}</div><div><div style="font-size:11px;color:var(--gris)">Alergias</div>${p.alergias || '—'}</div><div><div style="font-size:11px;color:var(--gris)">Profesional</div>${p.profesional || '—'}</div><div><div style="font-size:11px;color:var(--gris)">Modo Gestión</div>${p.familia || '—'}</div><div><div style="font-size:11px;color:var(--gris)">Contacto familiar</div>${p.contactoFamiliar || '—'}</div></div>`; const ats = d.atenciones || []; document.getElementById('det-atenciones').innerHTML = ats.length ? '<table><thead><tr><th>Fecha</th><th>Profesional</th><th>Notas</th><th>Próx. sesión</th></tr></thead><tbody>' + ats.map(a => `<tr><td>${(a.fecha||'').substring(0,10)}</td><td>${a.profesional||'—'}</td><td>${a.notas||'—'}</td><td>${a.proximaSesion||'—'}</td></tr>`).join('') + '</tbody></table>' : '<div class="empty">Sin atenciones registradas</div>'; const recs = d.recetas || []; document.getElementById('det-recetas').innerHTML = recs.length ? '<table><thead><tr><th>Fecha</th><th>Profesional</th><th>Medicamento</th><th>Dosis</th><th>Duración</th></tr></thead><tbody>' + recs.map(r => `<tr><td>${(r.fecha||'').substring(0,10)}</td><td>${r.profesional||'—'}</td><td>${r.medicamento||'—'}</td><td>${r.dosis||'—'}</td><td>${r.duracion||'—'}</td></tr>`).join('') + '</tbody></table>' : '<div class="empty">Sin recetas registradas</div>'; const als = d.alertas || []; document.getElementById('det-alertas').innerHTML = als.length ? '<table><thead><tr><th>Tipo</th><th>Mensaje</th><th>Frecuencia</th><th>Canal</th><th>Estado</th></tr></thead><tbody>' + als.map(a => `<tr><td>${badge(a.tipo)}</td><td>${a.mensaje||'—'}</td><td>${a.frecuencia||'—'}</td><td>${a.canal||'—'}</td><td>${badge(a.estado)}</td></tr>`).join('') + '</tbody></table>' : '<div class="empty">Sin alertas configuradas</div>'; }
-
-async function loadProfesionales() { document.getElementById('prof-body').innerHTML = '<tr><td colspan="9" class="loading"><span class="spin"></span>Cargando...</td></tr>'; const d = (await get('getProfesionales')).data || []; window.profData = d; const espCount = {}; const estCount = {}; d.forEach(p => { espCount[p.especialidad] = (espCount[p.especialidad] || 0) + 1; estCount[p.estado] = (estCount[p.estado] || 0) + 1; }); const eArr = Object.entries(espCount).sort((a,b)=>b[1]-a[1]); const eMx = eArr[0]?eArr[0][1]:1; document.getElementById('prof-dash-esp').innerHTML = eArr.length ? eArr.map(([e,n])=>`<div class="bar-row"><span class="bar-lbl">${e}</span><div class="bar-wrap"><div class="bar-fill" style="width:${Math.round(n/eMx*100)}%"></div></div><span class="bar-val">${n}</span></div>`).join('') : '<div class="empty">Sin datos</div>'; const estArr = Object.entries(estCount).sort((a,b)=>b[1]-a[1]); const estMx = estArr[0]?estArr[0][1]:1; document.getElementById('prof-dash-est').innerHTML = estArr.length ? estArr.map(([e,n])=>`<div class="bar-row"><span class="bar-lbl">${e}</span><div class="bar-wrap"><div class="bar-fill" style="width:${Math.round(n/estMx*100)}%;background:${e==='Aprobado'?'var(--vc)':e==='Pendiente'?'var(--amber)':'var(--rojo)'}"></div></div><span class="bar-val">${n}</span></div>`).join('') : '<div class="empty">Sin datos</div>'; const act = d.filter(p => p.estado === 'Aprobado').length; const pend = d.filter(p => p.estado === 'Pendiente').length; document.getElementById('prof-count').textContent = `${d.length} registrados · ${act} aprobados · ${pend} pendientes`; document.getElementById('prof-body').innerHTML = d.length ? d.map(p => `<tr><td><span class="av">${av(p.nombre)}</span>${p.nombre||'—'}</td><td style="font-size:11px">${p.rut||'—'}</td><td>${p.especialidad||'—'}</td><td style="color:var(--gris)">${p.comunas||'—'}</td><td>${p.modalidad||'—'}</td><td>${badge(p.estado)}</td><td style="font-size:11px;color:var(--verde)">${(p.fechaAlta||'—').substring(0,10)}</td><td><span class="badge ${p.publico==='Sí'?'bg':'bgr'}">${p.publico||'No'}</span></td><td><button class="btn btn-p btn-sm" onclick="verFichaProfPorFila(${p.fila})">Ver ficha</button>${p.estado==='Pendiente'?`<button class="btn btn-sm" onclick="aprobar(${p.fila},'Aprobado')">Aprobar</button>`:''}</td></tr>`).join('') : '<tr><td colspan="9" class="empty">Sin registros aún</td></tr>'; }
-let currentProfFila = null; let formacionItems = []; let experienciaItems = []; async function verFichaProfPorFila(fila) { const p = window.profData.find(x => x.fila === fila); if (!p) return; currentProfFila = p.fila; document.getElementById('prof-ficha-titulo').textContent = 'Ficha del profesional'; document.getElementById('pf-nombre').value = p.nombre||''; document.getElementById('pf-rut').value = p.rut||''; document.getElementById('pf-especialidad').value = p.especialidad||''; document.getElementById('pf-edad').value = p.edad||''; document.getElementById('pf-genero').value = p.genero||''; document.getElementById('pf-idiomas').value = p.idiomas||''; document.getElementById('pf-email').value = p.email||''; document.getElementById('pf-wa').value = p.whatsapp||''; document.getElementById('pf-comunas').value = p.comunas||''; document.getElementById('pf-modalidad').value = p.modalidad||''; document.getElementById('pf-registro').value = p.registro||'Sí, vigente'; document.getElementById('pf-estado').value = p.estado||'Pendiente'; document.getElementById('pf-publico').value = p.publico||'No'; document.getElementById('pf-destacado').value = p.destacado||'No'; document.getElementById('pf-exp-total').value = p.expTotal||''; document.getElementById('pf-exp-am').value = p.expAm||''; document.getElementById('pf-precio').value = p.precio||''; document.getElementById('pf-duracion').value = p.duracion||''; document.getElementById('pf-calcom').value = p.calLink||''; document.getElementById('pf-isapre').value = p.isapre||'Sí'; document.getElementById('pf-fonasa').value = p.fonasa||'Sí'; document.getElementById('pf-particular').value = p.particular||'Sí'; showTab('pf-basicos', document.querySelector('#modal-prof-ficha .tab')); openModal('modal-prof-ficha'); formacionItems = []; experienciaItems = []; renderFormacion(); renderExperiencia(); document.getElementById('pf-bio-text').value = 'Cargando...'; const rut = p.rut; const [formResp, bioResp] = await Promise.all([ get('getFormacionProf', `rut=${encodeURIComponent(rut)}`), get('getBioProf', `rut=${encodeURIComponent(rut)}`) ]); formacionItems = (formResp.data || []).map(f => ({ tipo: f.tipo||'Título profesional', titulo: f.titulo||'', universidad: f.universidad||'', año: f.año||'' })); renderFormacion(); document.getElementById('pf-bio-text').value = bioResp.data?.bio || p.bio || ''; }
-function addFormacion() { formacionItems.push({ tipo: 'Título profesional', titulo: '', universidad: '', año: '' }); renderFormacion(); } function renderFormacion() { document.getElementById('formacion-list').innerHTML = formacionItems.length ? formacionItems.map((f, i) => `<div style="background:var(--bg2);border-radius:8px;padding:.75rem;margin-bottom:.5rem"><div class="form-grid" style="margin-bottom:.5rem"><div class="fg"><label>Tipo</label><select onchange="formacionItems[${i}].tipo=this.value">${['Título profesional','Postgrado','Especialización','Diplomado','Curso'].map(t=>`<option ${f.tipo===t?'selected':''}>${t}</option>`).join('')}</select></div><div class="fg"><label>Título</label><input type="text" value="${f.titulo}" oninput="formacionItems[${i}].titulo=this.value"/></div><div class="fg"><label>Universidad</label><input type="text" value="${f.universidad}" oninput="formacionItems[${i}].universidad=this.value"/></div><div class="fg"><label>Año</label><input type="number" value="${f.año}" oninput="formacionItems[${i}].año=this.value"/></div></div><button class="btn btn-d btn-sm" onclick="formacionItems.splice(${i},1);renderFormacion()">Eliminar</button></div>`).join('') : '<div class="empty" style="padding:1rem">Sin estudios</div>'; } function addExperiencia() { experienciaItems.push({ cargo: '', institucion: '', desde: '', hasta: '' }); renderExperiencia(); } function renderExperiencia() { document.getElementById('experiencia-list').innerHTML = experienciaItems.length ? experienciaItems.map((e, i) => `<div style="background:var(--bg2);border-radius:8px;padding:.75rem;margin-bottom:.5rem"><div class="form-grid" style="margin-bottom:.5rem"><div class="fg"><label>Cargo</label><input type="text" value="${e.cargo}" oninput="experienciaItems[${i}].cargo=this.value"/></div><div class="fg"><label>Institución</label><input type="text" value="${e.institucion}" oninput="experienciaItems[${i}].institucion=this.value"/></div><div class="fg"><label>Desde</label><input type="number" value="${e.desde}" oninput="experienciaItems[${i}].desde=this.value"/></div><div class="fg"><label>Hasta</label><input type="number" value="${e.hasta}" oninput="experienciaItems[${i}].hasta=this.value"/></div></div><button class="btn btn-d btn-sm" onclick="experienciaItems.splice(${i},1);renderExperiencia()">Eliminar</button></div>`).join('') : '<div class="empty" style="padding:1rem">Sin experiencia</div>'; }
-async function saveProficha() { if (!currentProfFila) return; toast('Guardando...'); const params = `fila=${currentProfFila}&nombre=${encodeURIComponent(document.getElementById('pf-nombre').value)}&rut=${encodeURIComponent(document.getElementById('pf-rut').value)}&especialidad=${encodeURIComponent(document.getElementById('pf-especialidad').value)}&edad=${document.getElementById('pf-edad').value}&genero=${encodeURIComponent(document.getElementById('pf-genero').value)}&idiomas=${encodeURIComponent(document.getElementById('pf-idiomas').value)}&email=${encodeURIComponent(document.getElementById('pf-email').value)}&whatsapp=${encodeURIComponent(document.getElementById('pf-wa').value)}&comunas=${encodeURIComponent(document.getElementById('pf-comunas').value)}&modalidad=${encodeURIComponent(document.getElementById('pf-modalidad').value)}&registro=${encodeURIComponent(document.getElementById('pf-registro').value)}&estado=${encodeURIComponent(document.getElementById('pf-estado').value)}&publico=${encodeURIComponent(document.getElementById('pf-publico').value)}&destacado=${encodeURIComponent(document.getElementById('pf-destacado').value)}&expTotal=${document.getElementById('pf-exp-total').value}&expAm=${document.getElementById('pf-exp-am').value}&precio=${document.getElementById('pf-precio').value}&duracion=${document.getElementById('pf-duracion').value}&calLink=${encodeURIComponent(document.getElementById('pf-calcom').value)}&isapre=${document.getElementById('pf-isapre').value}&fonasa=${document.getElementById('pf-fonasa').value}&particular=${document.getElementById('pf-particular').value}&bio=${encodeURIComponent(document.getElementById('pf-bio-text').value)}&formacion=${encodeURIComponent(JSON.stringify(formacionItems))}`; await get('updateProfFicha', params); closeModal('modal-prof-ficha'); toast('✓ Ficha guardada'); setTimeout(loadProfesionales, 1500); }
-
-async function loadRecetas() { document.getElementById('rec-body').innerHTML = '<tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr>'; const d = (await get('getRecetas')).data || []; window.recData = d; document.getElementById('rec-count').textContent = d.length + ' recetas registradas'; document.getElementById('rec-body').innerHTML = d.length ? d.map(r => `<tr><td style="font-size:11px">${(r.fecha || '').substring(0, 10)}</td><td><span class="av">${av(r.paciente)}</span>${r.paciente || '—'}</td><td style="font-size:11px">${r.rut || '—'}</td><td>${r.profesional || '—'}</td><td>${r.medicamento || '—'}</td><td style="color:var(--gris)">${r.dosis || '—'}</td><td style="color:var(--gris)">${r.duracion || '—'}</td><td><button class="btn btn-p btn-sm" onclick="verRecetaDetalle(${r.fila})">Ver detalle</button></td></tr>`).join('') : '<tr><td colspan="8" class="empty">Sin recetas registradas aún</td></tr>'; }
-function verRecetaDetalle(fila) { const r = window.recData.find(x => x.fila === fila); if (!r) return; document.getElementById('rd-fecha').textContent = r.fecha || '—'; document.getElementById('rd-prof').textContent = r.profesional || '—'; document.getElementById('rd-pac').textContent = r.paciente || '—'; document.getElementById('rd-rut').textContent = r.rut || '—'; document.getElementById('rd-med').textContent = r.medicamento || '—'; document.getElementById('rd-dosis').textContent = r.dosis || '—'; document.getElementById('rd-dur').textContent = r.duracion || '—'; document.getElementById('rd-comentarios').textContent = r.comentarios || 'Sin comentarios adicionales registrados por el profesional.'; openModal('modal-receta-detalle'); }
-
-async function loadAlertas() { document.getElementById('al-body').innerHTML = '<tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr>'; const d = (await get('getAlertas')).data || []; const activas = d.filter(a => a.estado === 'Activa').length; document.getElementById('al-count').textContent = `${d.length} alertas configuradas · ${activas} activas`; const ac = document.getElementById('achip'); if (activas > 0) { ac.style.display = 'inline'; ac.textContent = activas; } else { ac.style.display = 'none'; } document.getElementById('al-body').innerHTML = d.length ? d.map(a => `<tr><td><span class="av">${av(a.paciente)}</span>${a.paciente || '—'}</td><td style="font-size:11px">${a.rut || '—'}</td><td>${badge(a.tipo)}</td><td style="color:var(--gris)">${a.mensaje || '—'}</td><td>${a.frecuencia || '—'}</td><td>${a.canal || '—'}</td><td>${badge(a.estado)}</td><td>${a.estado === 'Activa' ? `<button class="btn btn-d btn-sm" onclick="updateAlerta(${a.fila},'Pausada')">Pausar</button>` : `<button class="btn btn-p btn-sm" onclick="updateAlerta(${a.fila},'Activa')">Activar</button>`}</td></tr>`).join('') : '<tr><td colspan="8" class="empty">Sin alertas configuradas aún</td></tr>'; }
-async function updateAlerta(fila, estado) { await get('updateAlerta', `fila=${fila}&estado=${estado}`); toast('✓ Alerta ' + estado.toLowerCase()); setTimeout(loadAlertas, 1000); }
-
-async function loadCitas() { document.getElementById('cit-body').innerHTML = '<tr><td colspan="9" class="loading"><span class="spin"></span>Cargando...</td></tr>'; const [citas, metricas] = await Promise.all([ get('getCitas'), get('getMetricasCitas') ]); const d = citas.data || []; const m = metricas.data || {}; document.getElementById('cit-count').textContent = `${d.length} citas registradas`; document.getElementById('cm-total').textContent = m.total || 0; document.getElementById('cm-pct').textContent = (m.pctAprobacion || 0) + '%'; document.getElementById('cm-pend').textContent = m.pendientes || 0; document.getElementById('cm-rech').textContent = m.rechazadas || 0; document.getElementById('cit-body').innerHTML = d.length ? d.map(c => `<tr><td>${c.fechaCita||'—'}</td><td>${c.hora||'—'}</td><td><span class="av">${av(c.paciente)}</span>${c.paciente||'—'}</td><td>${c.profesional||'—'}</td><td>${c.especialidad||'—'}</td><td>${c.modalidad||'—'}</td><td><span class="badge ${c.origen==='Cal.com'?'bb':'bgr'}">${c.origen||'—'}</span></td><td>${badge(c.estado)}</td><td>${c.estado==='Pendiente'? `<button class="btn btn-p btn-sm" onclick="updateCita(${c.fila},'Confirmada')">Confirmar</button><button class="btn btn-d btn-sm" onclick="updateCita(${c.fila},'Rechazada')">Rechazar</button>`: c.estado==='Confirmada'?`<button class="btn btn-sm" onclick="updateCita(${c.fila},'Completada')">Completar</button>`:'—'}</td></tr>`).join('') : '<tr><td colspan="9" class="empty">Sin citas registradas aún</td></tr>'; }
-async function updateCita(fila, estado) { toast('Actualizando...'); await get('updateCita', `fila=${fila}&estado=${estado}`); toast(estado === 'Confirmada' ? '✓ Cita confirmada' : estado === 'Rechazada' ? 'Cita rechazada' : '✓ Cita completada'); setTimeout(loadCitas, 1000); }
-
-async function loadVerificacion() { const d = (await get('getProfesionales')).data || []; const pend = d.filter(p => p.estado === 'Pendiente'); document.getElementById('ver-count').textContent = `${pend.length} profesionales pendientes`; const vc = document.getElementById('vchip'); if (pend.length > 0) { vc.style.display = 'inline'; vc.textContent = pend.length; } else { vc.style.display = 'none'; } document.getElementById('ver-list').innerHTML = pend.length ? pend.map(p => `<div class="card" id="vc-${p.fila}"><div class="ch"><div><div style="font-weight:500">${p.nombre||'—'}</div><div style="font-size:11px;color:var(--gris)">${p.especialidad||'—'}</div></div>${badge('Pendiente')}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:12px;margin-bottom:12px"><div><span style="color:var(--gris)">RUT:</span> ${p.rut||'—'}</div><div><span style="color:var(--gris)">Reg:</span> ${p.registro||'—'}</div></div><div style="display:flex;gap:8px"><button class="btn btn-sm" onclick="window.open('https://rnpi.superdesalud.gob.cl','_blank')">Verificar RNPI</button><button class="btn btn-p btn-sm" onclick="aprobar(${p.fila},'Aprobado')">Aprobar</button><button class="btn btn-d btn-sm" onclick="aprobar(${p.fila},'Rechazado')">Rechazar</button></div></div>`).join('') : '<div class="empty">No hay pendientes</div>'; }
-async function aprobar(fila, estado) { toast('Procesando...'); await get('updateEstado', `fila=${fila}&estado=${estado}`); document.getElementById('vc-'+fila).innerHTML = `<div style="color:${estado==='Aprobado'?'var(--vc)':'var(--rojo)'}">✓ Perfil ${estado}</div>`; setTimeout(loadDashboard,1000); }
-
-async function savePaciente() { const n = document.getElementById('pac-nombre').value; const r = document.getElementById('pac-rut').value; if (!n || !r) { toast('Nombre y RUT son obligatorios', false); return; } await post({ tipo: 'paciente', nombre: n, rut: r, fechaNac: document.getElementById('pac-fnac').value, modo: document.getElementById('pac-modo').value, coordNombre: document.getElementById('pac-coord-nombre').value, coordRelacion: document.getElementById('pac-coord-relacion').value, coordEmail: document.getElementById('pac-coord-email').value, coordWa: document.getElementById('pac-coord-wa').value, diagnostico: document.getElementById('pac-diag').value, medicamentos: document.getElementById('pac-meds').value, alergias: document.getElementById('pac-alergias').value, profesional: document.getElementById('pac-prof').value, estado: document.getElementById('pac-estado').value }); closeModal('modal-paciente'); toast('✓ Paciente guardado'); setTimeout(loadPacientes, 1500); }
-async function saveAtencion() {
-  const p = document.getElementById('at-pac').value; const r = document.getElementById('at-rut').value; if (!p || !r) { toast('Paciente y RUT obligatorios', false); return; }
-  // Usaremos la fecha de sesión que indique el usuario en lugar de la fecha actual
-  let fSession = document.getElementById('at-fecha-sesion').value;
-  if(fSession) {
-    const fParts = fSession.split('-'); fSession = `${fParts[2]}-${fParts[1]}-${fParts[0]} 00:00:00`;
-  }
-  
-  await post({ tipo: 'atencion', paciente: p, rut: r, profesional: document.getElementById('at-prof').value, especialidad: document.getElementById('at-esp').value, notas: document.getElementById('at-notas').value, proximaSesion: document.getElementById('at-prox').value, fechaOverride: fSession }); closeModal('modal-atencion'); toast('✓ Atención registrada'); setTimeout(loadAtenciones, 1500);
-}
-async function saveCita() { const pac = document.getElementById('cit-pac').value; const prof = document.getElementById('cit-prof').value; const fech = document.getElementById('cit-fecha').value; const hora = document.getElementById('cit-hora').value; if (!pac || !prof || !fech || !hora) { toast('Completa obligatorios', false); return; } const params = new URLSearchParams({ action: 'createCita', paciente: pac, profesional: prof, especialidad: document.getElementById('cit-esp').value, fechaCita: fech, hora: hora, modalidad: document.getElementById('cit-mod').value, origen: 'Manual', emailProf: document.getElementById('cit-email-prof').value, waProf: document.getElementById('cit-wa-prof').value }); toast('Creando cita...'); await get('createCita', params.toString().replace('action=createCita&','')); closeModal('modal-cita'); toast('✓ Cita creada'); setTimeout(loadCitas, 1500); }
-async function saveAlerta() { const p = document.getElementById('al-pac').value; const r = document.getElementById('al-rut').value; const t = document.getElementById('al-tipo').value; const m = document.getElementById('al-msg').value; if (!p || !r || !t || !m) { toast('Completa obligatorios', false); return; } const hora = document.getElementById('al-hora').value; const frec = document.getElementById('al-frec').value + (hora ? ' a las ' + hora : ''); await get('addAlerta', `paciente=${encodeURIComponent(p)}&rut=${encodeURIComponent(r)}&tipo=${encodeURIComponent(t)}&mensaje=${encodeURIComponent(m)}&frecuencia=${encodeURIComponent(frec)}&canal=${encodeURIComponent(document.getElementById('al-canal').value)}`); closeModal('modal-alerta'); toast('✓ Alerta activada'); setTimeout(loadAlertas, 1500); }
-
-document.querySelectorAll('.modal-bg').forEach(bg => { bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('open'); }); });
-</script>
-</body>
-</html>
+.spin{
