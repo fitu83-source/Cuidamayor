@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FamHealth — Portal del Profesional</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.x/dist/tabler-icons.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --verde:#2D6A4F;--vc:#52B788;--vs:#D8F3DC;
+  --crema:#FAF7F2;--arena:#E9E0D0;--texto:#1A1A1A;--gris:#5C5C5C;
+  --blanco:#FFFFFF;--rojo:#E07A5F;--rs:#FCEBEB;
+  --as:#FAEEDA;--amber:#854F0B;--sb:210px;--sb-mini:52px;
+  --bg2:#F5F4F0;--bdr:#E2DDD6;
+}
+@media(prefers-color-scheme:dark){:root{
+  --crema:#1A1A1A;--texto:#F0EDE8;--gris:#9A9590;--blanco:#252525;
+  --arena:#3A3A3A;--bg2:#222;--bdr:#3A3A3A;
+  --vs:#1A3D2B;--as:#2D1F08;--rs:#2D1515;
+}}
+html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--texto);background:var(--crema)}
+
+/* LOGIN DE PROFESIONALES */
+#ls{position:fixed;inset:0;background:var(--verde);display:flex;align-items:center;justify-content:center;z-index:1000}
+.lb{background:var(--blanco);border-radius:16px;padding:2rem;width:340px;max-width:90vw;box-shadow:0 10px 25px rgba(0,0,0,0.2)}
+.ll{font-size:22px;font-weight:500;color:var(--verde);margin-bottom:4px}
+.ll span{color:var(--vc)}
+.ls{font-size:12px;color:var(--gris);margin-bottom:2rem}
+.lb label{font-size:12px;font-weight:500;display:block;margin-bottom:6px;color:var(--gris)}
+.lb input{width:100%;padding:10px 12px;border:0.5px solid var(--bdr);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--texto);background:var(--bg2);outline:none;margin-bottom:1rem;transition:border-color .2s}
+.lb input:focus{border-color:var(--vc)}
+.lbtn{width:100%;background:var(--verde);color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s}
+.lbtn:hover{background:#1f5239}
+.le{color:var(--rojo);font-size:12px;margin-top:8px;display:none}
+
+/* LAYOUT GENERAL */
+#app{display:none;height:100vh;overflow:hidden}
+
+/* SIDEBAR REASIGNADA */
+.sidebar{
+  position:fixed;left:0;top:0;bottom:0;width:var(--sb);
+  background:var(--blanco);border-right:0.5px solid var(--bdr);
+  display:flex;flex-direction:column;z-index:200;
+  transition:width .2s ease;
+}
+.sidebar.mini{width:var(--sb-mini)}
+.sidebar.mini .slogo-text, .sidebar.mini .nsec, .sidebar.mini .nb-text, .sidebar.mini .sfoot{display:none}
+.sidebar.mini .nb{justify-content:center;padding:10px 0}
+.sidebar.mini .nb i{font-size:18px}
+
+@media(max-width:768px){
+  .sidebar{width:80vw;max-width:280px;transform:translateX(-100%);transition:transform .25s ease;box-shadow:4px 0 20px rgba(0,0,0,.2);z-index:300;}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0!important}
+  .topbar{display:flex!important}
+}
+
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:250;backdrop-filter:blur(1px);}
+#overlay.show{display:block}
+
+.topbar{display:none;position:sticky;top:0;z-index:100;background:var(--blanco);border-bottom:0.5px solid var(--bdr);padding:10px 1rem;align-items:center;gap:10px;min-height:48px;}
+.topbar-logo{font-size:15px;font-weight:500;color:var(--verde);flex:1}
+.topbar-logo span{color:var(--vc)}
+.menu-btn{background:none;border:none;cursor:pointer;color:var(--gris);padding:4px;font-size:20px;display:flex;align-items:center;}
+
+.toggle-btn{position:absolute;top:14px;right:-14px;width:28px;height:28px;border-radius:50%;background:var(--blanco);border:0.5px solid var(--bdr);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--gris);z-index:10;}
+
+.slogo{padding:14px 16px;font-size:15px;font-weight:500;color:var(--texto);border-bottom:0.5px solid var(--bdr);display:flex;align-items:center;gap:8px}
+.slogo span{color:var(--verde)}
+.slogo small{display:block;font-size:10px;color:var(--gris);font-weight:400;margin-top:1px}
+.nsec{font-size:10px;font-weight:500;color:var(--gris);padding:10px 16px 3px;letter-spacing:.08em;text-transform:uppercase}
+.nb{display:flex;align-items:center;gap:8px;width:100%;padding:9px 16px;background:none;border:none;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--gris);text-align:left;transition:all .15s;}
+.nb:hover{background:var(--bg2);color:var(--texto)}
+.nb.on{background:var(--vs);color:var(--verde);font-weight:500}
+.nb i{font-size:15px;flex-shrink:0}
+
+.sfoot{margin-top:auto;padding:12px 16px;border-top:0.5px solid var(--bdr);font-size:11px;color:var(--gris);line-height:1.5}
+.sfoot .logout-link{color:var(--rojo);text-decoration:none;cursor:pointer;font-weight:500;display:inline-block;margin-top:5px}
+
+.main{margin-left:var(--sb);height:100vh;overflow-y:auto;padding:1.25rem;transition:margin-left .2s ease}
+.main.mini{margin-left:var(--sb-mini)}
+.pg{display:none}
+.pg.on{display:block}
+.ph h1{font-size:18px;font-weight:500;margin-bottom:2px}
+.ph p{font-size:12px;color:var(--gris);margin-bottom:1rem}
+
+/* DASHBOARD CARDS */
+.mets{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
+@media(max-width:640px){.mets{grid-template-columns:1fr}}
+.met{background:var(--bg2);border-radius:8px;padding:12px}
+.met .ml{font-size:11px;color:var(--gris);margin-bottom:3px}
+.met .mv{font-size:22px;font-weight:500}
+.met .md{font-size:11px;color:var(--vc);margin-top:2px}
+
+.card{background:var(--blanco);border:0.5px solid var(--bdr);border-radius:12px;padding:1rem;margin-bottom:.75rem}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;gap:8px}
+.ct{font-size:13px;font-weight:500}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+@media(max-width:768px){.two{grid-template-columns:1fr}}
+
+/* TABLES */
+.tbl-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed;min-width:480px}
+th{text-align:left;padding:6px 8px;font-size:10px;font-weight:500;color:var(--gris);border-bottom:0.5px solid var(--bdr);text-transform:uppercase;cursor:pointer}
+th:hover{background:var(--bg2)}
+td{padding:8px;border-bottom:0.5px solid var(--bg2);color:var(--texto);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
+tr:hover td{background:var(--bg2)}
+
+/* BADGES */
+.badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px}
+.bg{background:var(--vs);color:var(--verde)}
+.ba{background:var(--as);color:var(--amber)}
+.br{background:var(--rs);color:#A32D2D}
+.bb{background:#E6F1FB;color:#185FA5}
+.bgr{background:var(--bg2);color:var(--gris)}
+
+/* COMPONENTES FORM */
+.btn{font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;border:0.5px solid var(--bdr);background:var(--blanco);color:var(--texto);transition:all .15s}
+.btn:hover{background:var(--bg2)}
+.btn-p{background:var(--verde);color:#fff;border-color:var(--verde)}
+.btn-p:hover{background:#1f5239}
+.btn-d{color:#A32D2D;border-color:#F7C1C1}
+.btn-d:hover{background:var(--rs)}
+
+.filt{display:flex;gap:6px;margin-bottom:.75rem;flex-wrap:wrap}
+.filt input,.filt select{font-size:12px;padding:5px 8px;border:0.5px solid var(--bdr);border-radius:8px;background:var(--bg2);color:var(--texto);outline:none}
+.filt input{flex:1}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{font-size:11px;font-weight:500;color:var(--gris)}
+.fg input,.fg select,.fg textarea{font-size:14px;padding:9px 10px;border:0.5px solid var(--bdr);border-radius:8px;background:var(--bg2);color:var(--texto);outline:none;font-family:'DM Sans',sans-serif}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--vc)}
+.fg.full{grid-column:1/-1}
+
+/* MODALES */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(2px)}
+.modal-bg.open{display:flex}
+.modal{background:var(--blanco);border-radius:14px;padding:1.5rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.modal-title{font-size:14px;font-weight:500}
+.modal-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--gris)}
+
+.av{width:26px;height:26px;border-radius:50%;background:var(--vs);color:var(--verde);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;margin-right:6px;vertical-align:middle}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--bdr);border-top-color:var(--verde);border-radius:50%;animation:sp .8s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.loading,.empty{text-align:center;padding:2rem;color:var(--gris);font-size:12px}
+
+#toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--verde);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;transform:translateY(100px);opacity:0;transition:all .3s;z-index:999}
+#toast.show{transform:translateY(0);opacity:1}
+</style>
+</head>
+<body>
+
+<div id="ls">
+  <div class="lb">
+    <div class="ll">Fam<span>Health</span></div>
+    <div class="ls">Portal para Especialistas Clínicos</div>
+    <label>Email registrado</label>
+    <input type="email" id="prof-email" placeholder="doctor@mail.com" onkeydown="if(event.key==='Enter')doProfLogin()"/>
+    <button class="lbtn" onclick="doProfLogin()">Ingresar a mi consulta</button>
+    <div class="le" id="lerr">El email no corresponde a un profesional aprobado.</div>
+  </div>
+</div>
+
+<div id="overlay" onclick="toggleSidebar()"></div>
+
+<div id="app">
+  <div class="topbar">
+    <button class="menu-btn" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>
+    <div class="topbar-logo">Fam<span>Health</span> Profesional</div>
+  </div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="slogo">
+      <div class="slogo-text">Fam<span>Health</span><small>Portal Clínico</small></div>
+      <button class="toggle-btn" onclick="toggleDesktop()"><i class="ti ti-chevron-left" id="toggle-icon"></i></button>
+    </div>
+    <div class="nsec">Mi Consulta</div>
+    <button class="nb on" onclick="sp('dashboard',this)"><i class="ti ti-home-heart"></i><span class="nb-text">Inicio</span></button>
+    <button class="nb" onclick="sp('citas',this);loadProfCitas()"><i class="ti ti-calendar-event"></i><span class="nb-text">Mis Citas</span></button>
+    <button class="nb" onclick="sp('atenciones',this);loadProfAtenciones()"><i class="ti ti-notes"></i><span class="nb-text">Fichas y Evoluciones</span></button>
+    <button class="nb" onclick="sp('recetas',this);loadProfRecetas()"><i class="ti ti-pill"></i><span class="nb-text">Recetas Emitidas</span></button>
+    <div class="sfoot">
+      <span id="prof-logged-name" style="font-weight:600; display:block; text-overflow:ellipsis; overflow:hidden">Especialista</span>
+      <span id="prof-logged-spec" style="color:var(--gris); font-size:10px">Cargando...</span>
+      <br/><span class="logout-link" onclick="doLogout()">✕ Cerrar sesión</span>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <div id="pg-dashboard" class="pg on">
+      <div class="ph"><h1 id="dash-welcome">¡Hola!</h1><p>Resumen clínico de tu actividad en FamHealth.</p></div>
+      <div class="mets">
+        <div class="met"><div class="ml">Citas pendientes</div><div class="mv" id="p-citas-count">0</div><div class="md">Por confirmar/atender</div></div>
+        <div class="met"><div class="ml">Atenciones clínicas</div><div class="mv" id="p-at-count">0</div><div class="md">Historial de firmas</div></div>
+        <div class="met"><div class="ml">Recetas extendidas</div><div class="mv" id="p-rec-count">0</div><div class="md">Prescripciones</div></div>
+      </div>
+      <div class="two">
+        <div class="card"><div class="ch"><span class="ct">Próximas citas en agenda</span></div><div id="dash-citas"><div class="loading"><span class="spin"></span></div></div></div>
+        <div class="card">
+          <div class="ch"><span class="ct">Información de Cobertura</span></div>
+          <div style="font-size:12px; line-height:1.8; padding:.5rem; background:var(--bg2); border-radius:8px">
+            <p><strong>⚠️ Recordatorio de Retención:</strong> Para que tus pacientes puedan reembolsar en sus ISAPRES o procesar bonos FONASA, debes registrar la evolución clínica el mismo día de la sesión.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="pg-citas" class="pg">
+      <div class="ph"><h1>Mis Citas Agendadas</h1><p>Acepta, rechaza o inicia la atención clínica de tus solicitudes de agendamiento.</p></div>
+      <div class="card">
+        <div class="filt"><input type="text" placeholder="Filtrar por paciente..." oninput="ft('citas-body',this.value,'')"></div>
+        <div class="tbl-scroll"><table>
+          <thead><tr><th onclick="sortTable(this,0,true)">Fecha cita</th><th>Hora</th><th>Paciente</th><th>Modalidad</th><th>Origen</th><th>Estado</th><th>Acción</th></tr></thead>
+          <tbody id="citas-body"><tr><td colspan="7" class="loading"><span class="spin"></span>Cargando agenda...</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <div id="pg-atenciones" class="pg">
+      <div class="ph"><h1>Historial Clínico / Evoluciones</h1><p>Registra nuevas evoluciones o consulta los registros de tus pacientes asignados.</p></div>
+      <div class="card">
+        <div class="ch"><span class="ct">Evoluciones Clínicas Firmadas</span><button class="btn btn-p" onclick="abrirNuevaAtencion()"><i class="ti ti-plus"></i> Registrar Evolución Libre</button></div>
+        <div class="filt"><input type="text" placeholder="Buscar por paciente o notas..." oninput="ft('atenciones-body',this.value,'')"></div>
+        <div class="tbl-scroll"><table>
+          <thead><tr><th onclick="sortTable(this,0,true)">Fecha</th><th>Paciente</th><th>RUT</th><th>Notas de la Sesión</th><th>Próxima Sesión</th></tr></thead>
+          <tbody id="atenciones-body"><tr><td colspan="5" class="loading"><span class="spin"></span>Cargando historial clínico...</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <div id="pg-recetas" class="pg">
+      <div class="ph"><h1>Recetas entregadas</h1><p>Prescribe fármacos o tratamientos asociados al historial de tus pacientes.</p></div>
+      <div class="card">
+        <div class="ch"><span class="ct">Recetario Electrónico</span><button class="btn btn-p" onclick="openModal('modal-receta')"><i class="ti ti-plus"></i> Extender Nueva Receta</button></div>
+        <div class="filt"><input type="text" placeholder="Buscar medicamento o paciente..." oninput="ft('recetas-body',this.value,'')"></div>
+        <div class="tbl-scroll"><table>
+          <thead><tr><th onclick="sortTable(this,0,true)">Fecha</th><th>Paciente</th><th>RUT</th><th>Medicamento</th><th>Dosis</th><th>Duración</th><th>Acción</th></tr></thead>
+          <tbody id="recetas-body"><tr><td colspan="8" class="loading"><span class="spin"></span>Cargando recetario...</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div class="modal-bg" id="modal-receta">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Extender Receta Médica</span><button class="modal-close" onclick="closeModal('modal-receta')"><i class="ti ti-x"></i></button></div>
+    <div class="form-grid">
+      <div class="fg"><label>Paciente *</label><input type="text" id="rec-pac" placeholder="Nombre completo"/></div>
+      <div class="fg"><label>RUT paciente *</label><input type="text" id="rec-rut" placeholder="12.345.678-9"/></div>
+      <div class="fg full"><label>Medicamento / Tratamiento *</label><input type="text" id="rec-med" placeholder="Ej: Losartán 50mg o Ejercicios de flexión"/></div>
+      <div class="fg"><label>Dosis / Frecuencia</label><input type="text" id="rec-dosis" placeholder="Ej: 1 comp cada 12 horas"/></div>
+      <div class="fg"><label>Duración</label><input type="text" id="rec-dur" placeholder="Ej: 30 días o 10 sesiones"/></div>
+      <div class="fg full"><label>Indicaciones de Uso / Comentarios</label><textarea id="rec-comentarios" placeholder="Comentarios abiertos del especialista..."></textarea></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn" onclick="closeModal('modal-receta')">Cancelar</button>
+      <button class="btn btn-p" onclick="emitirRecetaProf()"><i class="ti ti-check"></i> Firmar y Emitir Receta</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal-atencion">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Evolución de Atención Médica</span><button class="modal-close" onclick="closeModal('modal-atencion')"><i class="ti ti-x"></i></button></div>
+    <div class="form-grid">
+      <div class="fg"><label>Paciente *</label><input type="text" id="at-pac" placeholder="Nombre completo"/></div>
+      <div class="fg"><label>RUT paciente *</label><input type="text" id="at-rut" placeholder="12.345.678-9"/></div>
+      <div class="fg full"><label>Notas Clínicas / Evolución de la Sesión *</label><textarea id="at-notas" style="min-height:120px" placeholder="Describe los hallazgos físicos, ejercicios realizados o evolución farmacológica..."></textarea></div>
+      <div class="fg full"><label>Próxima Sesión / Control Sugerido</label><input type="date" id="at-prox"/></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn" onclick="closeModal('modal-atencion')">Cancelar</button>
+      <button class="btn btn-p" onclick="guardarAtencionProf()"><i class="ti ti-check"></i> Registrar en Ficha</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal-receta-detalle">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title" style="color:var(--verde)">Receta Médica</span><button class="modal-close" onclick="closeModal('modal-receta-detalle')"><i class="ti ti-x"></i></button></div>
+    <div style="background:var(--bg2); padding:1rem; border-radius:8px; font-size:13px">
+      <div style="margin-bottom:8px"><strong>Paciente:</strong> <span id="rd-pac"></span> (<span id="rd-rut"></span>)</div>
+      <div style="margin-bottom:8px"><strong>Fecha:</strong> <span id="rd-fecha"></span></div>
+      <div style="margin-bottom:8px; background:#fff; padding:8px; border-radius:4px; border:0.5px solid var(--bdr)">
+        <strong>Prescripción:</strong> <div id="rd-med" style="font-weight:600; color:var(--verde); margin:4px 0"></div>
+        <div>Dosis: <span id="rd-dosis"></span> · Duración: <span id="rd-dur"></span></div>
+      </div>
+      <div><strong>Indicaciones:</strong><div id="rd-comentarios" style="background:#fff; padding:8px; border-radius:4px; margin-top:4px; min-height:50px; white-space:pre-wrap"></div></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:1rem"><button class="btn" onclick="closeModal('modal-receta-detalle')">Cerrar</button></div>
+  </div>
+</div>
+
+<script>
+// VARIABLES DE IDENTIDAD DEL ESPECIALISTA (Se llenan tras validar email)
+let ME_PROF_NAME = '';
+let ME_PROF_SPEC = '';
+let ME_PROF_RUT = '';
+
+// ALMACENES GLOBALES ANTI-BUGS DE COMILLAS
+window.citasData = []; window.atData = []; window.recData = [];
+
+// SORT TABLE
+let sortCol = -1; let sortAsc = true;
+function sortTable(th, colIdx, isDate=false) {
+  const table = th.closest('table'); const tbody = table.querySelector('tbody'); const rows = Array.from(tbody.querySelectorAll('tr'));
+  if (rows.length === 0 || rows[0].querySelector('td.empty') || rows[0].querySelector('td.loading')) return;
+  sortAsc = (sortCol === colIdx) ? !sortAsc : true; sortCol = colIdx;
+  rows.sort((a, b) => {
+    let v1 = a.cells[colIdx].innerText.trim(); let v2 = b.cells[colIdx].innerText.trim();
+    if (isDate) {
+      const d1 = v1.split('-'); const d2 = v2.split('-');
+      if (d1.length===3 && d2.length===3) { v1 = `${d1[2]}${d1[1]}${d1[0]}`; v2 = `${d2[2]}${d2[1]}${d2[0]}`; }
+    } else { if (!isNaN(v1) && !isNaN(v2) && v1!=='' && v2!=='') { v1=parseFloat(v1); v2=parseFloat(v2); } }
+    return v1 > v2 ? (sortAsc ? 1 : -1) : v1 < v2 ? (sortAsc ? -1 : 1) : 0;
+  });
+  tbody.append(...rows);
+  table.querySelectorAll('th i.sort-icon').forEach(i => i.remove());
+  th.innerHTML += `<i class="sort-icon ti ti-chevron-${sortAsc?'up':'down'}" style="margin-left:4px;font-size:11px;color:var(--verde)"></i>`;
+}
+
+// NAVIGATION
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('show'); }
+function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
+let sidebarMini = false;
+function toggleDesktop() { sidebarMini = !sidebarMini; document.getElementById('sidebar').classList.toggle('mini', sidebarMini); document.querySelector('.main').classList.toggle('mini', sidebarMini); document.getElementById('toggle-icon').className = sidebarMini ? 'ti ti-chevron-right' : 'ti ti-chevron-left'; }
+
+function sp(id, btn) {
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
+  document.getElementById('pg-' + id).classList.add('on');
+  if (btn) btn.classList.add('on');
+  closeSidebar();
+}
+
+function badge(e) {
+  const m = { 'Confirmada': 'bg', 'Completada': 'bg', 'Pendiente': 'ba', 'Rechazada': 'br', 'Cancelada': 'br' };
+  return `<span class="badge ${m[e] || 'bgr'}">${e}</span>`;
+}
+function av(n) { if (!n) return '??'; const p = n.trim().split(' '); return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase(); }
+function ft(id, q, esp) { q = q.toLowerCase(); document.querySelectorAll('#' + id + ' tr').forEach(r => { const t = r.textContent.toLowerCase(); r.style.display = (!q || t.includes(q)) ? '' : 'none'; }); }
+
+// LOGIN DE PROFESIONALES CONTRA LA HOJA 'PROFESIONALES'
+async function doProfLogin() {
+  const emailInput = document.getElementById('prof-email').value.trim();
+  if(!emailInput) { alert("Ingresa tu correo"); return; }
+  
+  document.getElementById('lerr').style.display = 'none';
+  const loginBtn = document.querySelector('.lb .lbtn');
+  loginBtn.textContent = "Verificando credenciales..."; loginBtn.disabled = true;
+
+  try {
+    const res = await fetch(`${SC}?action=getProfesionales`);
+    const j = await res.json();
+    const lista = j.data || [];
+    
+    // Buscamos si el email está registrado y APROBADO por el Admin
+    const profFound = lista.find(x => x.email.toLowerCase() === emailInput.toLowerCase() && x.estado === 'Aprobado');
+    
+    if(profFound) {
+      ME_PROF_NAME = profFound.nombre;
+      ME_PROF_SPEC = profFound.especialidad;
+      ME_PROF_RUT  = profFound.rut;
+
+      // Guardamos en sesión
+      localStorage.setItem('fam_prof_email', emailInput);
+      localStorage.setItem('fam_prof_name', ME_PROF_NAME);
+      localStorage.setItem('fam_prof_spec', ME_PROF_SPEC);
+      localStorage.setItem('fam_prof_rut', ME_PROF_RUT);
+
+      document.getElementById('ls').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      
+      initPortal();
+    } else {
+      document.getElementById('lerr').style.display = 'block';
+    }
+  } catch(e) {
+    alert("Error de conexión");
+  } finally {
+    loginBtn.textContent = "Ingresar a mi consulta"; loginBtn.disabled = false;
+  }
+}
+
+function initPortal() {
+  document.getElementById('dash-welcome').textContent = `¡Hola, ${ME_PROF_NAME.split(' ')[0]}!`;
+  document.getElementById('prof-logged-name').textContent = ME_PROF_NAME;
+  document.getElementById('prof-logged-spec').textContent = ME_PROF_SPEC;
+  loadProfDashboard();
+}
+
+function doLogout() {
+  localStorage.clear();
+  window.location.reload();
+}
+
+// CONTROLADOR AUTO-LOGIN
+window.addEventListener('DOMContentLoaded', () => {
+  const cachedEmail = localStorage.getItem('fam_prof_email');
+  if(cachedEmail) {
+    ME_PROF_NAME = localStorage.getItem('fam_prof_name');
+    ME_PROF_SPEC = localStorage.getItem('fam_prof_spec');
+    ME_PROF_RUT  = localStorage.getItem('fam_prof_rut');
+    
+    document.getElementById('ls').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initPortal();
+  }
+});
+
+// Carga Dashboard Filtrado
+async function loadProfDashboard() {
+  const [citas, atenciones, recetas] = await Promise.all([
+    fetch(`${SC}?action=getCitas`).then(r => r.json()),
+    fetch(`${SC}?action=getAtenciones`).then(r => r.json()),
+    fetch(`${SC}?action=getRecetas`).then(r => r.json())
+  ]);
+
+  // Filtramos todo por el NOMBRE del profesional logueado
+  const miAgenda = (citas.data || []).filter(c => c.profesional === ME_PROF_NAME);
+  const miHistorial = (atenciones.data || []).filter(a => a.profesional === ME_PROF_NAME);
+  const misRecetas = (recetas.data || []).filter(r => r.profesional === ME_PROF_NAME);
+
+  document.getElementById('p-citas-count').textContent = miAgenda.filter(c => c.estado === 'Pendiente' || c.estado === 'Confirmada').length;
+  document.getElementById('p-at-count').textContent = miHistorial.length;
+  document.getElementById('p-rec-count').textContent = misRecetas.length;
+
+  // Mini Agenda en Inicio
+  const proximas = miAgenda.slice(-4).reverse();
+  document.getElementById('dash-citas').innerHTML = proximas.length ? '<table><tbody>' + proximas.map(c => 
+    `<tr><td>${c.fechaCita}</td><td>${c.paciente}</td><td>${badge(c.estado)}</td></tr>`
+  ).join('') + '</tbody></table>' : '<div class="empty">No tienes citas agendadas en plataforma</div>';
+}
+
+// MIS CITAS PORTAL
+async function loadProfCitas() {
+  document.getElementById('citas-body').innerHTML = '<tr><td colspan="7" class="loading"><span class="spin"></span>Filtrando tu agenda...</td></tr>';
+  const j = await fetch(`${SC}?action=getCitas`).then(r => r.json());
+  const d = (j.data || []).filter(c => c.profesional === ME_PROF_NAME);
+  window.citasData = d;
+
+  document.getElementById('citas-body').innerHTML = d.length ? d.map(c => 
+    `<tr>
+      <td>${c.fechaCita || '—'}</td>
+      <td>${c.hora || '—'}</td>
+      <td><span class="av">${av(c.paciente)}</span><strong>${c.paciente || '—'}</strong></td>
+      <td>${c.modalidad || '—'}</td>
+      <td><span class="badge ${c.origen==='Cal.com'?'bb':'bgr'}">${c.origen || '—'}</span></td>
+      <td>${badge(c.estado)}</td>
+      <td>
+        ${c.estado === 'Pendiente' ? 
+          `<button class="btn btn-p btn-sm" onclick="accCita(${c.fila}, 'Confirmada')">Aceptar</button><button class="btn btn-d btn-sm" onclick="accCita(${c.fila}, 'Rechazada')">Rechazar</button>` :
+          c.estado === 'Confirmada' ?
+          `<button class="btn btn-p btn-sm" onclick="comenzarEvolucion('${c.paciente.replace(/'/g, "\\'")}')"><i class="ti ti-file-text"></i> Registrar Atención</button>` : '—'
+        }
+      </td>
+    </tr>`
+  ).join('') : '<tr><td colspan="7" class="empty">No tienes citas registradas.</td></tr>';
+}
+
+async function accCita(fila, nuevoEstado) {
+  toast('Actualizando estado de agenda...');
+  await fetch(`${SC}?action=updateCita&fila=${fila}&estado=${nuevoEstado}`);
+  toast('✓ Estado actualizado');
+  loadProfCitas();
+  loadProfDashboard();
+}
+
+function comenzarEvolucion(pacienteNombre) {
+  document.getElementById('at-pac').value = pacienteNombre;
+  document.getElementById('at-rut').value = 'Ver en Ficha';
+  document.getElementById('at-notas').value = '';
+  sp('atenciones', document.querySelectorAll('.nb')[2]);
+  openModal('modal-atencion');
+}
+
+// HISTORIAL EVOLUCIONES
+async function loadProfAtenciones() {
+  document.getElementById('atenciones-body').innerHTML = '<tr><td colspan="5" class="loading"><span class="spin"></span>Filtrando fichas...</td></tr>';
+  const j = await fetch(`${SC}?action=getAtenciones`).then(r => r.json());
+  const d = (j.data || []).filter(a => a.profesional === ME_PROF_NAME);
+  window.atData = d;
+
+  document.getElementById('atenciones-body').innerHTML = d.length ? d.map(a => 
+    `<tr>
+      <td style="font-size:11px">${(a.fecha || '').substring(0,10)}</td>
+      <td><span class="av">${av(a.paciente)}</span>${a.paciente || '—'}</td>
+      <td>${a.rut || '—'}</td>
+      <td style="color:var(--gris); max-width:250px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${a.notas}">${a.notas || '—'}</td>
+      <td style="font-size:11px">${(a.proximaSesion || '—').substring(0,10)}</td>
+    </tr>`
+  ).join('') : '<tr><td colspan="5" class="empty">No has registrado atenciones clínicas aún.</td></tr>';
+}
+
+function abrirNuevaAtencion() {
+  document.getElementById('at-pac').value = ''; document.getElementById('at-rut').value = ''; document.getElementById('at-notas').value = '';
+  openModal('modal-atencion');
+}
+
+async function guardarAtencionProf() {
+  const p = document.getElementById('at-pac').value; const n = document.getElementById('at-notas').value;
+  if(!p || !n) { alert("Paciente y Notas son obligatorios"); return; }
+  
+  toast('Guardando registro clínico...');
+  const payload = {
+    tipo: 'atencion', paciente: p, rut: document.getElementById('at-rut').value,
+    profesional: ME_PROF_NAME, especialidad: ME_PROF_SPEC,
+    notas: n, proximaSesion: document.getElementById('at-prox').value
+  };
+
+  await fetch(SC, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+  closeModal('modal-atencion'); toast('✓ Evolución guardada y firmada');
+  setTimeout(loadProfAtenciones, 1000);
+}
+
+// RECETAS DEL PROFESIONAL
+async function loadProfRecetas() {
+  document.getElementById('recetas-body').innerHTML = '<tr><td colspan="8" class="loading"><span class="spin"></span>Filtrando recetario...</td></tr>';
+  const j = await fetch(`${SC}?action=getRecetas`).then(r => r.json());
+  const d = (j.data || []).filter(r => r.profesional === ME_PROF_NAME);
+  window.recData = d;
+
+  document.getElementById('recetas-body').innerHTML = d.length ? d.map(r => 
+    `<tr>
+      <td style="font-size:11px">${(r.fecha || '').substring(0,10)}</td>
+      <td><span class="av">${av(r.paciente)}</span>${r.paciente || '—'}</td>
+      <td>${r.rut || '—'}</td>
+      <td><strong>${r.medicamento || '—'}</strong></td>
+      <td>${r.dosis || '—'}</td>
+      <td>${r.duracion || '—'}</td>
+      <td><button class="btn btn-p btn-sm" onclick="verRecetaDetalleProf(${r.fila})">Ver Receta</button></td>
+    </tr>`
+  ).join('') : '<tr><td colspan="8" class="empty">No has emitido recetas médicas aún.</td></tr>';
+}
+
+function verRecetaDetalleProf(fila) {
+  const r = window.recData.find(x => x.fila === fila); if(!r) return;
+  document.getElementById('rd-fecha').textContent = r.fecha || '—'; document.getElementById('rd-pac').textContent = r.paciente || '—'; document.getElementById('rd-rut').textContent = r.rut || '—'; document.getElementById('rd-med').textContent = r.medicamento || '—'; document.getElementById('rd-dosis').textContent = r.dosis || '—'; document.getElementById('rd-dur').textContent = r.duracion || '—'; document.getElementById('rd-comentarios').textContent = r.comentarios || 'Sin indicaciones extra.';
+  openModal('modal-receta-detalle');
+}
+
+async function emitirRecetaProf() {
+  const p = document.getElementById('rec-pac').value; const m = document.getElementById('rec-med').value;
+  if(!p || !m) { alert("Paciente y Medicamento son obligatorios"); return; }
+  
+  toast('Firmando receta digital...');
+  const payload = {
+    tipo: 'receta', paciente: p, rut: document.getElementById('rec-rut').value,
+    profesional: ME_PROF_NAME, medicamento: m,
+    dosis: document.getElementById('rec-dosis').value, duracion: document.getElementById('rec-dur').value,
+    comentarios: document.getElementById('rec-comentarios').value
+  };
+
+  await fetch(SC, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+  closeModal('modal-receta'); toast('✓ Receta extendida exitosamente');
+  setTimeout(loadProfRecetas, 1000);
+}
+
+document.querySelectorAll('.modal-bg').forEach(bg => { bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('open'); }); });
+</script>
+</body>
+</html>
