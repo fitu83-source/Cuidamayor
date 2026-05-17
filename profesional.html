@@ -38,7 +38,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:14px;color:var(
 /* LAYOUT GENERAL */
 #app{display:none;height:100vh;overflow:hidden}
 
-/* SIDEBAR REASIGNADA */
+/* SIDEBAR */
 .sidebar{
   position:fixed;left:0;top:0;bottom:0;width:var(--sb);
   background:var(--blanco);border-right:0.5px solid var(--bdr);
@@ -103,7 +103,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:14px;color:var(
 /* TABLES */
 .tbl-scroll{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed;min-width:480px}
-th{text-align:left;padding:6px 8px;font-size:10px;font-weight:500;color:var(--gris);border-bottom:0.5px solid var(--bdr);text-transform:uppercase;cursor:pointer}
+th{text-align:left;padding:6px 8px;font-size:10px;font-weight:500;color:var(--gris);border-bottom:0.5px solid var(--bdr);text-transform:uppercase;cursor:pointer;user-select:none}
 th:hover{background:var(--bg2)}
 td{padding:8px;border-bottom:0.5px solid var(--bg2);color:var(--texto);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
 tr:hover td{background:var(--bg2)}
@@ -165,7 +165,7 @@ tr:hover td{background:var(--bg2)}
   </div>
 </div>
 
-<div id="overlay" onclick="toggleSidebar()"></div>
+<div id="overlay" onclick="closeSidebar()"></div>
 
 <div id="app">
   <div class="topbar">
@@ -299,6 +299,9 @@ tr:hover td{background:var(--bg2)}
 </div>
 
 <script>
+// URL de conexión API unificada
+const SC = 'https://script.google.com/macros/s/AKfycbyn1kqivlJKUt-7bhJyk60As9bFaMCC6sMWF_OORTQd1bRcMIZ4Fl6lm9DmpQPQFMXoBA/exec';
+
 // VARIABLES DE IDENTIDAD DEL ESPECIALISTA (Se llenan tras validar email)
 let ME_PROF_NAME = '';
 let ME_PROF_SPEC = '';
@@ -361,7 +364,6 @@ async function doProfLogin() {
     const j = await res.json();
     const lista = j.data || [];
     
-    // Buscamos si el email está registrado y APROBADO por el Admin
     const profFound = lista.find(x => x.email.toLowerCase() === emailInput.toLowerCase() && x.estado === 'Aprobado');
     
     if(profFound) {
@@ -369,7 +371,6 @@ async function doProfLogin() {
       ME_PROF_SPEC = profFound.especialidad;
       ME_PROF_RUT  = profFound.rut;
 
-      // Guardamos en sesión
       localStorage.setItem('fam_prof_email', emailInput);
       localStorage.setItem('fam_prof_name', ME_PROF_NAME);
       localStorage.setItem('fam_prof_spec', ME_PROF_SPEC);
@@ -383,7 +384,7 @@ async function doProfLogin() {
       document.getElementById('lerr').style.display = 'block';
     }
   } catch(e) {
-    alert("Error de conexión");
+    alert("Error de conexión con la base de datos");
   } finally {
     loginBtn.textContent = "Ingresar a mi consulta"; loginBtn.disabled = false;
   }
@@ -401,7 +402,6 @@ function doLogout() {
   window.location.reload();
 }
 
-// CONTROLADOR AUTO-LOGIN
 window.addEventListener('DOMContentLoaded', () => {
   const cachedEmail = localStorage.getItem('fam_prof_email');
   if(cachedEmail) {
@@ -415,7 +415,6 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Carga Dashboard Filtrado
 async function loadProfDashboard() {
   const [citas, atenciones, recetas] = await Promise.all([
     fetch(`${SC}?action=getCitas`).then(r => r.json()),
@@ -423,7 +422,6 @@ async function loadProfDashboard() {
     fetch(`${SC}?action=getRecetas`).then(r => r.json())
   ]);
 
-  // Filtramos todo por el NOMBRE del profesional logueado
   const miAgenda = (citas.data || []).filter(c => c.profesional === ME_PROF_NAME);
   const miHistorial = (atenciones.data || []).filter(a => a.profesional === ME_PROF_NAME);
   const misRecetas = (recetas.data || []).filter(r => r.profesional === ME_PROF_NAME);
@@ -432,14 +430,12 @@ async function loadProfDashboard() {
   document.getElementById('p-at-count').textContent = miHistorial.length;
   document.getElementById('p-rec-count').textContent = misRecetas.length;
 
-  // Mini Agenda en Inicio
   const proximas = miAgenda.slice(-4).reverse();
   document.getElementById('dash-citas').innerHTML = proximas.length ? '<table><tbody>' + proximas.map(c => 
     `<tr><td>${c.fechaCita}</td><td>${c.paciente}</td><td>${badge(c.estado)}</td></tr>`
   ).join('') + '</tbody></table>' : '<div class="empty">No tienes citas agendadas en plataforma</div>';
 }
 
-// MIS CITAS PORTAL
 async function loadProfCitas() {
   document.getElementById('citas-body').innerHTML = '<tr><td colspan="7" class="loading"><span class="spin"></span>Filtrando tu agenda...</td></tr>';
   const j = await fetch(`${SC}?action=getCitas`).then(r => r.json());
@@ -458,7 +454,7 @@ async function loadProfCitas() {
         ${c.estado === 'Pendiente' ? 
           `<button class="btn btn-p btn-sm" onclick="accCita(${c.fila}, 'Confirmada')">Aceptar</button><button class="btn btn-d btn-sm" onclick="accCita(${c.fila}, 'Rechazada')">Rechazar</button>` :
           c.estado === 'Confirmada' ?
-          `<button class="btn btn-p btn-sm" onclick="comenzarEvolucion('${c.paciente.replace(/'/g, "\\'")}')"><i class="ti ti-file-text"></i> Registrar Atención</button>` : '—'
+          `<button class="btn btn-p btn-sm" onclick="comenzarEvolucion('${c.paciente.replace(/'/g, "\\'")}')">Registrar Atención</button>` : '—'
         }
       </td>
     </tr>`
@@ -476,12 +472,11 @@ async function accCita(fila, nuevoEstado) {
 function comenzarEvolucion(pacienteNombre) {
   document.getElementById('at-pac').value = pacienteNombre;
   document.getElementById('at-rut').value = 'Ver en Ficha';
-  document.getElementById('at-notas').value = '';
+  document.getElementById('at-notes').value = '';
   sp('atenciones', document.querySelectorAll('.nb')[2]);
   openModal('modal-atencion');
 }
 
-// HISTORIAL EVOLUCIONES
 async function loadProfAtenciones() {
   document.getElementById('atenciones-body').innerHTML = '<tr><td colspan="5" class="loading"><span class="spin"></span>Filtrando fichas...</td></tr>';
   const j = await fetch(`${SC}?action=getAtenciones`).then(r => r.json());
@@ -493,36 +488,35 @@ async function loadProfAtenciones() {
       <td style="font-size:11px">${(a.fecha || '').substring(0,10)}</td>
       <td><span class="av">${av(a.paciente)}</span>${a.paciente || '—'}</td>
       <td>${a.rut || '—'}</td>
-      <td style="color:var(--gris); max-width:250px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${a.notas}">${a.notas || '—'}</td>
+      <td style="color:var(--gris); max-width:250px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${a.notes}">${a.notes || '—'}</td>
       <td style="font-size:11px">${(a.proximaSesion || '—').substring(0,10)}</td>
     </tr>`
   ).join('') : '<tr><td colspan="5" class="empty">No has registrado atenciones clínicas aún.</td></tr>';
 }
 
 function abrirNuevaAtencion() {
-  document.getElementById('at-pac').value = ''; document.getElementById('at-rut').value = ''; document.getElementById('at-notas').value = '';
+  document.getElementById('at-pac').value = ''; document.getElementById('at-rut').value = ''; document.getElementById('at-notes').value = '';
   openModal('modal-atencion');
 }
 
 async function guardarAtencionProf() {
-  const p = document.getElementById('at-pac').value; const n = document.getElementById('at-notas').value;
+  const p = document.getElementById('at-pac').value; const n = document.getElementById('at-notes').value;
   if(!p || !n) { alert("Paciente y Notas son obligatorios"); return; }
   
   toast('Guardando registro clínico...');
   const payload = {
     tipo: 'atencion', paciente: p, rut: document.getElementById('at-rut').value,
     profesional: ME_PROF_NAME, especialidad: ME_PROF_SPEC,
-    notas: n, proximaSesion: document.getElementById('at-prox').value
+    notes: n, proximaSesion: document.getElementById('at-prox').value
   };
 
   await fetch(SC, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-  closeModal('modal-atencion'); toast('✓ Evolución guardada y firmada');
+  closeModal('modal-atencion'); toast('✓ Evolución guardada');
   setTimeout(loadProfAtenciones, 1000);
 }
 
-// RECETAS DEL PROFESIONAL
 async function loadProfRecetas() {
-  document.getElementById('recetas-body').innerHTML = '<tr><td colspan="8" class="loading"><span class="spin"></span>Filtrando recetario...</td></tr>';
+  document.getElementById('recetas-body').innerHTML = '<tr><td colspan="7" class="loading"><span class="spin"></span>Filtrando recetario...</td></tr>';
   const j = await fetch(`${SC}?action=getRecetas`).then(r => r.json());
   const d = (j.data || []).filter(r => r.profesional === ME_PROF_NAME);
   window.recData = d;
@@ -537,7 +531,7 @@ async function loadProfRecetas() {
       <td>${r.duracion || '—'}</td>
       <td><button class="btn btn-p btn-sm" onclick="verRecetaDetalleProf(${r.fila})">Ver Receta</button></td>
     </tr>`
-  ).join('') : '<tr><td colspan="8" class="empty">No has emitido recetas médicas aún.</td></tr>';
+  ).join('') : '<tr><td colspan="7" class="empty">No has emitido recetas médicas aún.</td></tr>';
 }
 
 function verRecetaDetalleProf(fila) {
