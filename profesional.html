@@ -28,18 +28,18 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:14px;color:var(
 #overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:250;} #overlay.show{display:block}
 .topbar{display:none;position:sticky;top:0;z-index:100;background:var(--blanco);border-bottom:0.5px solid var(--bdr);padding:10px 1rem;align-items:center;gap:10px;min-height:48px;}
 .topbar-logo{font-size:15px;font-weight:500;color:var(--verde);flex:1} .topbar-logo span{color:var(--vc)}
-.menu-btn{background:none;border:none;cursor:pointer;color:var(--gris);font-size:20px;}
+.menu-btn{background:none;border:none;cursor:pointer;color:var(--gris);font-size:20px;display:flex;align-items:center;}
 .toggle-btn{position:absolute;top:14px;right:-14px;width:28px;height:28px;border-radius:50%;background:var(--blanco);border:0.5px solid var(--bdr);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--gris);z-index:10;}
 .slogo{padding:14px 16px;font-size:15px;font-weight:500;color:var(--texto);border-bottom:0.5px solid var(--bdr);display:flex;align-items:center;gap:8px} .slogo span{color:var(--verde)}
 .nsec{font-size:10px;font-weight:500;color:var(--gris);padding:10px 16px 3px;text-transform:uppercase}
-.nb{display:flex;align-items:center;gap:8px;width:100%;padding:9px 16px;background:none;border:none;cursor:pointer;font-size:13px;color:var(--gris);text-align:left;} .nb:hover{background:var(--bg2);color:var(--texto)} .nb.on{background:var(--vs);color:var(--verde);font-weight:500}
+.nb{display:flex;align-items:center;gap:8px;width:100%;padding:9px 16px;background:none;border:none;cursor:pointer;font-size:13px;color:var(--gris);text-align:left;transition:all .15s;} .nb:hover{background:var(--bg2);color:var(--texto)} .nb.on{background:var(--vs);color:var(--verde);font-weight:500}
 .sfoot{margin-top:auto;padding:12px 16px;border-top:0.5px solid var(--bdr);font-size:11px;color:var(--gris);line-height:1.5} .logout-link{color:var(--rojo);cursor:pointer;font-weight:500;margin-top:5px;display:inline-block}
 
-.main{margin-left:var(--sb);height:100vh;overflow-y:auto;padding:1.25rem;} .main.mini{margin-left:var(--sb-mini)}
+.main{margin-left:var(--sb);height:100vh;overflow-y:auto;padding:1.25rem;transition:margin-left .2s ease} .main.mini{margin-left:var(--sb-mini)}
 .pg{display:none} .pg.on{display:block} .ph h1{font-size:18px;font-weight:500;margin-bottom:2px} .ph p{font-size:12px;color:var(--gris);margin-bottom:1rem}
 .mets{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem} @media(max-width:640px){.mets{grid-template-columns:1fr}}
-.met{background:var(--bg2);border-radius:8px;padding:12px} .met .ml{font-size:11px;color:var(--gris);margin-bottom:3px} .met .mv{font-size:22px;font-weight:500} .met .md{font-size:11px;color:var(--vc);margin-top:2px}
-.card{background:var(--blanco);border:0.5px solid var(--bdr);border-radius:12px;padding:1rem;margin-bottom:.75rem} .ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;} .ct{font-size:13px;font-weight:500}
+.met{background:var(--bg2);border-radius:8px;padding:12px} .met .ml{font-size:11px;color:var(--gris);margin-bottom:3px} .met .mv{font-size:22px;font-weight:500}
+.card{background:var(--blanco);border:0.5px solid var(--bdr);border-radius:12px;padding:1rem;margin-bottom:.75rem} .ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;gap:8px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:.75rem} @media(max-width:768px){.two{grid-template-columns:1fr}}
 
 .tbl-scroll{overflow-x:auto} table{width:100%;border-collapse:collapse;font-size:12px;text-align:left}
@@ -52,12 +52,9 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:none;align-items:center;justify-content:center;padding:16px;} .modal-bg.open{display:flex} .modal{background:var(--blanco);border-radius:14px;padding:1.5rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto}
 .av{width:26px;height:26px;border-radius:50%;background:var(--vs);color:var(--verde);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;margin-right:6px}
 .loading,.empty{text-align:center;padding:2rem;color:var(--gris);font-size:12px}
+.dt-fe{font-weight:600;color:var(--texto)} .dt-ho{font-size:11px;color:var(--gris)}
 #toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--verde);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;transform:translateY(100px);opacity:0;transition:all .3s;z-index:999} #toast.show{transform:translateY(0);opacity:1}
 
-.dt-fe{font-weight:600;color:var(--texto)}
-.dt-ho{font-size:10px;color:var(--gris)}
-
-/* TABS PERFIL */
 .tabs{display:flex;gap:4px;border-bottom:0.5px solid var(--bdr);margin-bottom:1rem;overflow-x:auto}
 .tab{padding:7px 14px;font-size:12px;cursor:pointer;border:none;background:none;color:var(--gris);font-family:'DM Sans',sans-serif;border-bottom:2px solid transparent;}
 .tab.on{color:var(--verde);border-bottom-color:var(--verde);font-weight:500}
@@ -80,101 +77,49 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
 <div id="overlay" onclick="toggleSidebar()"></div>
 
 <div id="app">
-  <div class="topbar">
-    <button class="menu-btn" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>
-    <div class="topbar-logo">Fam<span>Health</span> Profesional</div>
-  </div>
+  <div class="topbar"><button class="menu-btn" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button><div class="topbar-logo">Fam<span>Health</span> Profesional</div></div>
 
   <aside class="sidebar" id="sidebar">
     <div class="slogo"><div class="slogo-text">Fam<span>Health</span><small>Portal Clínico</small></div><button class="toggle-btn" onclick="toggleDesktop()"><i class="ti ti-chevron-left" id="toggle-icon"></i></button></div>
-    
     <div class="nsec">Mi Consulta</div>
     <button class="nb on" onclick="sp('dashboard',this)"><i class="ti ti-home-heart"></i><span class="nb-text">Inicio</span></button>
     <button class="nb" onclick="sp('citas',this);loadProfCitas()"><i class="ti ti-calendar-event"></i><span class="nb-text">Mis Citas</span></button>
-    <button class="nb" onclick="sp('atenciones',this);loadProfAtenciones()"><i class="ti ti-notes"></i><span class="nb-text">Historial Clínico</span></button>
-    <button class="nb" onclick="sp('recetas',this);loadProfRecetas()"><i class="ti ti-pill"></i><span class="nb-text">Mis Recetas</span></button>
-    <button class="nb" onclick="sp('alertas',this);loadProfAlertas()"><i class="ti ti-bell-ringing"></i><span class="nb-text">Alertas de Pacientes</span></button>
-    
+    <button class="nb" onclick="sp('atenciones',this);loadProfAtenciones()"><i class="ti ti-notes"></i><span class="nb-text">Fichas y Evoluciones</span></button>
+    <button class="nb" onclick="sp('recetas',this);loadProfRecetas()"><i class="ti ti-pill"></i><span class="nb-text">Recetas Emitidas</span></button>
+    <button class="nb" onclick="sp('alertas',this);loadProfAlertas()"><i class="ti ti-bell-ringing"></i><span class="nb-text">Alertas Pacientes</span></button>
     <div class="nsec">Configuración</div>
-    <button class="nb" onclick="sp('perfil',this);loadMiPerfil()"><i class="ti ti-user-circle"></i><span class="nb-text">Mi Perfil Profesional</span></button>
-    
-    <div class="sfoot">
-      <span id="prof-logged-name" style="font-weight:600; display:block;">Especialista</span>
-      <span id="prof-logged-spec" style="color:var(--gris); font-size:10px">Cargando...</span>
-      <span class="logout-link" onclick="doLogout()">✕ Cerrar sesión</span>
-    </div>
+    <button class="nb" onclick="sp('perfil',this);loadMiPerfil()"><i class="ti ti-user-circle"></i><span class="nb-text">Mi Perfil</span></button>
+    <div class="sfoot"><span id="prof-logged-name" style="font-weight:600; display:block;">...</span><span class="logout-link" onclick="doLogout()">✕ Cerrar sesión</span></div>
   </aside>
 
   <main class="main">
-
     <div id="pg-dashboard" class="pg on">
-      <div class="ph"><h1 id="dash-welcome">¡Hola!</h1><p>Resumen clínico de tu actividad en FamHealth.</p></div>
+      <div class="ph"><h1 id="dash-welcome">¡Hola!</h1></div>
       <div class="mets">
-        <div class="met"><div class="ml">Citas pendientes</div><div class="mv" id="p-citas-count">0</div></div>
-        <div class="met"><div class="ml">Atenciones clínicas</div><div class="mv" id="p-at-count">0</div></div>
-        <div class="met"><div class="ml">Recetas extendidas</div><div class="mv" id="p-rec-count">0</div></div>
+        <div class="met"><div class="ml">Citas en agenda</div><div class="mv" id="p-citas-count">0</div></div>
+        <div class="met"><div class="ml">Atenciones</div><div class="mv" id="p-at-count">0</div></div>
+        <div class="met"><div class="ml">Recetas</div><div class="mv" id="p-rec-count">0</div></div>
       </div>
-      <div class="two">
-        <div class="card"><div class="ch"><span class="ct">Próximas citas en agenda</span></div>
-        <div class="tbl-scroll"><table id="dash-citas"><tbody><tr><td class="loading">Cargando...</td></tr></tbody></table></div></div>
-        <div class="card"><div class="ch"><span class="ct">Información de Cobertura</span></div><div style="font-size:12px; line-height:1.6; padding:.5rem; background:var(--bg2); border-radius:8px"><p><strong>⚠️ Reembolsos:</strong> Recuerda registrar la evolución clínica para facilitar el reembolso ISAPRE/FONASA del paciente.</p></div></div>
-      </div>
+      <div class="two"><div class="card"><div class="ch"><span class="ct">Próximas citas</span></div><table id="dash-citas"><tbody></tbody></table></div></div>
     </div>
-
+    
     <div id="pg-citas" class="pg">
-      <div class="ph"><h1>Mis Citas Agendadas</h1><p>Acepta, rechaza o inicia la atención clínica.</p></div>
+      <div class="ph"><h1>Mis Citas</h1></div>
       <div class="card">
-        <div class="filt"><input type="text" placeholder="Filtrar por paciente..." oninput="ft('citas-body',this.value)"></div>
         <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:15%">Fecha</th><th style="width:10%">Hora</th><th style="width:25%">Paciente</th><th>Modalidad</th><th>Origen</th><th>Estado</th><th style="width:15%">Acción</th></tr></thead>
-          <tbody id="citas-body"><tr><td colspan="7" class="loading">Cargando agenda...</td></tr></tbody>
+          <thead><tr><th>Fecha</th><th>Hora</th><th>Paciente</th><th>Modalidad</th><th>Estado</th><th>Acción</th></tr></thead>
+          <tbody id="citas-body"></tbody>
         </table></div>
       </div>
     </div>
 
-    <div id="pg-atenciones" class="pg">
-      <div class="ph"><h1>Historial Clínico</h1><p>Consulta evoluciones y notas médicas.</p></div>
-      <div class="card">
-        <div class="ch"><span class="ct">Evoluciones Firmadas</span><button class="btn btn-p" onclick="openModal('modal-atencion')"><i class="ti ti-plus"></i> Registrar Evolución</button></div>
-        <div class="filt"><input type="text" placeholder="Buscar por paciente o notas..." oninput="ft('atenciones-body',this.value)"></div>
-        <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:15%">Fecha Registro</th><th style="width:20%">Paciente</th><th style="width:15%">RUT</th><th style="width:30%">Notas Sesión</th><th>Próxima Sesión</th></tr></thead>
-          <tbody id="atenciones-body"><tr><td colspan="5" class="loading">Cargando historial clínico...</td></tr></tbody>
-        </table></div>
-      </div>
-    </div>
-
-    <div id="pg-recetas" class="pg">
-      <div class="ph"><h1>Mis Recetas Emitidas</h1><p>Prescribe fármacos asociados al historial.</p></div>
-      <div class="card">
-        <div class="ch"><span class="ct">Recetario Electrónico</span><button class="btn btn-p" onclick="openModal('modal-receta')"><i class="ti ti-plus"></i> Extender Receta</button></div>
-        <div class="filt"><input type="text" placeholder="Buscar medicamento..." oninput="ft('recetas-body',this.value)"></div>
-        <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:15%">Fecha Emisión</th><th style="width:20%">Paciente</th><th style="width:15%">RUT</th><th style="width:20%">Medicamento</th><th>Dosis</th><th>Duración</th></tr></thead>
-          <tbody id="recetas-body"><tr><td colspan="6" class="loading">Cargando recetario...</td></tr></tbody>
-        </table></div>
-      </div>
-    </div>
-
-    <div id="pg-alertas" class="pg">
-      <div class="ph"><h1>Alertas de Mis Pacientes</h1><p>Seguimiento de medicación y controles.</p></div>
-      <div class="card">
-        <div class="filt"><input type="text" placeholder="Buscar paciente o mensaje..." oninput="ft('alertas-body',this.value)"></div>
-        <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:15%">Fecha Creación</th><th style="width:20%">Paciente</th><th>Tipo</th><th style="width:30%">Mensaje Recordatorio</th><th>Frecuencia</th><th>Estado</th></tr></thead>
-          <tbody id="alertas-body"><tr><td colspan="6" class="loading">Cargando alertas vigentes...</td></tr></tbody>
-        </table></div>
-      </div>
-    </div>
-
+    <div id="pg-atenciones" class="pg"><div class="ph"><h1>Historial Clínico</h1></div><div class="card"><div class="ch"><span class="ct">Evoluciones Firmadas</span><button class="btn btn-p" onclick="abrirNuevaAtencion()"><i class="ti ti-plus"></i> Registrar Evolución Libre</button></div><div class="tbl-scroll"><table><thead><tr><th>Fecha</th><th>Paciente</th><th>Notas</th></tr></thead><tbody id="atenciones-body"></tbody></table></div></div></div>
+    <div id="pg-recetas" class="pg"><div class="ph"><h1>Recetas Emitidas</h1></div><div class="card"><div class="ch"><span class="ct">Recetario</span><button class="btn btn-p" onclick="openModal('modal-receta')"><i class="ti ti-plus"></i> Extender Receta</button></div><div class="tbl-scroll"><table><thead><tr><th>Fecha</th><th>Paciente</th><th>Medicamento</th></tr></thead><tbody id="recetas-body"></tbody></table></div></div></div>
+    <div id="pg-alertas" class="pg"><div class="ph"><h1>Alertas</h1></div><div class="card"><div class="tbl-scroll"><table><thead><tr><th>Fecha</th><th>Paciente</th><th>Mensaje</th></tr></thead><tbody id="alertas-body"></tbody></table></div></div></div>
     <div id="pg-perfil" class="pg">
-      <div class="ph"><h1>Mi Perfil Profesional</h1><p>Mantén actualizada tu vitrina pública y configuración comercial.</p></div>
+      <div class="ph"><h1>Mi Perfil Profesional</h1></div>
       <div class="card" style="max-width:800px">
-        <div class="tabs">
-          <button class="tab on" onclick="showTab('pe-basicos',this)">Datos Públicos</button>
-          <button class="tab" onclick="showTab('pe-comercial',this)">Valores & Cobertura</button>
-        </div>
-        
+        <div class="tabs"><button class="tab on" onclick="showTab('pe-basicos',this)">Datos Públicos</button><button class="tab" onclick="showTab('pe-comercial',this)">Valores & Cobertura</button></div>
         <div id="pe-basicos" class="tab-pane on">
           <div style="display:flex;gap:20px;margin-bottom:1rem;align-items:flex-end">
             <div><img id="pe-foto-preview" class="prof-pic" src="https://via.placeholder.com/80"><label style="font-size:10px;color:var(--gris)">URL de tu Foto:</label><input type="text" id="pe-foto" placeholder="https://..." style="width:100%;font-size:12px;padding:4px" onchange="document.getElementById('pe-foto-preview').src=this.value||'https://via.placeholder.com/80'"></div>
@@ -190,7 +135,6 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
             <div class="fg full"><label>Biografía Profesional (Sobre mí)</label><textarea id="pe-bio" style="min-height:100px"></textarea></div>
           </div>
         </div>
-
         <div id="pe-comercial" class="tab-pane">
           <div class="form-grid">
             <div class="fg"><label>Link Agendamiento (Cal.com)</label><input type="text" id="pe-cal"></div>
@@ -200,26 +144,21 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
             <div class="fg"><label>Atiende por FONASA</label><select id="pe-fon"><option>Sí</option><option>No</option></select></div>
             <div class="fg"><label>Visible al Público</label><select id="pe-pub"><option>Sí</option><option>No</option></select></div>
           </div>
-          <p style="font-size:11px;color:var(--amber);background:var(--as);padding:8px;border-radius:6px;margin-top:10px">Nota: El Estado RNPI y Especialidad solo pueden ser modificados por Administración.</p>
         </div>
-
         <div style="text-align:right;margin-top:1rem;border-top:1px solid var(--bdr);padding-top:1rem"><button class="btn btn-p" onclick="saveMiPerfil()">Guardar Cambios de Perfil</button></div>
       </div>
     </div>
-
   </main>
 </div>
 
-<div class="modal-bg" id="modal-receta">
-  <div class="modal">
-    <div class="modal-header"><span class="modal-title">Extender Receta</span><button class="modal-close" onclick="closeModal('modal-receta')">×</button></div>
-    <div class="form-grid">
-      <div class="fg"><label>Paciente *</label><input type="text" id="rec-pac"></div><div class="fg"><label>RUT *</label><input type="text" id="rec-rut"></div>
-      <div class="fg full"><label>Medicamento *</label><input type="text" id="rec-med"></div>
-      <div class="fg"><label>Dosis</label><input type="text" id="rec-dosis"></div><div class="fg"><label>Duración</label><input type="text" id="rec-dur"></div>
-      <div class="fg full"><label>Indicaciones Adicionales</label><textarea id="rec-com"></textarea></div>
+<div class="modal-bg" id="modal-direccion">
+  <div class="modal" style="max-width:400px; text-align:center;">
+    <div class="modal-header"><span class="modal-title">Dirección de Atención</span><button class="modal-close" onclick="closeModal('modal-direccion')">×</button></div>
+    <div style="background:var(--bg2); padding:2rem; border-radius:12px; margin-bottom:1rem; font-size:16px; color:var(--verde); font-weight:500;">
+      <i class="ti ti-map-pin" style="font-size:32px; margin-bottom:10px; display:block;"></i>
+      <div id="dir-texto">Cargando dirección...</div>
     </div>
-    <div style="display:flex;justify-content:flex-end;gap:8px"><button class="btn" onclick="closeModal('modal-receta')">Cancelar</button><button class="btn btn-p" onclick="emitirRecetaProf()">Firmar y Emitir</button></div>
+    <button class="btn btn-p" style="width:100%" onclick="closeModal('modal-direccion')">Cerrar</button>
   </div>
 </div>
 
@@ -235,44 +174,60 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
   </div>
 </div>
 
+<div class="modal-bg" id="modal-receta">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Extender Receta Médica</span><button class="modal-close" onclick="closeModal('modal-receta')">×</button></div>
+    <div class="form-grid">
+      <div class="fg"><label>Paciente *</label><input type="text" id="rec-pac"></div><div class="fg"><label>RUT *</label><input type="text" id="rec-rut"></div>
+      <div class="fg full"><label>Medicamento / Tratamiento *</label><input type="text" id="rec-med"></div>
+      <div class="fg"><label>Dosis / Frecuencia</label><input type="text" id="rec-dosis"></div><div class="fg"><label>Duración</label><input type="text" id="rec-dur"></div>
+      <div class="fg full"><label>Indicaciones de Uso / Comentarios</label><textarea id="rec-comentarios"></textarea></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn" onclick="closeModal('modal-receta')">Cancelar</button><button class="btn btn-p" onclick="emitirRecetaProf()">Firmar y Emitir</button></div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
 const SC = 'https://script.google.com/macros/s/AKfycbyn1kqivlJKUt-7bhJyk60As9bFaMCC6sMWF_OORTQd1bRcMIZ4Fl6lm9DmpQPQFMXoBA/exec';
 
 let ME_PROF_NAME = ''; let ME_PROF_SPEC = ''; let ME_PROF_RUT = ''; let ME_PROF_FILA = null;
-let profFullData = null; // Para editar mi perfil
+let profFullData = null;
 
-window.citasData = []; window.atData = []; window.recData = [];
-
-// ── FORMATEADOR DE FECHAS SEPARADAS ──
+// FORMATO DE FECHA SOLICITADO: Jue 31 Dic | Hora: hh:mm
 function formatDT(dateStr) {
   if(!dateStr) return { d: '—', t: '—' };
-  let dateObj;
   try {
+    let dateObj;
     if (dateStr.includes('-') && dateStr.includes(':')) {
       const p = dateStr.split(' '); const dp = p[0].split('-'); const tp = p[1].split(':');
       dateObj = new Date(dp[2], dp[1]-1, dp[0], tp[0], tp[1]);
     } else { dateObj = new Date(dateStr); }
-    if(isNaN(dateObj)) return { d: dateStr.substring(0,10), t: '' };
+    if(isNaN(dateObj)) return { d: String(dateStr).substring(0,10), t: '—' };
     const days = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
     const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-    const d = `${days[dateObj.getDay()]} ${String(dateObj.getDate()).padStart(2,'0')}-${months[dateObj.getMonth()]}-${String(dateObj.getFullYear()).slice(-2)}`;
+    const d = `${days[dateObj.getDay()]} ${String(dateObj.getDate()).padStart(2,'0')} ${months[dateObj.getMonth()]}`;
     const t = `${String(dateObj.getHours()).padStart(2,'0')}:${String(dateObj.getMinutes()).padStart(2,'0')}`;
     return { d, t };
-  } catch(e) { return { d: dateStr.substring(0,10), t: '' }; }
+  } catch(e) { return { d: '—', t: '—' }; }
+}
+
+function verDireccion(dirText) {
+  if(!dirText || dirText === 'undefined') dirText = "No se proporcionó dirección.";
+  document.getElementById('dir-texto').textContent = dirText;
+  openModal('modal-direccion');
 }
 
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('show'); }
 function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
-let sidebarMini = false; function toggleDesktop() { sidebarMini = !sidebarMini; document.getElementById('sidebar').classList.toggle('mini', sidebarMini); document.querySelector('.main').classList.toggle('mini', sidebarMini); document.getElementById('toggle-icon').className = sidebarMini ? 'ti ti-chevron-right' : 'ti ti-chevron-left'; }
+function toggleDesktop() { document.getElementById('sidebar').classList.toggle('mini'); document.querySelector('.main').classList.toggle('mini'); }
 function sp(id, btn) { document.querySelectorAll('.pg').forEach(p => p.classList.remove('on')); document.querySelectorAll('.nb').forEach(b => b.classList.remove('on')); document.getElementById('pg-' + id).classList.add('on'); if (btn) btn.classList.add('on'); closeSidebar(); }
-function badge(e) { const m = { 'Confirmada': 'bg', 'Completada': 'bg', 'Pendiente': 'ba', 'Rechazada': 'br' }; return `<span class="badge ${m[e] || 'bgr'}">${e}</span>`; }
+function badge(e) { const m = { 'Confirmada': 'bg', 'Completada': 'bg', 'Pendiente': 'ba', 'Rechazada': 'br', 'Cancelada': 'br' }; return `<span class="badge ${m[e] || 'bgr'}">${e}</span>`; }
 function av(n) { if (!n) return '??'; const p = n.trim().split(' '); return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase(); }
-function ft(id, q) { q = q.toLowerCase(); document.querySelectorAll('#' + id + ' tr').forEach(r => { const t = r.textContent.toLowerCase(); r.style.display = (!q || t.includes(q)) ? '' : 'none'; }); }
 function openModal(id) { document.getElementById(id).classList.add('open'); } function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-function showTab(id, btn) { document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('on')); document.querySelectorAll('.tab').forEach(b => b.classList.remove('on')); document.getElementById(id).classList.add('on'); if (btn) btn.classList.add('on'); }
-function toast(msg, ok) { const t = document.getElementById('toast'); t.textContent = msg; t.style.background = ok === false ? '#E07A5F' : '#2D6A4F'; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
+function showTab(id, btn) { document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('on')); document.querySelectorAll('.tab').forEach(b => b.classList.remove('on')); document.getElementById(id).classList.add('on'); if(btn) btn.classList.add('on'); }
+function toast(msg) { const t = document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
 
 async function doProfLogin() {
   const emailInput = document.getElementById('prof-email').value.trim();
@@ -283,8 +238,7 @@ async function doProfLogin() {
     const profFound = (j.data || []).find(x => x.email.toLowerCase() === emailInput.toLowerCase() && x.estado === 'Aprobado');
     if(profFound) {
       ME_PROF_NAME = profFound.nombre; ME_PROF_SPEC = profFound.especialidad; ME_PROF_RUT = profFound.rut; ME_PROF_FILA = profFound.fila;
-      profFullData = profFound;
-      localStorage.setItem('fam_prof_email', emailInput);
+      profFullData = profFound; localStorage.setItem('fam_prof_email', emailInput);
       document.getElementById('ls').style.display = 'none'; document.getElementById('app').style.display = 'block';
       initPortal();
     } else { document.getElementById('lerr').style.display = 'block'; }
@@ -296,10 +250,7 @@ function doLogout() { localStorage.clear(); window.location.reload(); }
 
 window.addEventListener('DOMContentLoaded', async () => {
   const cachedEmail = localStorage.getItem('fam_prof_email');
-  if(cachedEmail) {
-    document.getElementById('prof-email').value = cachedEmail;
-    doProfLogin();
-  }
+  if(cachedEmail) { document.getElementById('prof-email').value = cachedEmail; doProfLogin(); }
 });
 
 function initPortal() {
@@ -312,11 +263,11 @@ function initPortal() {
 async function loadProfDashboard() {
   const [citas, atenciones, recetas] = await Promise.all([ fetch(`${SC}?action=getCitas`).then(r=>r.json()), fetch(`${SC}?action=getAtenciones`).then(r=>r.json()), fetch(`${SC}?action=getRecetas`).then(r=>r.json()) ]);
   const miAgenda = (citas.data || []).filter(c => c.profesional === ME_PROF_NAME);
-  document.getElementById('p-citas-count').textContent = miAgenda.filter(c => c.estado === 'Pendiente' || c.estado === 'Confirmada').length;
+  document.getElementById('p-citas-count').textContent = miAgenda.filter(c => c.estado === 'Confirmada').length;
   document.getElementById('p-at-count').textContent = (atenciones.data || []).filter(a => a.profesional === ME_PROF_NAME).length;
   document.getElementById('p-rec-count').textContent = (recetas.data || []).filter(r => r.profesional === ME_PROF_NAME).length;
   const proximas = miAgenda.slice(-4).reverse();
-  document.getElementById('dash-citas').innerHTML = proximas.length ? proximas.map(c => { const dt = formatDT(c.fechaCita + ' ' + (c.hora||'00:00:00')); return `<tr><td class="dt-fe">${dt.d} <span class="dt-ho">${c.hora||''}</span></td><td>${c.paciente}</td><td>${badge(c.estado)}</td></tr>`; }).join('') : '<tr><td class="empty">Agenda libre</td></tr>';
+  document.getElementById('dash-citas').innerHTML = proximas.length ? proximas.map(c => { const dt = formatDT(c.fechaCita + ' ' + (c.hora||'00:00')); return `<tr><td class="dt-fe">${dt.d} <span class="dt-ho">${dt.t}</span></td><td>${c.paciente}</td><td>${badge(c.estado)}</td></tr>`; }).join('') : '<tr><td class="empty">Agenda libre</td></tr>';
 }
 
 async function loadProfCitas() {
@@ -324,11 +275,23 @@ async function loadProfCitas() {
     const d = (await fetch(`${SC}?action=getCitas`).then(r=>r.json())).data.filter(c => c.profesional === ME_PROF_NAME) || [];
     document.getElementById('citas-body').innerHTML = d.length ? d.map(c => {
       const dt = formatDT(c.fechaCita + ' ' + (c.hora||'00:00'));
-      return `<tr><td><span class="dt-fe">${dt.d}</span></td><td><span class="dt-ho">${c.hora||'—'}</span></td><td><span class="av">${av(c.paciente)}</span><strong>${c.paciente||'—'}</strong></td><td>${c.modalidad||'—'}</td><td>${c.origen||'—'}</td><td>${badge(c.estado)}</td><td>${c.estado === 'Pendiente' ? `<button class="btn btn-p" onclick="accCita(${c.fila},'Confirmada')">✓</button>` : c.estado === 'Confirmada' ? `<button class="btn btn-p" onclick="abrirNuevaAtencion('${c.paciente}')">Evolución</button>` : '—'}</td></tr>`;
-    }).join('') : `<tr><td colspan="7" class="empty">Sin citas</td></tr>`;
-  } catch(e) { document.getElementById('citas-body').innerHTML = `<tr><td colspan="7" class="empty">Error visualizando tabla</td></tr>`; }
+      const btnDir = c.direccion ? `<button class="btn btn-sm" onclick="verDireccion('${c.direccion.replace(/'/g, "\\'")}')">Ver Dir</button>` : '';
+      
+      let acciones = '';
+      if(c.estado === 'Confirmada') {
+        acciones = `<button class="btn btn-p btn-sm" onclick="abrirNuevaAtencion('${c.paciente.replace(/'/g, "\\'")}')">Evolución</button>
+                    <button class="btn btn-d btn-sm" onclick="accCita(${c.fila},'Rechazada')">Rechazar</button>`;
+      } else if (c.estado === 'Pendiente') {
+        acciones = `<button class="btn btn-p btn-sm" onclick="accCita(${c.fila},'Confirmada')">Aprobar</button><button class="btn btn-d btn-sm" onclick="accCita(${c.fila},'Rechazada')">Rechazar</button>`;
+      } else {
+        acciones = '—';
+      }
+
+      return `<tr><td><span class="dt-fe">${dt.d}</span></td><td><span class="dt-ho">${dt.t}</span></td><td><span class="av">${av(c.paciente)}</span><strong>${c.paciente||'—'}</strong></td><td>${c.modalidad||'—'} ${btnDir}</td><td>${badge(c.estado)}</td><td>${acciones}</td></tr>`;
+    }).join('') : `<tr><td colspan="6" class="empty">Sin citas</td></tr>`;
+  } catch(e) { document.getElementById('citas-body').innerHTML = `<tr><td colspan="6" class="empty">Error visualizando tabla</td></tr>`; }
 }
-async function accCita(fila, est) { toast('Actualizando...'); await fetch(`${SC}?action=updateCita&fila=${fila}&estado=${est}`); loadProfCitas(); }
+async function accCita(fila, est) { toast('Actualizando...'); await fetch(`${SC}?action=updateCita&fila=${fila}&estado=${est}`); loadProfCitas(); loadProfDashboard(); }
 
 function abrirNuevaAtencion(pac = '') { document.getElementById('at-pac').value = pac; document.getElementById('at-rut').value = ''; document.getElementById('at-notas').value = ''; sp('atenciones', document.querySelectorAll('.nb')[2]); openModal('modal-atencion'); }
 
@@ -336,10 +299,10 @@ async function loadProfAtenciones() {
   try {
     const d = (await fetch(`${SC}?action=getAtenciones`).then(r=>r.json())).data.filter(a => a.profesional === ME_PROF_NAME) || [];
     document.getElementById('atenciones-body').innerHTML = d.length ? d.map(a => {
-      const dt = formatDT(a.fecha); const dp = formatDT(a.proximaSesion);
-      return `<tr><td><span class="dt-fe">${dt.d}</span> <span class="dt-ho">${dt.t}</span></td><td><span class="av">${av(a.paciente)}</span>${a.paciente||'—'}</td><td>${a.rut||'—'}</td><td style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${a.notas}">${a.notas||'—'}</td><td><span class="dt-fe">${dp.d!=='—'?dp.d:'—'}</span></td></tr>`;
-    }).join('') : `<tr><td colspan="5" class="empty">Sin evoluciones</td></tr>`;
-  } catch(e) { document.getElementById('atenciones-body').innerHTML = `<tr><td colspan="5" class="empty">Error de tabla</td></tr>`; }
+      const dt = formatDT(a.fecha);
+      return `<tr><td><span class="dt-fe">${dt.d}</span></td><td><span class="av">${av(a.paciente)}</span>${a.paciente||'—'}</td><td style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${a.notas}">${a.notas||'—'}</td></tr>`;
+    }).join('') : `<tr><td colspan="3" class="empty">Sin evoluciones</td></tr>`;
+  } catch(e) { document.getElementById('atenciones-body').innerHTML = `<tr><td colspan="3" class="empty">Error de tabla</td></tr>`; }
 }
 async function guardarAtencionProf() { const p = document.getElementById('at-pac').value; const n = document.getElementById('at-notas').value; if(!p || !n) return; toast('Guardando...'); await fetch(SC, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tipo: 'atencion', paciente: p, rut: document.getElementById('at-rut').value, profesional: ME_PROF_NAME, especialidad: ME_PROF_SPEC, notas: n, proximaSesion: document.getElementById('at-prox').value }) }); closeModal('modal-atencion'); toast('✓ Firmado'); setTimeout(loadProfAtenciones, 1000); }
 
@@ -348,51 +311,30 @@ async function loadProfRecetas() {
     const d = (await fetch(`${SC}?action=getRecetas`).then(r=>r.json())).data.filter(r => r.profesional === ME_PROF_NAME) || [];
     document.getElementById('recetas-body').innerHTML = d.length ? d.map(r => {
       const dt = formatDT(r.fecha);
-      return `<tr><td><span class="dt-fe">${dt.d}</span> <span class="dt-ho">${dt.t}</span></td><td><span class="av">${av(r.paciente)}</span>${r.paciente||'—'}</td><td>${r.rut||'—'}</td><td><strong>${r.medicamento||'—'}</strong></td><td>${r.dosis||'—'}</td><td>${r.duracion||'—'}</td></tr>`;
-    }).join('') : `<tr><td colspan="6" class="empty">Sin recetas</td></tr>`;
-  } catch(e) { document.getElementById('recetas-body').innerHTML = `<tr><td colspan="6" class="empty">Error de tabla</td></tr>`; }
+      return `<tr><td><span class="dt-fe">${dt.d}</span></td><td><span class="av">${av(r.paciente)}</span>${r.paciente||'—'}</td><td><strong>${r.medicamento||'—'}</strong></td></tr>`;
+    }).join('') : `<tr><td colspan="3" class="empty">Sin recetas</td></tr>`;
+  } catch(e) { document.getElementById('recetas-body').innerHTML = `<tr><td colspan="3" class="empty">Error de tabla</td></tr>`; }
 }
-async function emitirRecetaProf() { const p = document.getElementById('rec-pac').value; const m = document.getElementById('rec-med').value; if(!p||!m)return; toast('Emitiendo...'); await fetch(SC, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tipo: 'receta', paciente: p, rut: document.getElementById('rec-rut').value, profesional: ME_PROF_NAME, medicamento: m, dosis: document.getElementById('rec-dosis').value, duracion: document.getElementById('rec-dur').value, comentarios: document.getElementById('rec-com').value }) }); closeModal('modal-receta'); toast('✓ Emitido'); setTimeout(loadProfRecetas, 1000); }
+async function emitirRecetaProf() { const p = document.getElementById('rec-pac').value; const m = document.getElementById('rec-med').value; if(!p||!m)return; toast('Emitiendo...'); await fetch(SC, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tipo: 'receta', paciente: p, rut: document.getElementById('rec-rut').value, profesional: ME_PROF_NAME, medicamento: m, dosis: document.getElementById('rec-dosis').value, duracion: document.getElementById('rec-dur').value, comentarios: document.getElementById('rec-comentarios').value }) }); closeModal('modal-receta'); toast('✓ Emitido'); setTimeout(loadProfRecetas, 1000); }
 
-// MÓDULO ALERTAS DEL PROFESIONAL
 async function loadProfAlertas() {
   try {
-    document.getElementById('alertas-body').innerHTML = '<tr><td colspan="6" class="loading"><span class="spin"></span>Cruzando datos de pacientes...</td></tr>';
-    // 1. Traemos pacientes para saber cuáles RUT son de este profesional
     const pacReq = await fetch(`${SC}?action=getPacientes`).then(r=>r.json());
     const misRuts = (pacReq.data||[]).filter(p => p.profesional === ME_PROF_NAME).map(p => p.rut);
-    // 2. Traemos alertas y filtramos las que correspondan a sus pacientes
     const alReq = await fetch(`${SC}?action=getAlertas`).then(r=>r.json());
     const misAlertas = (alReq.data||[]).filter(a => misRuts.includes(a.rut));
-    
     document.getElementById('alertas-body').innerHTML = misAlertas.length ? misAlertas.map(a => {
       const dt = formatDT(a.fecha);
-      return `<tr><td><span class="dt-fe">${dt.d}</span></td><td><span class="av">${av(a.paciente)}</span>${a.paciente||'—'}</td><td>${a.tipo||'—'}</td><td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.mensaje||'—'}</td><td>${a.frecuencia||'—'}</td><td>${badge(a.estado)}</td></tr>`;
-    }).join('') : `<tr><td colspan="6" class="empty">Tus pacientes no tienen alertas configuradas</td></tr>`;
-  } catch(e) { document.getElementById('alertas-body').innerHTML = `<tr><td colspan="6" class="empty">Error de tabla</td></tr>`; }
+      return `<tr><td><span class="dt-fe">${dt.d}</span></td><td><span class="av">${av(a.paciente)}</span>${a.paciente||'—'}</td><td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.mensaje||'—'}</td></tr>`;
+    }).join('') : `<tr><td colspan="3" class="empty">Tus pacientes no tienen alertas configuradas</td></tr>`;
+  } catch(e) { document.getElementById('alertas-body').innerHTML = `<tr><td colspan="3" class="empty">Error de tabla</td></tr>`; }
 }
 
-// MÓDULO MI PERFIL (PROFESIONAL)
 async function loadMiPerfil() {
   if(!profFullData) return;
   document.getElementById('pe-nombre-display').textContent = profFullData.nombre;
   document.getElementById('pe-estado-display').textContent = `Estado en plataforma: ${profFullData.estado}`;
-  document.getElementById('pe-wa').value = profFullData.whatsapp || '';
-  document.getElementById('pe-expt').value = profFullData.expTotal || '';
-  document.getElementById('pe-expam').value = profFullData.expAm || '';
-  document.getElementById('pe-idiomas').value = profFullData.idiomas || '';
-  document.getElementById('pe-comunas').value = profFullData.comunas || '';
-  document.getElementById('pe-mod').value = profFullData.modalidad || 'Domicilio';
-  document.getElementById('pe-cal').value = profFullData.calLink || '';
-  document.getElementById('pe-precio').value = profFullData.precio || '';
-  document.getElementById('pe-duracion').value = profFullData.duracion || '';
-  document.getElementById('pe-isa').value = profFullData.isapre || 'Sí';
-  document.getElementById('pe-fon').value = profFullData.fonasa || 'Sí';
-  document.getElementById('pe-pub').value = profFullData.publico || 'Sí';
-  document.getElementById('pe-foto').value = profFullData.foto || '';
-  document.getElementById('pe-foto-preview').src = profFullData.foto || 'https://via.placeholder.com/80';
-  
-  // Buscar Bio
+  document.getElementById('pe-wa').value = profFullData.whatsapp || ''; document.getElementById('pe-expt').value = profFullData.expTotal || ''; document.getElementById('pe-expam').value = profFullData.expAm || ''; document.getElementById('pe-idiomas').value = profFullData.idiomas || ''; document.getElementById('pe-comunas').value = profFullData.comunas || ''; document.getElementById('pe-mod').value = profFullData.modalidad || 'Domicilio'; document.getElementById('pe-cal').value = profFullData.calLink || ''; document.getElementById('pe-precio').value = profFullData.precio || ''; document.getElementById('pe-duracion').value = profFullData.duracion || ''; document.getElementById('pe-isa').value = profFullData.isapre || 'Sí'; document.getElementById('pe-fon').value = profFullData.fonasa || 'Sí'; document.getElementById('pe-pub').value = profFullData.publico || 'Sí'; document.getElementById('pe-foto').value = profFullData.foto || ''; document.getElementById('pe-foto-preview').src = profFullData.foto || 'https://via.placeholder.com/80';
   const bioReq = await fetch(`${SC}?action=getBioProf&rut=${profFullData.rut}`).then(r=>r.json());
   document.getElementById('pe-bio').value = bioReq.data?.bio || '';
 }
@@ -400,8 +342,7 @@ async function loadMiPerfil() {
 async function saveMiPerfil() {
   toast('Actualizando perfil público...');
   const params = `fila=${ME_PROF_FILA}&rut=${ME_PROF_RUT}&whatsapp=${encodeURIComponent(document.getElementById('pe-wa').value)}&expTotal=${document.getElementById('pe-expt').value}&expAm=${document.getElementById('pe-expam').value}&idiomas=${encodeURIComponent(document.getElementById('pe-idiomas').value)}&comunas=${encodeURIComponent(document.getElementById('pe-comunas').value)}&modalidad=${encodeURIComponent(document.getElementById('pe-mod').value)}&calLink=${encodeURIComponent(document.getElementById('pe-cal').value)}&precio=${document.getElementById('pe-precio').value}&duracion=${document.getElementById('pe-duracion').value}&isapre=${document.getElementById('pe-isa').value}&fonasa=${document.getElementById('pe-fon').value}&publico=${document.getElementById('pe-pub').value}&foto=${encodeURIComponent(document.getElementById('pe-foto').value)}&bio=${encodeURIComponent(document.getElementById('pe-bio').value)}`;
-  await fetch(`${SC}?action=updateProfFicha&${params}`);
-  toast('✓ Perfil actualizado');
+  await fetch(`${SC}?action=updateProfFicha&${params}`); toast('✓ Perfil actualizado');
 }
 </script>
 </body>
