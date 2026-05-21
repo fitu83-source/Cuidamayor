@@ -75,7 +75,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:14px;color:var(
 .toggle-btn{position:absolute;top:14px;right:-14px;width:28px;height:28px;border-radius:50%;background:var(--blanco);border:0.5px solid var(--bdr);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--gris);z-index:10;transition:all .2s}
 .toggle-btn:hover{background:var(--bg2);color:var(--verde)}
 
-.slogo{padding:14px 16px;font-size:15px;font-weight:500;color:var(--texto);border-bottom:0.5px solid var(--bdr);display:flex;align-items:center;gap:8px}
+.slogo{padding:14px 16px;font-size:15px;font-weight:500;color:var(--texto);border-bottom:0.5px solid var(--bdr);position:relative;display:flex;align-items:center;gap:8px}
 .slogo span{color:var(--verde)}
 .slogo small{display:block;font-size:10px;color:var(--gris);font-weight:400;margin-top:1px}
 .nsec{font-size:10px;font-weight:500;color:var(--gris);padding:10px 16px 3px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
@@ -228,6 +228,7 @@ tr:hover td{background:var(--bg2)}
 
   <main class="main">
 
+    <!-- DASHBOARD -->
     <div id="pg-dashboard" class="pg on">
       <div class="ph"><h1>Dashboard</h1><p id="dash-fecha">Cargando...</p></div>
       <div class="mets">
@@ -246,6 +247,7 @@ tr:hover td{background:var(--bg2)}
       </div>
     </div>
 
+    <!-- PROFESIONALES -->
     <div id="pg-profesionales" class="pg">
       <div class="ph"><h1>Profesionales</h1><p id="prof-count">Cargando...</p></div>
       <div class="two" style="margin-bottom:1rem">
@@ -273,6 +275,7 @@ tr:hover td{background:var(--bg2)}
       </div>
     </div>
 
+    <!-- PACIENTES -->
     <div id="pg-pacientes" class="pg">
       <div class="ph"><h1>Pacientes</h1><p id="pac-count">Cargando...</p></div>
       <div class="card">
@@ -296,6 +299,7 @@ tr:hover td{background:var(--bg2)}
       </div>
     </div>
 
+    <!-- HISTORIAL ATENCIONES -->
     <div id="pg-atenciones" class="pg">
       <div class="ph"><h1>Historial de atenciones</h1><p id="at-count">Cargando...</p></div>
       <div class="two" style="margin-bottom:1rem">
@@ -336,6 +340,7 @@ tr:hover td{background:var(--bg2)}
       </div>
     </div>
 
+    <!-- RECETAS -->
     <div id="pg-recetas" class="pg">
       <div class="ph"><h1>Recetas entregadas</h1><p id="rec-count">Cargando...</p></div>
       <div class="card">
@@ -359,6 +364,7 @@ tr:hover td{background:var(--bg2)}
       </div>
     </div>
 
+    <!-- ALERTAS -->
     <div id="pg-alertas" class="pg">
       <div class="ph"><h1>Módulo de alertas</h1><p id="al-count">Cargando...</p></div>
       <div class="card">
@@ -388,6 +394,7 @@ tr:hover td{background:var(--bg2)}
       </div>
     </div>
 
+    <!-- SOLICITUDES ESPECIALES -->
     <div id="pg-solicitudes" class="pg">
       <div class="ph"><h1>Solicitudes Especiales (Concierge)</h1><p id="sol-count">Cargando...</p></div>
       <div class="card">
@@ -412,6 +419,7 @@ tr:hover td{background:var(--bg2)}
       </div>
     </div>
 
+    <!-- CITAS -->
     <div id="pg-citas" class="pg">
       <div class="ph"><h1>Citas agendadas</h1><p id="cit-count">Cargando...</p></div>
       <div class="mets" id="cit-mets">
@@ -440,11 +448,13 @@ tr:hover td{background:var(--bg2)}
       </div>
     </div>
 
+    <!-- VERIFICACIÓN RNPI -->
     <div id="pg-verificacion" class="pg">
       <div class="ph"><h1>Verificación RNPI</h1><p id="ver-count">Cargando...</p></div>
       <div id="ver-list"><div class="loading"><span class="spin"></span>Cargando...</div></div>
     </div>
 
+    <!-- USUARIOS -->
     <div id="pg-usuarios" class="pg">
       <div class="ph"><h1>Gestión de Usuarios y Accesos</h1><p id="usr-count">Cargando...</p></div>
       <div class="card">
@@ -467,6 +477,8 @@ tr:hover td{background:var(--bg2)}
 
   </main>
 </div>
+
+<!-- ================= MODALS COMPLETOS ================= -->
 
 <div class="modal-bg" id="modal-cita">
   <div class="modal">
@@ -528,7 +540,7 @@ tr:hover td{background:var(--bg2)}
       <div class="fg"><label>Modo de gestión</label><select id="pac-modo"><option value="">Seleccionar...</option><option>Autónomo</option><option>Familiar</option><option>Híbrido</option></select></div>
       <div class="fg"><label>Nombre coordinador</label><input type="text" id="pac-coord-nombre"/></div>
       <div class="fg"><label>Relación con paciente</label><select id="pac-coord-relacion"><option value="">Seleccionar...</option><option>Hijo/a</option><option>Cónyuge</option><option>Otro</option></select></div>
-      <div class="fg"><label>Email coordinador</label><input type="email" id="pac-coord-email"/></div><div class="fg"><label>WhatsApp coordinador</label><input type="tel" id="pac-coord-wa"/></div>
+      <div class="fg"><label>Email coordinador</label><input type="email" id="pac-coord-email"/></div><div class="fg"><label>WhatsApp coord.</label><input type="tel" id="pac-coord-wa"/></div>
       <div class="fg"><label>Profesional asignado</label><input type="text" id="pac-prof"/></div>
       <div class="fg"><label>Estado</label><select id="pac-estado"><option>Activo</option><option>En espera</option><option>Inactivo</option></select></div>
       <div class="fg full"><label>Diagnóstico</label><textarea id="pac-diag"></textarea></div><div class="fg full"><label>Medicamentos</label><textarea id="pac-meds"></textarea></div><div class="fg full"><label>Alergias</label><input type="text" id="pac-alergias"/></div>
@@ -630,6 +642,17 @@ tr:hover td{background:var(--bg2)}
   </div>
 </div>
 
+<div class="modal-bg" id="modal-direccion">
+  <div class="modal" style="max-width:400px; text-align:center;">
+    <div class="modal-header"><span class="modal-title">Dirección de Atención</span><button class="modal-close" onclick="closeModal('modal-direccion')">×</button></div>
+    <div style="background:var(--bg2); padding:2rem; border-radius:12px; margin-bottom:1rem; font-size:16px; color:var(--verde); font-weight:500;">
+      <i class="ti ti-map-pin" style="font-size:32px; margin-bottom:10px; display:block;"></i>
+      <div id="dir-texto-admin">Cargando dirección...</div>
+    </div>
+    <button class="btn btn-p" style="width:100%" onclick="closeModal('modal-direccion')">Cerrar</button>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -650,10 +673,16 @@ function formatDT(dateStr) {
     if(isNaN(dateObj)) return { d: String(dateStr).substring(0,10), t: '—' };
     const days = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
     const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-    const d = `${days[dateObj.getDay()]} ${String(dateObj.getDate()).padStart(2,'0')}-${months[dateObj.getMonth()]}-${String(dateObj.getFullYear()).slice(-2)}`;
+    const d = `${days[dateObj.getDay()]} ${String(dateObj.getDate()).padStart(2,'0')} ${months[dateObj.getMonth()]}`;
     const t = `${String(dateObj.getHours()).padStart(2,'0')}:${String(dateObj.getMinutes()).padStart(2,'0')}`;
     return { d, t };
   } catch(e) { return { d: '—', t: '—' }; }
+}
+
+function verDireccion(dirText) {
+  if(!dirText || dirText === 'undefined') dirText = "No se proporcionó dirección.";
+  document.getElementById('dir-texto-admin').textContent = dirText;
+  openModal('modal-direccion');
 }
 
 function parseCLDate(str) {
@@ -667,7 +696,6 @@ function parseCLDate(str) {
   return new Date(s);
 }
 
-// ── ORDENAMIENTO (SORT) ──
 let sortCol = -1; let sortAsc = true;
 function sortTable(th, colIdx, isDate=false) {
   const table = th.closest('table'); const tbody = table.querySelector('tbody'); const rows = Array.from(tbody.querySelectorAll('tr'));
@@ -688,7 +716,6 @@ function sortTable(th, colIdx, isDate=false) {
   th.innerHTML += `<i class="sort-icon ti ti-chevron-${sortAsc?'up':'down'}" style="margin-left:4px;font-size:11px;color:var(--verde)"></i>`;
 }
 
-// ── UI HELPERS ──
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('show'); }
 function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
 let sidebarMini = false; function toggleDesktop() { sidebarMini = !sidebarMini; document.getElementById('sidebar').classList.toggle('mini', sidebarMini); document.querySelector('.main').classList.toggle('mini', sidebarMini); document.getElementById('toggle-icon').className = sidebarMini ? 'ti ti-chevron-right' : 'ti ti-chevron-left'; }
@@ -710,7 +737,6 @@ async function get(action, extra) { try { let url = SC + '?action=' + action; if
 let posting = false; async function post(data) { if (posting) return false; posting = true; try { await fetch(SC, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); return true; } catch (e) { return false; } finally { setTimeout(() => { posting = false; }, 3000); } }
 function ft(id, q, esp) { q = q.toLowerCase(); esp = (esp||'').toLowerCase(); document.querySelectorAll('#' + id + ' tr').forEach(r => { const t = r.textContent.toLowerCase(); r.style.display = (!q || t.includes(q)) && (!esp || t.includes(esp)) ? '' : 'none'; }); }
 
-// ── CARGA DEL DASHBOARD PROTEGIDA ──
 async function loadDashboard() {
   try {
     const now = new Date(); document.getElementById('dash-fecha').textContent = now.toLocaleDateString('es-CL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -735,12 +761,10 @@ async function loadDashboard() {
     document.getElementById('m-fam').textContent = leadsPend;
     document.getElementById('m-pend').textContent = pend;
 
-    // Badges en el menú lateral
     const vc = document.getElementById('vchip'); if (pend > 0) { vc.style.display = 'inline'; vc.textContent = pend; } else { vc.style.display = 'none'; }
     const ac = document.getElementById('achip'); if (activas > 0) { ac.style.display = 'inline'; ac.textContent = activas; } else { ac.style.display = 'none'; }
     const lc = document.getElementById('lchip'); if (leadsPend > 0) { lc.style.display = 'inline'; lc.textContent = leadsPend; } else { lc.style.display = 'none'; }
 
-    // Tablas Dashboard
     const ul = pacArr.slice(-5).reverse();
     document.getElementById('dash-fam').innerHTML = ul.length ? '<table><tbody>' + ul.map(p => `<tr><td><span class="av">${av(p.nombre)}</span>${p.nombre||'—'}</td><td style="color:var(--gris)">${p.modo||'Autónomo'}</td><td>${badge(p.estado)}</td></tr>`).join('') + '</tbody></table>' : '<div class="empty">Sin pacientes aún</div>';
 
@@ -762,7 +786,6 @@ async function loadDashboard() {
   }
 }
 
-// ── PACIENTES ──
 async function loadPacientes() {
   try {
     document.getElementById('pac-body').innerHTML = '<tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr>';
@@ -805,7 +828,6 @@ async function verDetalle(rut) {
   const als = d.alertas || []; document.getElementById('det-alertas').innerHTML = als.length ? '<table><thead><tr><th>Tipo</th><th>Mensaje</th><th>Frecuencia</th><th>Canal</th><th>Estado</th></tr></thead><tbody>' + als.map(a => `<tr><td>${badge(a.tipo)}</td><td>${a.mensaje||'—'}</td><td>${a.frecuencia||'—'}</td><td>${a.canal||'—'}</td><td>${badge(a.estado)}</td></tr>`).join('') + '</tbody></table>' : '<div class="empty">Sin alertas configuradas</div>';
 }
 
-// ── PROFESIONALES ──
 async function loadProfesionales() {
   try {
     document.getElementById('prof-body').innerHTML = '<tr><td colspan="7" class="loading"><span class="spin"></span>Cargando...</td></tr>';
@@ -819,7 +841,6 @@ async function loadProfesionales() {
     const pend = d.filter(p => p.estado === 'Pendiente').length;
     document.getElementById('prof-count').textContent = `${d.length} registrados · ${act} aprobados · ${pend} pendientes`;
 
-    // Mini Dashboards
     const espCount = {}; const estCount = {};
     d.forEach(p => { 
       const esp = p.especialidad || 'Otra';
@@ -875,17 +896,14 @@ function addExperiencia() { experienciaItems.push({ cargo: '', institucion: '', 
 function renderExperiencia() { document.getElementById('experiencia-list').innerHTML = experienciaItems.length ? experienciaItems.map((e, i) => `<div style="background:var(--bg2);border-radius:8px;padding:.75rem;margin-bottom:.5rem"><div class="form-grid" style="margin-bottom:.5rem"><div class="fg"><label>Cargo</label><input type="text" value="${e.cargo}" oninput="experienciaItems[${i}].cargo=this.value"/></div><div class="fg"><label>Institución</label><input type="text" value="${e.institucion}" oninput="experienciaItems[${i}].institucion=this.value"/></div><div class="fg"><label>Desde</label><input type="number" value="${e.desde}" oninput="experienciaItems[${i}].desde=this.value"/></div><div class="fg"><label>Hasta</label><input type="number" value="${e.hasta}" oninput="experienciaItems[${i}].hasta=this.value"/></div></div><button class="btn btn-d btn-sm" onclick="experienciaItems.splice(${i},1);renderExperiencia()">Eliminar</button></div>`).join('') : '<div class="empty" style="padding:1rem">Sin experiencia</div>'; }
 async function saveProficha() { if (!currentProfFila) return; toast('Guardando...'); const params = `fila=${currentProfFila}&nombre=${encodeURIComponent(document.getElementById('pf-nombre').value)}&rut=${encodeURIComponent(document.getElementById('pf-rut').value)}&especialidad=${encodeURIComponent(document.getElementById('pf-especialidad').value)}&edad=${document.getElementById('pf-edad').value}&genero=${encodeURIComponent(document.getElementById('pf-genero').value)}&idiomas=${encodeURIComponent(document.getElementById('pf-idiomas').value)}&email=${encodeURIComponent(document.getElementById('pf-email').value)}&whatsapp=${encodeURIComponent(document.getElementById('pf-wa').value)}&comunas=${encodeURIComponent(document.getElementById('pf-comunas').value)}&modalidad=${encodeURIComponent(document.getElementById('pf-modalidad').value)}&registro=${encodeURIComponent(document.getElementById('pf-registro').value)}&estado=${encodeURIComponent(document.getElementById('pf-estado').value)}&publico=${encodeURIComponent(document.getElementById('pf-publico').value)}&destacado=${encodeURIComponent(document.getElementById('pf-destacado').value)}&expTotal=${document.getElementById('pf-exp-total').value}&expAm=${document.getElementById('pf-exp-am').value}&precio=${document.getElementById('pf-precio').value}&duracion=${document.getElementById('pf-duracion').value}&calLink=${encodeURIComponent(document.getElementById('pf-calcom').value)}&isapre=${document.getElementById('pf-isapre').value}&fonasa=${document.getElementById('pf-fonasa').value}&particular=${document.getElementById('pf-particular').value}&bio=${encodeURIComponent(document.getElementById('pf-bio-text').value)}&formacion=${encodeURIComponent(JSON.stringify(formacionItems))}`; await get('updateProfFicha', params); closeModal('modal-prof-ficha'); toast('✓ Ficha guardada'); setTimeout(loadProfesionales, 1500); }
 
-// ── ATENCIONES ──
 async function loadAtenciones() {
   try {
     document.getElementById('at-body').innerHTML = '<tr><td colspan="7" class="loading"><span class="spin"></span>Cargando...</td></tr>';
-    const d = (await get('getAtenciones')).data || [];
-    window.atData = d;
+    const d = (await get('getAtenciones')).data || []; window.atData = d;
     document.getElementById('at-count').textContent = d.length + ' atenciones registradas';
     
     document.getElementById('at-body').innerHTML = d.length ? d.map(a => {
-      const dt = formatDT(a.fecha);
-      const pr = formatDT(a.proximaSesion);
+      const dt = formatDT(a.fecha); const pr = formatDT(a.proximaSesion);
       return `<tr>
         <td><div class="dt-fe">${dt.d}</div><div class="dt-ho">${dt.t}</div></td>
         <td><span class="av">${av(a.paciente)}</span>${a.paciente || '—'}</td>
@@ -897,31 +915,22 @@ async function loadAtenciones() {
       </tr>`;
     }).join('') : '<tr><td colspan="7" class="empty">Sin atenciones registradas aún</td></tr>';
     
-    const now = new Date(); const past4W = new Date(now.getTime() - 28*24*60*60*1000); const future10W = new Date(now.getTime() + 70*24*60*60*1000);
-    let pastCount = 0; let futureCount = 0;
-    d.forEach(a => {
-      const dt = parseCLDate((a.fecha||'').substring(0,10)); if(dt >= past4W && dt <= now) pastCount++;
-      const pt = parseCLDate((a.proximaSesion||'').substring(0,10)); if(pt > now && pt <= future10W) futureCount++;
-    });
+    const now = new Date(); const past4W = new Date(now.getTime() - 28*24*60*60*1000); const future10W = new Date(now.getTime() + 70*24*60*60*1000); let pastCount = 0; let futureCount = 0;
+    d.forEach(a => { const dt = parseCLDate((a.fecha||'').substring(0,10)); if(dt >= past4W && dt <= now) pastCount++; const pt = parseCLDate((a.proximaSesion||'').substring(0,10)); if(pt > now && pt <= future10W) futureCount++; });
     document.getElementById('at-pasadas').textContent = pastCount; document.getElementById('at-futuras').textContent = futureCount;
-    if(!document.getElementById('at-date-to').value) {
-      document.getElementById('at-date-to').value = now.toISOString().substring(0,10);
-      document.getElementById('at-date-from').value = new Date(now.getTime() - 30*24*60*60*1000).toISOString().substring(0,10);
-    }
+    if(!document.getElementById('at-date-to').value) { document.getElementById('at-date-to').value = now.toISOString().substring(0,10); document.getElementById('at-date-from').value = new Date(now.getTime() - 30*24*60*60*1000).toISOString().substring(0,10); }
     renderAtencionesEsp();
   } catch(e) { document.getElementById('at-body').innerHTML = '<tr><td colspan="7" class="empty">Error al cargar</td></tr>'; }
 }
 
 function renderAtencionesEsp() {
-  const fromStr = document.getElementById('at-date-from').value; const toStr = document.getElementById('at-date-to').value;
-  if(!fromStr || !toStr) return;
+  const fromStr = document.getElementById('at-date-from').value; const toStr = document.getElementById('at-date-to').value; if(!fromStr || !toStr) return;
   const from = new Date(fromStr); const to = new Date(toStr); to.setHours(23,59,59); const espCount = {};
   window.atData.forEach(a => { const dt = parseCLDate((a.fecha||'').substring(0,10)); if (dt >= from && dt <= to) { const e = a.especialidad || 'Sin especialidad'; espCount[e] = (espCount[e] || 0) + 1; } });
   const eArr = Object.entries(espCount).sort((a,b)=>b[1]-a[1]); const eMx = eArr[0]?eArr[0][1]:1;
   document.getElementById('at-dash-esp').innerHTML = eArr.length ? eArr.map(([e,n])=>`<div class="bar-row"><span class="bar-lbl">${e}</span><div class="bar-wrap"><div class="bar-fill" style="width:${Math.round(n/eMx*100)}%"></div></div><span class="bar-val">${n}</span></div>`).join('') : '<div class="empty">No hay atenciones en el período.</div>';
 }
 
-// ── RECETAS ──
 async function loadRecetas() {
   try {
     document.getElementById('rec-body').innerHTML = '<tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr>';
@@ -947,7 +956,6 @@ function verRecetaDetalle(fila) {
   document.getElementById('rd-fecha').textContent = r.fecha || '—'; document.getElementById('rd-prof').textContent = r.profesional || '—'; document.getElementById('rd-pac').textContent = r.paciente || '—'; document.getElementById('rd-rut').textContent = r.rut || '—'; document.getElementById('rd-med').textContent = r.medicamento || '—'; document.getElementById('rd-dosis').textContent = r.dosis || '—'; document.getElementById('rd-dur').textContent = r.duracion || '—'; document.getElementById('rd-comentarios').textContent = r.comentarios || 'Sin comentarios adicionales registrados.'; openModal('modal-receta-detalle');
 }
 
-// ── ALERTAS ──
 async function loadAlertas() {
   try {
     document.getElementById('al-body').innerHTML = '<tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr>';
@@ -971,7 +979,6 @@ async function loadAlertas() {
 }
 async function updateAlerta(fila, estado) { await get('updateAlerta', `fila=${fila}&estado=${estado}`); toast('✓ Alerta ' + estado.toLowerCase()); setTimeout(loadAlertas, 1000); }
 
-// ── SOLICITUDES ──
 async function loadSolicitudes() {
   try {
     document.getElementById('sol-body').innerHTML = '<tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr>';
@@ -988,14 +995,13 @@ async function loadSolicitudes() {
         <td>${l.comuna||'—'}</td>
         <td>${l.urgencia||'—'}</td>
         <td>${badge(l.estado)}</td>
-        <td>${l.estado !== 'Activado' ? `<button class="btn btn-p btn-sm" onclick="activarSolicitud(${l.fila}, '${l.nombre.replace(/'/g, "\\'")}')">Marcar Resuelta</button>` : `<span class="badge bg">✓</span>`}</td>
+        <td>${l.estado !== 'Activado' ? `<button class="btn btn-p btn-sm" onclick="activarSolicitud(${l.fila}, '${l.nombre.replace(/'/g, "\'")}')">Marcar Resuelta</button>` : `<span class="badge bg">✓</span>`}</td>
       </tr>`;
     }).join('') : '<tr><td colspan="8" class="empty">Sin solicitudes aún</td></tr>';
   } catch(e) { document.getElementById('sol-body').innerHTML = '<tr><td colspan="8" class="empty">Error al cargar</td></tr>'; }
 }
 async function activarSolicitud(fila, nombre) { toast('Actualizando...'); await get('activarLead', `fila=${fila}`); toast(`✓ Solicitud de ${nombre} resuelta`); setTimeout(loadSolicitudes, 1000); setTimeout(loadDashboard, 1500); }
 
-// ── CITAS ──
 async function loadCitas() {
   try {
     document.getElementById('cit-body').innerHTML = '<tr><td colspan="7" class="loading"><span class="spin"></span>Cargando...</td></tr>';
@@ -1005,31 +1011,50 @@ async function loadCitas() {
     
     document.getElementById('cit-body').innerHTML = d.length ? d.map(c => {
       const cr = formatDT(c.fechaCreacion); const ag = formatDT(c.fechaCita + ' ' + (c.hora||'00:00'));
+      const btnDir = c.direccion ? `<button class="btn btn-sm" onclick="verDireccion('${c.direccion.replace(/'/g, "\'")}')">Ver Dir.</button>` : '';
+      
+      let acciones = '';
+      if(c.estado === 'Confirmada') { acciones = `<button class="btn btn-p btn-sm" onclick="updateCita(${c.fila},'Completada')">Completar</button><button class="btn btn-d btn-sm" onclick="updateCita(${c.fila},'Rechazada')">Rechazar</button>`; }
+      else if(c.estado === 'Pendiente') { acciones = `<button class="btn btn-p btn-sm" onclick="updateCita(${c.fila},'Confirmada')">Aprobar</button>`; }
+      else { acciones = '—'; }
+
       return `<tr>
         <td><div class="dt-fe">${cr.d}</div><div class="dt-ho">${cr.t}</div></td>
         <td><div class="dt-fe">${ag.d}</div><div class="dt-ho">${c.hora||''}</div></td>
         <td><span class="av">${av(c.paciente)}</span>${c.paciente||'—'}</td>
         <td>${c.profesional||'—'}</td>
-        <td>${c.modalidad||'—'}</td>
+        <td>${c.modalidad||'—'} ${btnDir}</td>
         <td>${badge(c.estado)}</td>
-        <td>${c.estado==='Pendiente'? `<button class="btn btn-p btn-sm" onclick="updateCita(${c.fila},'Confirmada')">Confirmar</button><button class="btn btn-d btn-sm" onclick="updateCita(${c.fila},'Rechazada')">Rechazar</button>`: c.estado==='Confirmada'?`<button class="btn btn-sm" onclick="updateCita(${c.fila},'Completada')">Completar</button>`:'—'}</td>
+        <td>${acciones}</td>
       </tr>`;
     }).join('') : '<tr><td colspan="7" class="empty">Sin citas registradas aún</td></tr>';
   } catch(e) { document.getElementById('cit-body').innerHTML = '<tr><td colspan="7" class="empty">Error al cargar</td></tr>'; }
 }
-async function updateCita(fila, estado) { toast('Actualizando...'); await get('updateCita', `fila=${fila}&estado=${estado}`); toast(estado === 'Confirmada' ? '✓ Cita confirmada' : estado === 'Rechazada' ? 'Cita rechazada' : '✓ Cita completada'); setTimeout(loadCitas, 1000); }
 
-// ── VERIFICACION ──
+async function updateCita(fila, estado) { toast('Actualizando...'); await get('updateCita', `fila=${fila}&estado=${estado}`); toast(estado === 'Confirmada' ? '✓ Cita aprobada' : estado === 'Rechazada' ? 'Cita rechazada' : '✓ Cita completada'); setTimeout(loadCitas, 1000); }
+
+async function saveCita() {
+  const pac = document.getElementById('cit-pac').value; const prof = document.getElementById('cit-prof').value; const fech = document.getElementById('cit-fecha').value; const hora = document.getElementById('cit-hora').value;
+  if (!pac || !prof || !fech || !hora) { toast('Completa los campos obligatorios', false); return; }
+  
+  let dir = '';
+  if(document.getElementById('cit-mod').value === 'Domicilio') {
+    dir = prompt("Ingresa la dirección de atención a domicilio:") || '';
+  }
+
+  const params = new URLSearchParams({ action: 'createCita', paciente: pac, profesional: prof, especialidad: document.getElementById('cit-esp').value, fechaCita: fech, hora: hora, modalidad: document.getElementById('cit-mod').value, origen: 'Manual', emailProf: document.getElementById('cit-email-prof').value, waProf: document.getElementById('cit-wa-prof').value, direccion: dir });
+  toast('Creando cita y pre-aprobando...'); await get('createCita', params.toString().replace('action=createCita&','')); closeModal('modal-cita'); toast('✓ Cita creada'); setTimeout(loadCitas, 1500);
+}
+
 async function loadVerificacion() {
   try {
     const d = (await get('getProfesionales')).data || []; const pend = d.filter(p => p.estado === 'Pendiente');
-    document.getElementById('ver-count').textContent = `${pend.length} profesionales pendientes`;
+    document.getElementById('ver-count').textContent = `${pend.length} profesionales pendientes`; const vc = document.getElementById('vchip'); if (pend.length > 0) { vc.style.display = 'inline'; vc.textContent = pend.length; } else { vc.style.display = 'none'; }
     document.getElementById('ver-list').innerHTML = pend.length ? pend.map(p => `<div class="card" id="vc-${p.fila}"><div class="ch"><div><div style="font-weight:500">${p.nombre||'—'}</div><div style="font-size:11px;color:var(--gris)">${p.especialidad||'—'}</div></div>${badge('Pendiente')}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:12px;margin-bottom:12px"><div><span style="color:var(--gris)">RUT:</span> ${p.rut||'—'}</div><div><span style="color:var(--gris)">Reg:</span> ${p.registro||'—'}</div></div><div style="display:flex;gap:8px"><button class="btn btn-sm" onclick="window.open('https://rnpi.superdesalud.gob.cl','_blank')">Verificar RNPI</button><button class="btn btn-p btn-sm" onclick="aprobar(${p.fila},'Aprobado')">Aprobar</button><button class="btn btn-d btn-sm" onclick="aprobar(${p.fila},'Rechazado')">Rechazar</button></div></div>`).join('') : '<div class="empty">No hay pendientes</div>';
   } catch(e) { document.getElementById('ver-list').innerHTML = '<div class="empty">Error al cargar</div>'; }
 }
 async function aprobar(fila, estado) { toast('Procesando...'); await get('updateEstado', `fila=${fila}&estado=${estado}`); document.getElementById('vc-'+fila).innerHTML = `<div style="color:${estado==='Aprobado'?'var(--vc)':'var(--rojo)'}">✓ Perfil ${estado}</div>`; setTimeout(loadDashboard,1000); }
 
-// ── USUARIOS ──
 async function loadUsuarios() {
   try {
     document.getElementById('usr-body').innerHTML = '<tr><td colspan="5" class="loading"><span class="spin"></span>Cargando...</td></tr>';
@@ -1042,9 +1067,9 @@ async function loadUsuarios() {
 }
 
 async function saveUsuario() { const n = document.getElementById('u-nombre').value; const e = document.getElementById('u-email').value; if (!n || !e) { toast('Nombre y Email son obligatorios', false); return; } toast('Creando usuario...'); const r = document.getElementById('u-rol').value; const s = document.getElementById('u-estado').value; await get('saveUsuario', `nombre=${encodeURIComponent(n)}&email=${encodeURIComponent(e)}&rol=${encodeURIComponent(r)}&estado=${encodeURIComponent(s)}`); closeModal('modal-usuario'); toast('✓ Usuario creado'); setTimeout(loadUsuarios, 1500); }
+
 async function savePaciente() { const n = document.getElementById('pac-nombre').value; const r = document.getElementById('pac-rut').value; if (!n || !r) { toast('Nombre y RUT son obligatorios', false); return; } await post({ tipo: 'paciente', nombre: n, rut: r, fechaNac: document.getElementById('pac-fnac').value, modo: document.getElementById('pac-modo').value, coordNombre: document.getElementById('pac-coord-nombre').value, coordRelacion: document.getElementById('pac-coord-relacion').value, coordEmail: document.getElementById('pac-coord-email').value, coordWa: document.getElementById('pac-coord-wa').value, diagnostico: document.getElementById('pac-diag').value, medicamentos: document.getElementById('pac-meds').value, alergias: document.getElementById('pac-alergias').value, profesional: document.getElementById('pac-prof').value, estado: document.getElementById('pac-estado').value }); closeModal('modal-paciente'); toast('✓ Paciente guardado'); setTimeout(loadPacientes, 1500); }
 async function saveAtencion() { const p = document.getElementById('at-pac').value; const r = document.getElementById('at-rut').value; if (!p || !r) { toast('Paciente y RUT obligatorios', false); return; } let fSession = document.getElementById('at-fecha-sesion').value; if(fSession) { const fParts = fSession.split('-'); fSession = `${fParts[2]}-${fParts[1]}-${fParts[0]} 00:00:00`; } await post({ tipo: 'atencion', paciente: p, rut: r, profesional: document.getElementById('at-prof').value, especialidad: document.getElementById('at-esp').value, notas: document.getElementById('at-notas').value, proximaSesion: document.getElementById('at-prox').value, fechaOverride: fSession }); closeModal('modal-atencion'); toast('✓ Atención registrada'); setTimeout(loadAtenciones, 1500); }
-async function saveCita() { const pac = document.getElementById('cit-pac').value; const prof = document.getElementById('cit-prof').value; const fech = document.getElementById('cit-fecha').value; const hora = document.getElementById('cit-hora').value; if (!pac || !prof || !fech || !hora) { toast('Completa obligatorios', false); return; } const params = new URLSearchParams({ action: 'createCita', paciente: pac, profesional: prof, especialidad: document.getElementById('cit-esp').value, fechaCita: fech, hora: hora, modalidad: document.getElementById('cit-mod').value, origen: 'Manual', emailProf: document.getElementById('cit-email-prof').value, waProf: document.getElementById('cit-wa-prof').value }); toast('Creando cita...'); await get('createCita', params.toString().replace('action=createCita&','')); closeModal('modal-cita'); toast('✓ Cita creada'); setTimeout(loadCitas, 1500); }
 async function saveReceta() { const p = document.getElementById('rec-pac').value; const r = document.getElementById('rec-rut').value; if (!p || !r) { toast('Paciente y RUT obligatorios', false); return; } await post({ tipo: 'receta', paciente: p, rut: r, profesional: document.getElementById('rec-prof').value, medicamento: document.getElementById('rec-med').value, dosis: document.getElementById('rec-dosis').value, duracion: document.getElementById('rec-dur').value, comentarios: document.getElementById('rec-comentarios').value }); closeModal('modal-receta'); toast('✓ Receta registrada'); setTimeout(loadRecetas, 1500); }
 async function saveAlerta() { const p = document.getElementById('al-pac').value; const r = document.getElementById('al-rut').value; const t = document.getElementById('al-tipo').value; const m = document.getElementById('al-msg').value; if (!p || !r || !t || !m) { toast('Completa obligatorios', false); return; } const hora = document.getElementById('al-hora').value; const frec = document.getElementById('al-frec').value + (hora ? ' a las ' + hora : ''); await get('addAlerta', `paciente=${encodeURIComponent(p)}&rut=${encodeURIComponent(r)}&tipo=${encodeURIComponent(t)}&mensaje=${encodeURIComponent(m)}&frecuencia=${encodeURIComponent(frec)}&canal=${encodeURIComponent(document.getElementById('al-canal').value)}`); closeModal('modal-alerta'); toast('✓ Alerta activada'); setTimeout(loadAlertas, 1500); }
 
