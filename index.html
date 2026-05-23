@@ -1022,8 +1022,12 @@
     }).join('');
   }
 
-  // Cargar profesionales sin bloquear el render
-  setTimeout(cargarProfesionales, 100);
+  // Cargar profesionales cuando el DOM esté listo
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', cargarProfesionales);
+  } else {
+    cargarProfesionales();
+  }
 
 
     const val = document.getElementById('f-para-quien').value;
