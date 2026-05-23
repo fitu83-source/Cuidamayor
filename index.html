@@ -954,13 +954,37 @@
 
   async function cargarProfesionales() {
     try {
-      const r = await fetch(SCRIPT_BUSCAR + '?action=getProfesionales');
-      const j = await r.json();
-      todosLosProfesionales = (j.data || []).filter(p => p.estado === 'Aprobado' && p.publico === 'Sí');
+      const SHEET_ID = '1zL7by07oR7yqBZPiMcPcH18_OfGhahuahq43ChwNW_Q';
+      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Profesionales`;
+      const r = await fetch(url);
+      const text = await r.text();
+      const json = JSON.parse(text.substring(47).slice(0, -2));
+      const cols = json.table.cols.map(c => c.label);
+      const idxMap = {
+        nombre: cols.indexOf('Nombre'), rut: cols.indexOf('RUT'),
+        especialidad: cols.indexOf('Especialidad'), comunas: cols.indexOf('Comunas'),
+        modalidad: cols.indexOf('Modalidad'), email: cols.indexOf('Email'),
+        estado: cols.indexOf('Estado'), edad: cols.indexOf('Edad'),
+        expTotal: cols.indexOf('Años exp.'), expAm: cols.indexOf('Exp. adulto mayor'),
+        precio: cols.indexOf('Precio'), calLink: cols.indexOf('Cal Link'),
+        isapre: cols.indexOf('ISAPRE'), fonasa: cols.indexOf('FONASA'),
+        publico: cols.indexOf('Público'), destacado: cols.indexOf('Destacado')
+      };
+      const get = (row, key) => { const i = idxMap[key]; return (i >= 0 && row.c[i]) ? String(row.c[i].v || '') : ''; };
+      todosLosProfesionales = json.table.rows.map(row => ({
+        nombre: get(row,'nombre'), rut: get(row,'rut'),
+        especialidad: get(row,'especialidad'), comunas: get(row,'comunas'),
+        modalidad: get(row,'modalidad'), email: get(row,'email'),
+        estado: get(row,'estado'), edad: get(row,'edad'),
+        expTotal: get(row,'expTotal'), expAm: get(row,'expAm'),
+        precio: get(row,'precio'), calLink: get(row,'calLink'),
+        isapre: get(row,'isapre'), fonasa: get(row,'fonasa'),
+        publico: get(row,'publico'), destacado: get(row,'destacado')
+      })).filter(p => p.estado === 'Aprobado' && p.publico === 'Sí');
       buscarProfesionales();
     } catch(e) {
       const el = document.getElementById('prof-lista');
-      if (el) el.innerHTML = '<div class="buscador-empty">No se pudieron cargar los profesionales. <a href="#registro" style="color:var(--verde)">Regístrate mientras tanto</a></div>';
+      if (el) el.innerHTML = '<div class="buscador-empty">No se pudieron cargar los profesionales.</div>';
     }
   }
 
