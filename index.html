@@ -951,20 +951,11 @@
     return '$' + n.toLocaleString('es-CL');
   }
 
-  function jsonpLoad(url) {
-    return new Promise((resolve, reject) => {
-      const cb = 'fhcb_' + Date.now();
-      const script = document.createElement('script');
-      window[cb] = (data) => { resolve(data); delete window[cb]; script.remove(); };
-      script.onerror = () => { reject(); delete window[cb]; script.remove(); };
-      script.src = url + '&callback=' + cb;
-      document.head.appendChild(script);
-    });
-  }
 
   async function cargarProfesionales() {
     try {
-      const j = await jsonpLoad(`${SCRIPT_BUSCAR}?action=getProfesionales`);
+      const r = await fetch(SCRIPT_BUSCAR + '?action=getProfesionales');
+      const j = await r.json();
       todosLosProfesionales = (j.data || []).filter(p => p.estado === 'Aprobado' && p.publico === 'Sí');
       buscarProfesionales();
     } catch(e) {
