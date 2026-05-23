@@ -35,6 +35,7 @@
       overflow-x: hidden;
     }
 
+    /* ── NAV ── */
     nav {
       position: sticky; top: 0; z-index: 100;
       background: rgba(250,247,242,.92);
@@ -46,203 +47,535 @@
     }
     .nav-logo {
       font-family: 'DM Serif Display', serif;
-      font-size: 1.5rem; color: var(--verde); text-decoration: none; letter-spacing: -.5px;
+      font-size: 1.5rem;
+      color: var(--verde);
+      text-decoration: none;
+      letter-spacing: -.5px;
     }
     .nav-logo span { color: var(--verde-claro); }
     .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a { text-decoration: none; color: var(--texto-suave); font-size: .95rem; font-weight: 500; transition: color .2s; }
+    .nav-links a {
+      text-decoration: none; color: var(--texto-suave);
+      font-size: .95rem; font-weight: 500;
+      transition: color .2s;
+    }
     .nav-links a:hover { color: var(--verde); }
-    .nav-cta { background: var(--verde); color: var(--blanco) !important; padding: .5rem 1.25rem; border-radius: 50px; font-weight: 600 !important; transition: background .2s !important; }
+    .nav-cta {
+      background: var(--verde); color: var(--blanco) !important;
+      padding: .5rem 1.25rem; border-radius: 50px;
+      font-weight: 600 !important;
+      transition: background .2s !important;
+    }
     .nav-cta:hover { background: var(--verde-claro) !important; color: var(--blanco) !important; }
 
-    @media(max-width:640px){ .nav-links { display: none; } }
-
-    .hero {
-      min-height: 92vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 3rem;
-      padding: clamp(3rem,8vw,6rem) clamp(1.5rem,5vw,4rem); position: relative; overflow: hidden;
+    @media(max-width:640px){
+      .nav-links { display: none; }
     }
-    .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 80% at 80% 40%, var(--verde-suave) 0%, transparent 70%); pointer-events: none; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 3rem;
+      padding: clamp(3rem,8vw,6rem) clamp(1.5rem,5vw,4rem);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 80% at 80% 40%, var(--verde-suave) 0%, transparent 70%);
+      pointer-events: none;
+    }
     .hero-badge {
-      display: inline-flex; align-items: center; gap: .5rem; background: var(--verde-suave); color: var(--verde);
-      border: 1px solid var(--verde-claro); border-radius: 50px; padding: .4rem 1rem; font-size: .85rem; font-weight: 600; margin-bottom: 1.5rem; animation: fadeUp .6s ease both;
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: var(--verde-suave); color: var(--verde);
+      border: 1px solid var(--verde-claro);
+      border-radius: 50px; padding: .4rem 1rem;
+      font-size: .85rem; font-weight: 600;
+      margin-bottom: 1.5rem;
+      animation: fadeUp .6s ease both;
     }
     .hero-badge::before { content: '●'; font-size: .5rem; animation: pulse 2s infinite; }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-    .hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(2.4rem, 4.5vw, 3.8rem); line-height: 1.15; letter-spacing: -.5px; color: var(--texto); margin-bottom: 1.5rem; animation: fadeUp .7s .1s ease both; }
-    .hero h1 em { font-style: italic; color: var(--verde); }
-    .hero p { font-size: clamp(1rem, 1.8vw, 1.2rem); color: var(--texto-suave); max-width: 480px; margin-bottom: 2.5rem; animation: fadeUp .7s .2s ease both; }
-    .hero-ctas { display: flex; flex-wrap: wrap; gap: 1rem; animation: fadeUp .7s .3s ease both; }
-    .btn-primary { background: var(--verde); color: var(--blanco); padding: 1rem 2rem; border-radius: 50px; font-size: 1rem; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: background .2s, transform .15s, box-shadow .2s; box-shadow: 0 4px 20px rgba(45,106,79,.3); display: inline-flex; align-items: center; gap: .5rem; }
-    .btn-primary:hover { background: #1f5239; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(45,106,79,.35); }
-    .btn-secondary { background: transparent; color: var(--verde); padding: 1rem 2rem; border-radius: 50px; font-size: 1rem; font-weight: 600; text-decoration: none; border: 2px solid var(--verde); cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: .5rem; }
-    .btn-secondary:hover { background: var(--verde-suave); transform: translateY(-2px); }
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+      line-height: 1.15;
+      letter-spacing: -.5px;
+      color: var(--texto);
+      margin-bottom: 1.5rem;
+      animation: fadeUp .7s .1s ease both;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--verde);
+    }
+    .hero p {
+      font-size: clamp(1rem, 1.8vw, 1.2rem);
+      color: var(--texto-suave);
+      max-width: 480px;
+      margin-bottom: 2.5rem;
+      animation: fadeUp .7s .2s ease both;
+    }
+    .hero-ctas {
+      display: flex; flex-wrap: wrap; gap: 1rem;
+      animation: fadeUp .7s .3s ease both;
+    }
+    .btn-primary {
+      background: var(--verde); color: var(--blanco);
+      padding: 1rem 2rem; border-radius: 50px;
+      font-size: 1rem; font-weight: 600;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      box-shadow: 0 4px 20px rgba(45,106,79,.3);
+      display: inline-flex; align-items: center; gap: .5rem;
+    }
+    .btn-primary:hover {
+      background: #1f5239; transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(45,106,79,.35);
+    }
+    .btn-secondary {
+      background: transparent; color: var(--verde);
+      padding: 1rem 2rem; border-radius: 50px;
+      font-size: 1rem; font-weight: 600;
+      text-decoration: none; border: 2px solid var(--verde);
+      cursor: pointer; transition: all .2s;
+      display: inline-flex; align-items: center; gap: .5rem;
+    }
+    .btn-secondary:hover {
+      background: var(--verde-suave); transform: translateY(-2px);
+    }
 
-    .hero-stats { display: flex; gap: 2rem; margin-top: 3rem; animation: fadeUp .7s .4s ease both; }
+    .hero-stats {
+      display: flex; gap: 2rem; margin-top: 3rem;
+      animation: fadeUp .7s .4s ease both;
+    }
     .stat { display: flex; flex-direction: column; }
-    .stat-num { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--verde); line-height: 1; }
+    .stat-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem; color: var(--verde); line-height: 1;
+    }
     .stat-label { font-size: .85rem; color: var(--texto-suave); }
 
-    .hero-visual { position: relative; animation: fadeUp .8s .2s ease both; }
-    .hero-card { background: var(--blanco); border-radius: 24px; padding: 2rem; box-shadow: var(--sombra); position: relative; }
-    .hero-card-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
-    .avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--verde-suave); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+    .hero-visual {
+      position: relative;
+      animation: fadeUp .8s .2s ease both;
+    }
+    .hero-card {
+      background: var(--blanco);
+      border-radius: 24px;
+      padding: 2rem;
+      box-shadow: var(--sombra);
+      position: relative;
+    }
+    .hero-card-header {
+      display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;
+    }
+    .avatar {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--verde-suave);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+    }
     .prof-name { font-weight: 600; font-size: 1.05rem; }
     .prof-spec { color: var(--texto-suave); font-size: .9rem; }
-    .badge-verificado { display: inline-flex; align-items: center; gap: .3rem; background: var(--verde-suave); color: var(--verde); border-radius: 50px; padding: .25rem .75rem; font-size: .8rem; font-weight: 600; }
+    .badge-verificado {
+      display: inline-flex; align-items: center; gap: .3rem;
+      background: var(--verde-suave); color: var(--verde);
+      border-radius: 50px; padding: .25rem .75rem;
+      font-size: .8rem; font-weight: 600;
+    }
     .stars { color: #F4A261; font-size: 1rem; letter-spacing: 2px; }
     .hero-card-detail { color: var(--texto-suave); font-size: .9rem; margin-top: .5rem; }
-    .hero-card-slot { display: flex; align-items: center; gap: .75rem; margin-top: 1.25rem; padding: .75rem 1rem; background: var(--crema); border-radius: 12px; }
+    .hero-card-slot {
+      display: flex; align-items: center; gap: .75rem;
+      margin-top: 1.25rem; padding: .75rem 1rem;
+      background: var(--crema); border-radius: 12px;
+    }
     .slot-icon { font-size: 1.2rem; }
     .slot-text { font-size: .9rem; }
     .slot-text strong { color: var(--verde); }
-    .hero-card-btn { width: 100%; margin-top: 1.25rem; background: var(--verde); color: var(--blanco); border: none; border-radius: 50px; padding: .9rem; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background .2s; }
+    .hero-card-btn {
+      width: 100%; margin-top: 1.25rem;
+      background: var(--verde); color: var(--blanco);
+      border: none; border-radius: 50px;
+      padding: .9rem; font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: background .2s;
+    }
     .hero-card-btn:hover { background: #1f5239; }
 
-    .floating-tag { position: absolute; background: var(--blanco); border-radius: 12px; padding: .6rem 1rem; box-shadow: 0 4px 20px rgba(0,0,0,.12); font-size: .85rem; font-weight: 600; display: flex; align-items: center; gap: .5rem; animation: float 4s ease-in-out infinite; }
+    .floating-tag {
+      position: absolute;
+      background: var(--blanco);
+      border-radius: 12px;
+      padding: .6rem 1rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,.12);
+      font-size: .85rem; font-weight: 600;
+      display: flex; align-items: center; gap: .5rem;
+      animation: float 4s ease-in-out infinite;
+    }
     .floating-tag.t1 { top: -1rem; right: -1rem; }
     .floating-tag.t2 { bottom: 1rem; left: -1.5rem; animation-delay: 2s; }
     @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
 
-    @media(max-width:768px){ .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 3rem; } .hero-visual { display: none; } }
+    @media(max-width:768px){
+      .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 3rem; }
+      .hero-visual { display: none; }
+    }
 
-    .section { padding: clamp(4rem,8vw,7rem) clamp(1.5rem,5vw,4rem); }
-    .section-label { font-size: .85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--verde); margin-bottom: 1rem; }
-    .section-title { font-family: 'DM Serif Display', serif; font-size: clamp(1.8rem, 3.5vw, 2.8rem); line-height: 1.2; margin-bottom: 1rem; }
-    .section-sub { color: var(--texto-suave); font-size: 1.05rem; max-width: 540px; margin-bottom: 3rem; }
+    /* ── PROBLEMA ── */
+    .section {
+      padding: clamp(4rem,8vw,7rem) clamp(1.5rem,5vw,4rem);
+    }
+    .section-label {
+      font-size: .85rem; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--verde);
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      line-height: 1.2; margin-bottom: 1rem;
+    }
+    .section-sub {
+      color: var(--texto-suave); font-size: 1.05rem;
+      max-width: 540px; margin-bottom: 3rem;
+    }
 
-    .problema-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-    .problema-card { background: var(--blanco); border-radius: var(--radio); padding: 2rem; border-left: 4px solid var(--rojo-suave); box-shadow: var(--sombra); transition: transform .2s; }
+    .problema-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .problema-card {
+      background: var(--blanco);
+      border-radius: var(--radio);
+      padding: 2rem;
+      border-left: 4px solid var(--rojo-suave);
+      box-shadow: var(--sombra);
+      transition: transform .2s;
+    }
     .problema-card:hover { transform: translateY(-4px); }
     .problema-emoji { font-size: 2rem; margin-bottom: 1rem; }
-    .problema-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: .5rem; }
+    .problema-card h3 {
+      font-size: 1rem; font-weight: 600;
+      margin-bottom: .5rem;
+    }
     .problema-card p { color: var(--texto-suave); font-size: .95rem; }
 
+    /* ── CÓMO FUNCIONA ── */
     .como-bg { background: var(--verde); color: var(--blanco); }
     .como-bg .section-label { color: var(--verde-claro); }
     .como-bg .section-title { color: var(--blanco); }
     .como-bg .section-sub { color: rgba(255,255,255,.75); }
 
-    .pasos { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2rem; }
-    .paso { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); border-radius: var(--radio); padding: 2rem; position: relative; transition: background .2s; }
+    .pasos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2rem;
+    }
+    .paso {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: var(--radio);
+      padding: 2rem;
+      position: relative;
+      transition: background .2s;
+    }
     .paso:hover { background: rgba(255,255,255,.14); }
-    .paso-num { font-family: 'DM Serif Display', serif; font-size: 3rem; color: var(--verde-claro); opacity: .5; line-height: 1; margin-bottom: .75rem; }
+    .paso-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 3rem; color: var(--verde-claro);
+      opacity: .5; line-height: 1;
+      margin-bottom: .75rem;
+    }
     .paso h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: .5rem; }
     .paso p { color: rgba(255,255,255,.75); font-size: .95rem; }
 
+    /* ── PROFESIONALES ── */
     .prof-section { background: var(--blanco); }
-    .prof-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .prof-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
     @media(max-width:768px){ .prof-grid { grid-template-columns: 1fr; } }
+
     .beneficio-list { list-style: none; display: flex; flex-direction: column; gap: 1.25rem; }
-    .beneficio-item { display: flex; gap: 1rem; align-items: flex-start; padding: 1.25rem; background: var(--crema); border-radius: var(--radio); }
-    .beneficio-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--verde-suave); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+    .beneficio-item {
+      display: flex; gap: 1rem; align-items: flex-start;
+      padding: 1.25rem; background: var(--crema);
+      border-radius: var(--radio);
+    }
+    .beneficio-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--verde-suave);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+    }
     .beneficio-item h4 { font-weight: 600; margin-bottom: .2rem; }
     .beneficio-item p { color: var(--texto-suave); font-size: .9rem; }
 
+    /* ── ESPECIALIDADES ── */
+    .esp-grid {
+      display: flex; flex-wrap: wrap; gap: 1rem;
+      margin-top: 2rem;
+    }
+    .esp-tag {
+      background: var(--blanco); border: 1.5px solid var(--arena);
+      border-radius: 50px; padding: .6rem 1.25rem;
+      font-size: .9rem; font-weight: 500;
+      display: flex; align-items: center; gap: .5rem;
+      transition: all .2s;
+    }
+    .esp-tag:hover {
+      border-color: var(--verde-claro);
+      background: var(--verde-suave); color: var(--verde);
+    }
+
     /* ── BUSCADOR ── */
     .buscador-section { background: var(--crema); }
-    .buscador-box { background: var(--blanco); border: 1px solid var(--arena); border-radius: 20px; padding: 2rem; margin-bottom: 2rem; }
-    .buscador-filtros { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 1.5rem; }
-    .buscador-filtros select, .buscador-filtros input { flex: 1; min-width: 160px; padding: 10px 14px; border: 1.5px solid var(--arena); border-radius: 10px; font-size: 14px; font-family: var(--font); background: var(--crema); color: var(--texto); outline: none; transition: border-color .2s; }
+    .buscador-box {
+      background: var(--blanco);
+      border: 1px solid var(--arena);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .buscador-filtros {
+      display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 1.5rem;
+    }
+    .buscador-filtros select, .buscador-filtros input {
+      flex: 1; min-width: 160px;
+      padding: 10px 14px;
+      border: 1.5px solid var(--arena);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: var(--font);
+      background: var(--crema);
+      color: var(--texto);
+      outline: none;
+      transition: border-color .2s;
+    }
     .buscador-filtros select:focus, .buscador-filtros input:focus { border-color: var(--verde); }
-    
-    .prof-lista { display: flex; flex-direction: column; gap: 12px; max-height: 520px; overflow-y: auto; padding-right: 8px; }
-    .prof-lista::-webkit-scrollbar { width: 6px; }
-    .prof-lista::-webkit-scrollbar-track { background: var(--crema); border-radius: 10px; }
-    .prof-lista::-webkit-scrollbar-thumb { background: var(--arena); border-radius: 10px; }
-    .prof-lista::-webkit-scrollbar-thumb:hover { background: var(--verde-claro); }
-
-    .prof-item { background: var(--crema); border: 1px solid var(--arena); border-radius: 14px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 16px; transition: border-color .2s, box-shadow .2s; }
+    .btn-buscar {
+      background: var(--verde); color: white;
+      border: none; border-radius: 10px;
+      padding: 10px 24px; font-size: 14px;
+      font-weight: 600; font-family: var(--font);
+      cursor: pointer; transition: background .2s; white-space: nowrap;
+    }
+    .btn-buscar:hover { background: #1f5239; }
+    .prof-lista { display: flex; flex-direction: column; gap: 12px; }
+    .prof-item {
+      background: var(--crema);
+      border: 1px solid var(--arena);
+      border-radius: 14px;
+      padding: 1rem 1.25rem;
+      display: flex; align-items: center; gap: 16px;
+      transition: border-color .2s, box-shadow .2s;
+    }
     .prof-item:hover { border-color: var(--verde); box-shadow: 0 4px 16px rgba(45,106,79,.08); }
-    .prof-item-av { width: 48px; height: 48px; border-radius: 50%; background: var(--verde-suave); color: var(--verde); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; flex-shrink: 0; }
+    .prof-item-av {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--verde-suave); color: var(--verde);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 700; flex-shrink: 0;
+    }
     .prof-item-info { flex: 1; min-width: 0; }
     .prof-item-nombre { font-size: 15px; font-weight: 600; color: var(--texto); margin-bottom: 2px; }
     .prof-item-meta { font-size: 13px; color: var(--texto-suave); }
     .prof-item-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
-    .prof-badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; background: var(--verde-suave); color: var(--verde); }
+    .prof-badge {
+      font-size: 11px; font-weight: 600; padding: 2px 8px;
+      border-radius: 20px; background: var(--verde-suave); color: var(--verde);
+    }
     .prof-badge.precio { background: #E6F1FB; color: #185FA5; }
     .prof-badge.modalidad { background: var(--arena); color: var(--texto-suave); }
     .prof-item-accion { flex-shrink: 0; }
-    
-    .btn-agendar { background: var(--verde); color: white; border: none; border-radius: 10px; padding: 8px 18px; font-size: 13px; font-weight: 600; font-family: var(--font); cursor: pointer; transition: background .2s; white-space: nowrap; text-decoration: none; display: inline-block; }
+    .btn-agendar {
+      background: var(--verde); color: white;
+      border: none; border-radius: 10px;
+      padding: 8px 18px; font-size: 13px;
+      font-weight: 600; font-family: var(--font);
+      cursor: pointer; transition: background .2s; white-space: nowrap;
+      text-decoration: none; display: inline-block;
+    }
     .btn-agendar:hover { background: #1f5239; }
-    
+    .btn-agendar.sin-agenda {
+      background: none; color: var(--verde);
+      border: 1.5px solid var(--verde); 
+    }
+    .btn-agendar.sin-agenda:hover { background: var(--verde-suave); }
     .buscador-empty { text-align: center; padding: 2rem; color: var(--texto-suave); font-size: 14px; }
     .buscador-loading { text-align: center; padding: 2rem; color: var(--texto-suave); font-size: 14px; }
-    .solicitar-link { display: inline-block; margin-top: 1rem; color: var(--verde); font-weight: 600; text-decoration: none; border-bottom: 1px dashed var(--verde); transition: all 0.2s; cursor: pointer; }
-    .solicitar-link:hover { color: #1f5239; border-bottom-style: solid; }
+    @media(max-width:640px){
+      .prof-item { flex-wrap: wrap; gap: 10px; }
+      .prof-item-accion { width: 100%; }
+      .btn-agendar { width: 100%; text-align: center; }
+    }
 
-    @media(max-width:640px){ .prof-item { flex-wrap: wrap; gap: 10px; } .prof-item-accion { width: 100%; } .btn-agendar { width: 100%; text-align: center; } }
-
-    /* ── FORMULARIOS DE REGISTRO PROFESIONAL ── */
+    /* ── FORMULARIOS ── */
     .forms-section { background: var(--crema); }
-    .forms-wrapper { display: flex; justify-content: center; margin-top: 3rem; }
-    .form-card { background: var(--blanco); border-radius: 24px; padding: 2.5rem; box-shadow: var(--sombra); max-width: 600px; width: 100%; }
-    .form-tag { display: inline-block; background: var(--verde-suave); color: var(--verde); border-radius: 50px; padding: .3rem .9rem; font-size: .8rem; font-weight: 600; margin-bottom: 1rem; }
-    .form-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.5rem; margin-bottom: .5rem; }
+    .forms-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    @media(max-width:768px){ .forms-grid { grid-template-columns: 1fr; } }
+
+    .form-card {
+      background: var(--blanco);
+      border-radius: 24px;
+      padding: 2.5rem;
+      box-shadow: var(--sombra);
+    }
+    .form-card.destacado { border: 2px solid var(--verde); }
+    .form-tag {
+      display: inline-block;
+      background: var(--verde-suave); color: var(--verde);
+      border-radius: 50px; padding: .3rem .9rem;
+      font-size: .8rem; font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .form-card h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem; margin-bottom: .5rem;
+    }
     .form-card p { color: var(--texto-suave); font-size: .95rem; margin-bottom: 1.75rem; }
 
     .form-group { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1.1rem; }
-    label { font-size: .9rem; font-weight: 600; color: var(--texto); }
-    input, select, textarea { padding: .85rem 1rem; border: 1.5px solid var(--arena); border-radius: 12px; font-size: 1rem; font-family: 'DM Sans', sans-serif; color: var(--texto); background: var(--crema); transition: border-color .2s, box-shadow .2s; outline: none; width: 100%; }
-    input:focus, select:focus, textarea:focus { border-color: var(--verde-claro); box-shadow: 0 0 0 3px rgba(82,183,136,.15); background: var(--blanco); }
-    
-    .form-submit { width: 100%; background: var(--verde); color: var(--blanco); border: none; border-radius: 50px; padding: 1rem; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all .2s; box-shadow: 0 4px 16px rgba(45,106,79,.25); font-family: 'DM Sans', sans-serif; }
-    .form-submit:hover { background: #1f5239; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(45,106,79,.3); }
-    .form-note { text-align: center; font-size: .82rem; color: var(--texto-suave); margin-top: .75rem; }
+    label {
+      font-size: .9rem; font-weight: 600; color: var(--texto);
+    }
+    input, select, textarea {
+      padding: .85rem 1rem;
+      border: 1.5px solid var(--arena);
+      border-radius: 12px;
+      font-size: 1rem;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--texto);
+      background: var(--crema);
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+      width: 100%;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--verde-claro);
+      box-shadow: 0 0 0 3px rgba(82,183,136,.15);
+      background: var(--blanco);
+    }
+    input::placeholder, textarea::placeholder { color: #aaa; }
+    select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235C5C5C' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; }
 
-    .success-msg { display: none; text-align: center; padding: 2rem; }
+    .form-submit {
+      width: 100%;
+      background: var(--verde); color: var(--blanco);
+      border: none; border-radius: 50px;
+      padding: 1rem; font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: all .2s;
+      box-shadow: 0 4px 16px rgba(45,106,79,.25);
+      font-family: 'DM Sans', sans-serif;
+    }
+    .form-submit:hover {
+      background: #1f5239; transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(45,106,79,.3);
+    }
+    .form-note {
+      text-align: center; font-size: .82rem;
+      color: var(--texto-suave); margin-top: .75rem;
+    }
+
+    /* SUCCESS STATE */
+    .success-msg {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+    }
     .success-msg .success-icon { font-size: 3rem; margin-bottom: 1rem; }
-    .success-msg h4 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--verde); margin-bottom: .5rem; }
+    .success-msg h4 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.4rem; color: var(--verde); margin-bottom: .5rem;
+    }
     .success-msg p { color: var(--texto-suave); font-size: .95rem; }
 
-    /* ── MODAL CONCIERGE (Solicitar Profesional) ── */
-    .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(4px); }
-    .modal-bg.open { display: flex; animation: fadeIn 0.2s ease; }
-    .modal-content { background: var(--blanco); border-radius: 24px; padding: 2rem; width: 100%; max-width: 450px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-    .modal-close { position: absolute; top: 1.2rem; right: 1.2rem; background: var(--crema); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; color: var(--texto-suave); transition: background 0.2s; }
-    .modal-close:hover { background: var(--arena); color: var(--texto); }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
     /* ── FOOTER ── */
-    footer { background: var(--texto); color: rgba(255,255,255,.7); padding: 3rem clamp(1.5rem,5vw,4rem); }
-    .footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 2rem; }
-    .footer-logo { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--blanco); margin-bottom: .5rem; }
+    footer {
+      background: var(--texto);
+      color: rgba(255,255,255,.7);
+      padding: 3rem clamp(1.5rem,5vw,4rem);
+    }
+    .footer-inner {
+      display: flex; flex-wrap: wrap;
+      justify-content: space-between; align-items: flex-start;
+      gap: 2rem;
+    }
+    .footer-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.6rem; color: var(--blanco);
+      margin-bottom: .5rem;
+    }
     .footer-logo span { color: var(--verde-claro); }
     .footer-tagline { font-size: .9rem; max-width: 260px; }
     .footer-links { display: flex; flex-direction: column; gap: .5rem; }
     .footer-links a { color: rgba(255,255,255,.6); text-decoration: none; font-size: .9rem; transition: color .2s; }
     .footer-links a:hover { color: var(--verde-claro); }
-    .footer-bottom { border-top: 1px solid rgba(255,255,255,.1); margin-top: 2rem; padding-top: 1.5rem; font-size: .82rem; color: rgba(255,255,255,.4); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.1);
+      margin-top: 2rem; padding-top: 1.5rem;
+      font-size: .82rem; color: rgba(255,255,255,.4);
+    }
 
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
     .reveal { opacity: 1; transform: none; }
     .reveal.visible { opacity: 1; transform: none; }
   </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
   <a href="#" class="nav-logo">Fam<span>Health</span></a>
   <ul class="nav-links">
     <li><a href="#como-funciona">Cómo funciona</a></li>
     <li><a href="#profesionales">Para profesionales</a></li>
-    <li><a href="#buscador" class="nav-cta">Buscar profesional</a></li>
+    <li><a href="#registro" class="nav-cta">Comenzar gratis</a></li>
   </ul>
 </nav>
 
+<!-- HERO -->
 <section class="hero">
   <div class="hero-content">
     <div class="hero-badge">🟢 Lanzamiento en Santiago — Únete ahora</div>
     <h1>El profesional de salud <em>ideal</em> para tu familiar mayor</h1>
     <p>Conectamos familias con profesionales verificados en kinesiología, enfermería, fonoaudiología y más. Sin búsquedas en Google. Sin incertidumbre.</p>
     <div class="hero-ctas">
-      <a href="#buscador" class="btn-primary">🔍 Buscar profesional</a>
+      <a href="#registro" class="btn-primary">🔍 Buscar profesional</a>
       <a href="#profesionales" class="btn-secondary">Soy profesional →</a>
     </div>
     <div class="hero-stats">
-      <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Verificados</span></div>
-      <div class="stat"><span class="stat-num">48h</span><span class="stat-label">Respuesta máx.</span></div>
-      <div class="stat"><span class="stat-num">$0</span><span class="stat-label">Para comenzar</span></div>
+      <div class="stat">
+        <span class="stat-num">100%</span>
+        <span class="stat-label">Verificados</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">48h</span>
+        <span class="stat-label">Respuesta máx.</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">$0</span>
+        <span class="stat-label">Para comenzar</span>
+      </div>
     </div>
   </div>
 
@@ -252,61 +585,130 @@
       <div class="floating-tag t2">📅 Agenda en línea</div>
       <div class="hero-card-header">
         <div class="avatar">👩‍⚕️</div>
-        <div><div class="prof-name">Dra. María González</div><div class="prof-spec">Kinesióloga · Domicilio</div></div>
+        <div>
+          <div class="prof-name">Dra. María González</div>
+          <div class="prof-spec">Kinesióloga · Domicilio</div>
+        </div>
       </div>
       <div class="badge-verificado">✓ Verificado MINSAL</div>
-      <div style="margin-top:.75rem"><span class="stars">★★★★★</span><span style="font-size:.9rem;color:var(--texto-suave);margin-left:.3rem">4.9 (38 reseñas)</span></div>
+      <div style="margin-top:.75rem">
+        <span class="stars">★★★★★</span>
+        <span style="font-size:.9rem;color:var(--texto-suave);margin-left:.3rem">4.9 (38 reseñas)</span>
+      </div>
       <div class="hero-card-detail">📍 Providencia · Las Condes · Vitacura</div>
-      <div class="hero-card-slot"><span class="slot-icon">⏰</span><span class="slot-text">Próxima hora: <strong>Hoy 16:00</strong></span></div>
+      <div class="hero-card-slot">
+        <span class="slot-icon">⏰</span>
+        <span class="slot-text">Próxima hora: <strong>Hoy 16:00</strong></span>
+      </div>
       <button class="hero-card-btn" onclick="document.getElementById('buscador').scrollIntoView({behavior:'smooth'})">Agendar hora →</button>
     </div>
   </div>
 </section>
 
+<!-- PROBLEMA -->
 <section class="section">
   <p class="section-label reveal">El problema</p>
   <h2 class="section-title reveal">¿Te suena familiar?</h2>
   <p class="section-sub reveal">Buscar ayuda para tu mamá o papá no debería ser tan difícil ni generar tanta angustia.</p>
+
   <div class="problema-grid">
-    <div class="problema-card reveal"><div class="problema-emoji">😰</div><h3>"Busqué en Google y no sé si es confiable"</h3><p>Cualquiera puede aparecer en internet. Tú necesitas certeza, no una lista interminable de resultados sin verificación.</p></div>
-    <div class="problema-card reveal"><div class="problema-emoji">📱</div><h3>"Pregunté en WhatsApp pero nadie tenía disponibilidad"</h3><p>Las recomendaciones informales no tienen horarios, no tienen respaldo y no tienen seguimiento.</p></div>
-    <div class="problema-card reveal"><div class="problema-emoji">📋</div><h3>"Cada vez hay que explicar todo de cero"</h3><p>Sin historial compartido, el cuidado se fragmenta. El profesional llega sin contexto y el paciente repite lo mismo una y otra vez.</p></div>
+    <div class="problema-card reveal">
+      <div class="problema-emoji">😰</div>
+      <h3>"Busqué en Google y no sé si es confiable"</h3>
+      <p>Cualquiera puede aparecer en internet. Tú necesitas certeza, no una lista interminable de resultados sin verificación.</p>
+    </div>
+    <div class="problema-card reveal">
+      <div class="problema-emoji">📱</div>
+      <h3>"Pregunté en WhatsApp pero nadie tenía disponibilidad"</h3>
+      <p>Las recomendaciones informales no tienen horarios, no tienen respaldo y no tienen seguimiento.</p>
+    </div>
+    <div class="problema-card reveal">
+      <div class="problema-emoji">📋</div>
+      <h3>"Cada vez hay que explicar todo de cero"</h3>
+      <p>Sin historial compartido, el cuidado se fragmenta. El profesional llega sin contexto y el paciente repite lo mismo una y otra vez.</p>
+    </div>
   </div>
 </section>
 
+<!-- CÓMO FUNCIONA -->
 <section class="section como-bg" id="como-funciona">
   <p class="section-label reveal">Cómo funciona</p>
   <h2 class="section-title reveal">Simple para ti.<br>Profesional para tu familiar.</h2>
   <p class="section-sub reveal">Tres pasos para encontrar y agendar al profesional indicado.</p>
+
   <div class="pasos">
-    <div class="paso reveal"><div class="paso-num">01</div><h3>Busca y filtra</h3><p>Encuentra al profesional indicado filtrando por especialidad, comuna y modalidad de atención.</p></div>
-    <div class="paso reveal"><div class="paso-num">02</div><h3>Compara perfiles</h3><p>Revisa credenciales comprobadas, años de experiencia y precios transparentes.</p></div>
-    <div class="paso reveal"><div class="paso-num">03</div><h3>Agenda directamente</h3><p>Sin intermediarios ni registros previos obligatorios. Agenda su disponibilidad en línea.</p></div>
+    <div class="paso reveal">
+      <div class="paso-num">01</div>
+      <h3>Regístrate gratis</h3>
+      <p>Crea el perfil de tu familiar en 3 minutos. Solo lo esencial: nombre, edad y necesidades principales.</p>
+    </div>
+    <div class="paso reveal">
+      <div class="paso-num">02</div>
+      <h3>Encuentra al profesional indicado</h3>
+      <p>Filtra por especialidad, comuna y modalidad. Todos con credenciales comprobadas y reseñas reales.</p>
+    </div>
+    <div class="paso reveal">
+      <div class="paso-num">03</div>
+      <h3>Agenda directamente</h3>
+      <p>Sin intermediarios. Sin llamadas. Confirmación inmediata por WhatsApp y email.</p>
+    </div>
+  </div>
+
+  <div style="margin-top:3rem;display:flex;flex-wrap:wrap;gap:1rem;" class="reveal">
+    <p style="color:rgba(255,255,255,.6);font-size:.9rem;align-self:center;">Especialidades disponibles:</p>
+    <div style="display:flex;flex-wrap:wrap;gap:.75rem;">
+      <span style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50px;padding:.4rem 1rem;font-size:.85rem;color:#fff">🦵 Kinesiología</span>
+      <span style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50px;padding:.4rem 1rem;font-size:.85rem;color:#fff">👴 Geriatría</span>
+      <span style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50px;padding:.4rem 1rem;font-size:.85rem;color:#fff">💉 Enfermería</span>
+      <span style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50px;padding:.4rem 1rem;font-size:.85rem;color:#fff">🗣️ Fonoaudiología</span>
+      <span style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50px;padding:.4rem 1rem;font-size:.85rem;color:#fff">🧠 Psicología</span>
+      <span style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50px;padding:.4rem 1rem;font-size:.85rem;color:#fff">🥗 Nutrición</span>
+    </div>
   </div>
 </section>
 
+<!-- PARA PROFESIONALES -->
 <section class="section prof-section" id="profesionales">
   <div class="prof-grid">
     <div>
       <p class="section-label reveal">Para profesionales</p>
       <h2 class="section-title reveal">Llega a familias que te buscan activamente</h2>
       <p class="section-sub reveal">Gratis durante todo el período de lanzamiento. Sin comisiones ocultas.</p>
-      <a href="#registro" class="btn-primary reveal" style="display:inline-flex;margin-top:.5rem">Registrar mi perfil →</a>
+      <a href="#registro-prof" class="btn-primary reveal" style="display:inline-flex;margin-top:.5rem">Registrar mi perfil →</a>
     </div>
     <div>
       <ul class="beneficio-list">
-        <li class="beneficio-item reveal"><div class="beneficio-icon">✓</div><div><h4>Perfil verificado que genera confianza</h4><p>Tus credenciales validadas, visibles para las familias.</p></div></li>
-        <li class="beneficio-item reveal"><div class="beneficio-icon">📅</div><div><h4>Agenda integrada sin llamadas</h4><p>Las familias reservan directamente en tu disponibilidad.</p></div></li>
-        <li class="beneficio-item reveal"><div class="beneficio-icon">🚀</div><div><h4>Cero costo en esta etapa</h4><p>Regístrate ahora y construye tu reputación digital.</p></div></li>
+        <li class="beneficio-item reveal">
+          <div class="beneficio-icon">✓</div>
+          <div>
+            <h4>Perfil verificado que genera confianza</h4>
+            <p>Tus credenciales validadas, visibles para las familias que más te necesitan.</p>
+          </div>
+        </li>
+        <li class="beneficio-item reveal">
+          <div class="beneficio-icon">📅</div>
+          <div>
+            <h4>Agenda integrada sin llamadas</h4>
+            <p>Las familias reservan directamente en tu disponibilidad. Tú decides cuándo y cómo atiendes.</p>
+          </div>
+        </li>
+        <li class="beneficio-item reveal">
+          <div class="beneficio-icon">🚀</div>
+          <div>
+            <h4>Cero costo en esta etapa</h4>
+            <p>Regístrate ahora y construye tu reputación digital antes que tu competencia.</p>
+          </div>
+        </li>
       </ul>
     </div>
   </div>
 </section>
 
+<!-- BUSCADOR DE PROFESIONALES -->
 <section class="section buscador-section" id="buscador">
   <p class="section-label reveal">Encuentra tu profesional</p>
   <h2 class="section-title reveal">Busca, filtra y agenda</h2>
-  <p class="section-sub reveal">Todos nuestros profesionales están verificados por el Registro Nacional de Prestadores Individuales (RNPI).</p>
+  <p class="section-sub reveal">Todos nuestros profesionales están verificados por el Registro Nacional de Prestadores Individuales (RNPI) del Ministerio de Salud.</p>
 
   <div class="buscador-box reveal">
     <div class="buscador-filtros">
@@ -328,195 +730,374 @@
       </select>
       <input type="text" id="filtro-comuna" placeholder="🔍 Buscar por nombre o comuna..." oninput="buscarProfesionales()">
     </div>
-    
     <div class="prof-lista" id="prof-lista">
       <div class="buscador-loading">Cargando profesionales disponibles...</div>
     </div>
-    
-    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--arena);">
-      <a onclick="abrirModalSolicitud()" class="solicitar-link">¿No encuentras al profesional que buscas? Solicítalo aquí y lo buscamos por ti.</a>
-    </div>
   </div>
 </section>
 
+<!-- FORMULARIOS -->
 <section class="section forms-section" id="registro">
-  <p class="section-label reveal">Únete a nuestra red</p>
-  <h2 class="section-title reveal" style="text-align: center;">Registra tu perfil profesional</h2>
-  <p class="section-sub reveal" style="margin-left: auto; margin-right: auto; text-align: center;">Gratis durante el lanzamiento. Revisamos tus credenciales y activamos tu perfil en 48 horas.</p>
+  <p class="section-label reveal">Únete ahora</p>
+  <h2 class="section-title reveal">¿Qué describes mejor tu situación?</h2>
+  <p class="section-sub reveal">En menos de 24 horas te contactamos por WhatsApp. Sin compromiso.</p>
 
-  <div class="forms-wrapper">
+  <div class="forms-grid">
+
+    <!-- FORMULARIO UNIFICADO — LEAD -->
+    <div class="form-card destacado reveal">
+      <span class="form-tag">🏥 Busco atención médica</span>
+      <h3>Encuentra el profesional ideal</h3>
+      <p>Cuéntanos qué necesitas y te conectamos con el profesional indicado en tu comuna.</p>
+
+      <div id="form-familias">
+        <div class="form-group">
+          <label for="f-nombre">Tu nombre completo</label>
+          <input type="text" id="f-nombre" placeholder="Ej: Carlos Pérez" autocomplete="given-name" />
+        </div>
+        <div class="form-group">
+          <label for="f-email">Tu email</label>
+          <input type="email" id="f-email" placeholder="correo@email.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label for="f-whatsapp">Tu WhatsApp</label>
+          <input type="tel" id="f-whatsapp" placeholder="+56 9 XXXX XXXX" autocomplete="tel" />
+        </div>
+        <div class="form-group">
+          <label for="f-para-quien">¿La atención es para...?</label>
+          <select id="f-para-quien" onchange="toggleParentesco()">
+            <option value="">Selecciona una opción</option>
+            <option value="yo">Para mí mismo/a</option>
+            <option value="familiar">Para un familiar</option>
+          </select>
+        </div>
+        <div class="form-group" id="grupo-parentesco" style="display:none">
+          <label for="f-parentesco">¿Qué parentesco tiene contigo?</label>
+          <select id="f-parentesco">
+            <option value="">Selecciona...</option>
+            <option>Madre</option>
+            <option>Padre</option>
+            <option>Abuelo/a</option>
+            <option>Suegro/a</option>
+            <option>Tío/a</option>
+            <option>Otro familiar</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="f-especialidad">Especialidad que necesitas</label>
+          <select id="f-especialidad">
+            <option value="">Selecciona una especialidad</option>
+            <option>Kinesiología</option>
+            <option>Geriatría</option>
+            <option>Enfermería</option>
+            <option>Fonoaudiología</option>
+            <option>Medicina General</option>
+            <option>Psicología</option>
+            <option>Nutrición</option>
+            <option>Otra</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="f-comuna">¿En qué comuna?</label>
+          <input type="text" id="f-comuna" placeholder="Ej: Providencia" />
+        </div>
+        <div class="form-group">
+          <label for="f-urgencia">¿Cuándo necesitas la atención?</label>
+          <select id="f-urgencia">
+            <option value="">Selecciona una opción</option>
+            <option>Esta semana</option>
+            <option>Este mes</option>
+            <option>Solo estoy explorando</option>
+          </select>
+        </div>
+        <button class="form-submit" onclick="submitForm('familias')">Buscar profesional →</button>
+        <p class="form-note">🔒 Tus datos no se comparten con terceros</p>
+      </div>
+      <div class="success-msg" id="success-familias">
+        <div class="success-icon">✅</div>
+        <h4>¡Recibimos tu solicitud!</h4>
+        <p>En menos de 24 horas te contactamos por WhatsApp con opciones disponibles en tu comuna.</p>
+      </div>
+    </div>
+
+    <!-- FORMULARIO PROFESIONALES -->
     <div class="form-card reveal" id="registro-prof">
       <span class="form-tag">👩‍⚕️ Para profesionales</span>
-      <h3>Datos del especialista</h3>
+      <h3>Quiero registrar mi perfil profesional</h3>
+      <p>Gratis durante el lanzamiento. Revisamos tus credenciales y activamos tu perfil en 48 horas.</p>
+
       <div id="form-profesionales">
-        <div class="form-group"><label>Nombre completo</label><input type="text" id="p-nombre" placeholder="Ej: María González" /></div>
-        <div class="form-group"><label>RUT</label><input type="text" id="p-rut" placeholder="12.345.678-9" /></div>
-        <div class="form-group"><label>Especialidad principal</label><select id="p-especialidad"><option value="">Selecciona tu especialidad</option><option>Kinesiología</option><option>Geriatría</option><option>Enfermería</option><option>Fonoaudiología</option><option>Medicina General</option><option>Psicología</option><option>Nutrición</option><option>Otra</option></select></div>
-        <div class="form-group"><label>¿En qué comunas atiendes?</label><input type="text" id="p-comunas" placeholder="Ej: Providencia, Las Condes" /></div>
-        <div class="form-group"><label>Modalidad de atención</label><select id="p-modalidad"><option value="">Selecciona modalidad</option><option>Presencial en clínica</option><option>Domicilio</option><option>Teleconsulta</option><option>Todas</option></select></div>
-        <div class="form-group"><label>Registro MINSAL vigente</label><select id="p-registro"><option value="">Selecciona una opción</option><option>Sí, vigente</option><option>En trámite</option></select></div>
-        <div class="form-group"><label>Email profesional</label><input type="email" id="p-email" placeholder="correo@email.com" /></div>
-        <div class="form-group"><label>WhatsApp</label><input type="tel" id="p-whatsapp" placeholder="+56 9 XXXX XXXX" /></div>
+        <div class="form-group">
+          <label for="p-nombre">Nombre completo</label>
+          <input type="text" id="p-nombre" placeholder="Ej: María González" autocomplete="name" />
+        </div>
+        <div class="form-group">
+          <label for="p-rut">RUT</label>
+          <input type="text" id="p-rut" placeholder="12.345.678-9" />
+        </div>
+        <div class="form-group">
+          <label for="p-especialidad">Especialidad principal</label>
+          <select id="p-especialidad">
+            <option value="">Selecciona tu especialidad</option>
+            <option>Kinesiología</option>
+            <option>Geriatría</option>
+            <option>Enfermería</option>
+            <option>Fonoaudiología</option>
+            <option>Medicina General</option>
+            <option>Psicología</option>
+            <option>Nutrición</option>
+            <option>Otra</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="p-comunas">¿En qué comunas atiendes?</label>
+          <input type="text" id="p-comunas" placeholder="Ej: Providencia, Las Condes" />
+        </div>
+        <div class="form-group">
+          <label for="p-modalidad">Modalidad de atención</label>
+          <select id="p-modalidad">
+            <option value="">Selecciona modalidad</option>
+            <option>Presencial en clínica</option>
+            <option>Domicilio</option>
+            <option>Teleconsulta</option>
+            <option>Domicilio y teleconsulta</option>
+            <option>Todas las anteriores</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="p-registro">¿Tienes registro MINSAL vigente?</label>
+          <select id="p-registro">
+            <option value="">Selecciona una opción</option>
+            <option>Sí, vigente</option>
+            <option>En trámite</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="p-email">Email profesional</label>
+          <input type="email" id="p-email" placeholder="correo@email.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label for="p-whatsapp">WhatsApp</label>
+          <input type="tel" id="p-whatsapp" placeholder="+56 9 XXXX XXXX" autocomplete="tel" />
+        </div>
         <button class="form-submit" onclick="submitForm('profesionales')">Registrar mi perfil →</button>
+        <p class="form-note">🔒 Verificamos tus credenciales antes de publicar tu perfil</p>
       </div>
       <div class="success-msg" id="success-profesionales">
-        <div class="success-icon">🎉</div><h4>¡Solicitud recibida!</h4><p>Te contactaremos en 48 horas para activar tu perfil.</p>
+        <div class="success-icon">🎉</div>
+        <h4>¡Solicitud recibida!</h4>
+        <p>Revisaremos tus credenciales y te contactamos en 48 horas para activar tu perfil. ¡Bienvenido/a a la plataforma!</p>
       </div>
     </div>
+
   </div>
 </section>
 
-<div class="modal-bg" id="modal-solicitud">
-  <div class="modal-content">
-    <button class="modal-close" onclick="cerrarModalSolicitud()">×</button>
-    <div id="solicitud-form-container">
-      <h3 style="font-family:'DM Serif Display',serif; font-size:1.4rem; color:var(--verde); margin-bottom:.5rem;">Te ayudamos a buscar</h3>
-      <p style="color:var(--texto-suave); font-size:.9rem; margin-bottom:1.5rem; line-height:1.4;">Cuéntanos qué especialista necesitas y en qué comuna. Nuestro equipo lo buscará y validará por ti sin costo.</p>
-      
-      <div class="form-group"><label>Tu Nombre</label><input type="text" id="s-nombre" placeholder="Ej: Camila Torres"></div>
-      <div class="form-group"><label>Tu WhatsApp</label><input type="tel" id="s-whatsapp" placeholder="+56 9 XXXX XXXX"></div>
-      <div class="form-group"><label>¿Qué profesional necesitas?</label><textarea id="s-detalle" rows="3" placeholder="Ej: Necesito un kinesiólogo especialista en Parkinson a domicilio en Ñuñoa..."></textarea></div>
-      
-      <button class="form-submit" id="btn-enviar-solicitud" onclick="enviarSolicitudConcierge()" style="margin-top:1rem;">Enviar solicitud de búsqueda</button>
-    </div>
-    <div id="solicitud-success" style="display:none; text-align:center; padding:1rem 0;">
-      <div style="font-size:3rem; margin-bottom:1rem;">🔎</div>
-      <h4 style="font-family:'DM Serif Display',serif; font-size:1.3rem; color:var(--verde); margin-bottom:.5rem;">¡Búsqueda activada!</h4>
-      <p style="color:var(--texto-suave); font-size:.9rem;">Nos pondremos en contacto contigo por WhatsApp apenas encontremos al profesional ideal.</p>
-      <button class="btn-secondary" onclick="cerrarModalSolicitud()" style="margin-top:1.5rem; width:100%;">Cerrar</button>
-    </div>
-  </div>
-</div>
-
+<!-- FOOTER -->
 <footer>
   <div class="footer-inner">
-    <div><div class="footer-logo">Fam<span>Health</span></div><p class="footer-tagline">Profesionales verificados para el cuidado de quienes más quieres.</p></div>
+    <div>
+      <div class="footer-logo">Fam<span>Health</span></div>
+      <p class="footer-tagline">Profesionales verificados para el cuidado de quienes más quieres.</p>
+    </div>
     <div>
       <div style="font-size:.85rem;font-weight:600;color:rgba(255,255,255,.4);margin-bottom:.75rem;letter-spacing:1px;text-transform:uppercase">Plataforma</div>
-      <div class="footer-links"><a href="#como-funciona">Cómo funciona</a><a href="#profesionales">Para profesionales</a></div>
+      <div class="footer-links">
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#profesionales">Para profesionales</a>
+        <a href="#registro">Registrarse</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:.85rem;font-weight:600;color:rgba(255,255,255,.4);margin-bottom:.75rem;letter-spacing:1px;text-transform:uppercase">Contacto</div>
+      <div class="footer-links">
+        <a href="mailto:contacto@famhealth.cl">contacto@famhealth.cl</a>
+        <a href="https://wa.me/56900000000">WhatsApp</a>
+      </div>
     </div>
   </div>
-  <div class="footer-bottom"><p>© 2026 FamHealth · Santiago, Chile</p></div>
+  <div class="footer-bottom">
+    <p>© 2025 FamHealth · Santiago, Chile &nbsp;·&nbsp; <a href="#" style="color:rgba(255,255,255,.4);text-decoration:none">Política de privacidad</a> &nbsp;·&nbsp; <a href="#" style="color:rgba(255,255,255,.4);text-decoration:none">Términos de uso</a></p>
+  </div>
 </footer>
 
 <script>
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyn1kqivlJKUt-7bhJyk60As9bFaMCC6sMWF_OORTQd1bRcMIZ4Fl6lm9DmpQPQFMXoBA/exec';
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.05 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  // Fallback: activar todos después de 800ms por si el observer no dispara
+  setTimeout(() => {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+  }, 800);
+
+  // ── BUSCADOR DE PROFESIONALES ──
+  const SCRIPT_BUSCAR = 'https://script.google.com/macros/s/AKfycbyhJyabLfcZmYlfYetU0s3yNfvydu__GZcMLEArjO-C8BedrYqFnKcerv5L-IqQcPnmCA/exec';
   let todosLosProfesionales = [];
 
-  function initials(nombre) { if(!nombre) return '??'; const p = nombre.trim().split(' '); return (p[0][0] + (p[1]?p[1][0]:'')).toUpperCase(); }
-  function formatPrecio(precio) { if(!precio) return null; const n = parseInt(precio); if(isNaN(n)||n===0) return null; return '$' + n.toLocaleString('es-CL'); }
+  function initials(nombre) {
+    if (!nombre) return '??';
+    const p = nombre.trim().split(' ');
+    return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase();
+  }
+
+  function formatPrecio(precio) {
+    if (!precio) return null;
+    const n = parseInt(precio);
+    if (isNaN(n) || n === 0) return null;
+    return '$' + n.toLocaleString('es-CL');
+  }
 
   async function cargarProfesionales() {
     try {
-      const r = await fetch(`${SCRIPT_URL}?action=getProfesionales`);
+      const r = await fetch(`${SCRIPT_BUSCAR}?action=getProfesionales`);
       if (!r.ok) throw new Error('Error');
       const j = await r.json();
       todosLosProfesionales = (j.data || []).filter(p => p.estado === 'Aprobado' && p.publico === 'Sí');
       buscarProfesionales();
-    } catch(e) { document.getElementById('prof-lista').innerHTML = '<div class="buscador-empty">Cargando profesionales...</div>'; }
+    } catch(e) {
+      const el = document.getElementById('prof-lista');
+      if (el) el.innerHTML = '<div class="buscador-empty">Cargando profesionales... <a href="#registro" style="color:var(--verde)">Regístrate mientras tanto</a></div>';
+    }
   }
 
   function buscarProfesionales() {
-    const esp = document.getElementById('filtro-esp').value.toLowerCase();
-    const mod = document.getElementById('filtro-modalidad').value.toLowerCase();
-    const q   = document.getElementById('filtro-comuna').value.toLowerCase();
+    const esp      = document.getElementById('filtro-esp').value.toLowerCase();
+    const modal    = document.getElementById('filtro-modalidad').value.toLowerCase();
+    const query    = document.getElementById('filtro-comuna').value.toLowerCase();
+
     const filtrados = todosLosProfesionales.filter(p => {
-      return (!esp || (p.especialidad||'').toLowerCase().includes(esp)) &&
-             (!mod || (p.modalidad||'').toLowerCase().includes(mod)) &&
-             (!q   || (p.nombre||'').toLowerCase().includes(q) || (p.comunas||'').toLowerCase().includes(q));
+      const matchEsp   = !esp    || (p.especialidad||'').toLowerCase().includes(esp);
+      const matchMod   = !modal  || (p.modalidad||'').toLowerCase().includes(modal);
+      const matchQuery = !query  || (p.nombre||'').toLowerCase().includes(query) || (p.comunas||'').toLowerCase().includes(query);
+      return matchEsp && matchMod && matchQuery;
     });
+
     renderProfesionales(filtrados);
   }
 
   function renderProfesionales(lista) {
     const el = document.getElementById('prof-lista');
     if (!lista.length) {
-      el.innerHTML = `
-        <div class="buscador-empty">
-          No encontramos profesionales con esos filtros exactos en este momento.<br><br>
-          <button class="btn-secondary" onclick="abrirModalSolicitud()">Solicitar búsqueda personalizada</button>
-        </div>`;
+      el.innerHTML = '<div class="buscador-empty">No encontramos profesionales con esos filtros.<br>Prueba cambiando la especialidad o la comuna.</div>';
       return;
     }
     el.innerHTML = lista.map(p => {
-      const precio = formatPrecio(p.precio);
-      const link = p.calLink ? (p.calLink.startsWith('http') ? p.calLink : 'https://' + p.calLink) : null;
+      const precio  = formatPrecio(p.precio);
+      const calLink = p.calLink ? (p.calLink.startsWith('http') ? p.calLink : 'https://' + p.calLink) : null;
+      const expAm   = p.expAm ? `${p.expAm} años con adulto mayor` : null;
       return `
         <div class="prof-item">
           <div class="prof-item-av">${initials(p.nombre)}</div>
           <div class="prof-item-info">
-            <div class="prof-item-nombre">${p.nombre||'—'} <span style="font-size:11px;color:var(--verde);font-weight:500">✓ Verificado</span></div>
-            <div class="prof-item-meta">${p.especialidad||''} · ${p.comunas||''}</div>
+            <div class="prof-item-nombre">${p.nombre || '—'} <span style="font-size:11px;color:var(--verde);font-weight:500">✓ Verificado</span></div>
+            <div class="prof-item-meta">${p.especialidad || ''} · ${p.comunas || ''}</div>
             <div class="prof-item-badges">
-              ${p.modalidad ? `<span class="prof-badge modalidad">📍 ${p.modalidad}</span>`:''}
-              ${precio ? `<span class="prof-badge precio">💰 ${precio}/sesión</span>`:''}
+              ${p.modalidad ? `<span class="prof-badge modalidad">📍 ${p.modalidad}</span>` : ''}
+              ${precio ? `<span class="prof-badge precio">💰 ${precio}/sesión</span>` : ''}
+              ${expAm ? `<span class="prof-badge">👴 ${expAm}</span>` : ''}
+              ${p.fonasa === 'Sí' ? `<span class="prof-badge">FONASA</span>` : ''}
+              ${p.isapre === 'Sí' ? `<span class="prof-badge">ISAPRE</span>` : ''}
             </div>
           </div>
           <div class="prof-item-accion">
-            ${link ? `<a href="${link}" target="_blank" class="btn-agendar">Agendar hora →</a>` : `<button class="btn-agendar sin-agenda" onclick="abrirModalSolicitud()">Solicitar información</button>`}
+            ${calLink
+              ? `<a href="${calLink}" target="_blank" class="btn-agendar">Agendar hora →</a>`
+              : `<button class="btn-agendar sin-agenda" onclick="document.getElementById('registro').scrollIntoView({behavior:'smooth'})">Solicitar hora</button>`
+            }
           </div>
         </div>`;
     }).join('');
   }
 
+  // Cargar profesionales sin bloquear el render
   setTimeout(cargarProfesionales, 100);
 
-  // Registro de Profesionales
+
+    const val = document.getElementById('f-para-quien').value;
+    document.getElementById('grupo-parentesco').style.display = val === 'familiar' ? 'block' : 'none';
+  }
+
+  // Form submit con Google Apps Script
   async function submitForm(tipo) {
-    const form = document.getElementById('form-' + tipo), btn = form.querySelector('.form-submit');
+    const form = document.getElementById('form-' + tipo);
+    const success = document.getElementById('success-' + tipo);
+    const btn = form.querySelector('.form-submit');
+    const inputs = form.querySelectorAll('input, select');
+
+    // Validación
     let valido = true;
-    form.querySelectorAll('input, select').forEach(i => { i.style.borderColor = ''; if(!i.value.trim()){ i.style.borderColor='#E07A5F'; valido=false; } });
-    if(!valido) return;
-    btn.disabled = true; btn.textContent = 'Enviando...';
-    let data = { tipo: tipo };
-    form.querySelectorAll('input, select').forEach(i => { data[i.id] = i.value; });
+    inputs.forEach(input => {
+      input.style.borderColor = '';
+      const skip = ['f-parentesco'].includes(input.id);
+      if (!input.value.trim() && !skip) {
+        input.style.borderColor = '#E07A5F';
+        valido = false;
+      }
+    });
+
+    if (!valido) {
+      const primero = form.querySelector('input[style*="E07A5F"], select[style*="E07A5F"]');
+      if (primero) primero.focus();
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+    btn.style.opacity = '0.7';
+
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyhJyabLfcZmYlfYetU0s3yNfvydu__GZcMLEArjO-C8BedrYqFnKcerv5L-IqQcPnmCA/exec';
+
+    let data = {};
+    if (tipo === 'familias') {
+      data = {
+        tipo: 'lead',
+        nombre:      document.getElementById('f-nombre').value,
+        email:       document.getElementById('f-email').value,
+        whatsapp:    document.getElementById('f-whatsapp').value,
+        paraQuien:   document.getElementById('f-para-quien').value,
+        parentesco:  document.getElementById('f-parentesco')?.value || '',
+        especialidad: document.getElementById('f-especialidad').value,
+        comuna:      document.getElementById('f-comuna').value,
+        urgencia:    document.getElementById('f-urgencia').value
+      };
+    } else {
+      inputs.forEach(input => { data[input.id] = input.value; });
+      data.tipo = tipo;
+    }
+
     try {
-      await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-      form.style.display = 'none'; document.getElementById('success-' + tipo).style.display = 'block';
-    } catch(e) { alert('Error. Intenta de nuevo.'); btn.disabled = false; btn.textContent = 'Registrar mi perfil →'; }
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      form.style.display = 'none';
+      success.style.display = 'block';
+    } catch(e) {
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.textContent = tipo === 'familias' ? 'Buscar profesional →' : 'Registrar mi perfil →';
+      alert('Hubo un problema al enviar. Por favor intenta de nuevo.');
+    }
   }
 
-  // Lógica del Modal Concierge (Manda los datos al Endpoint Lead)
-  function abrirModalSolicitud() { document.getElementById('modal-solicitud').classList.add('open'); }
-  function cerrarModalSolicitud() { 
-    document.getElementById('modal-solicitud').classList.remove('open'); 
-    setTimeout(() => {
-      document.getElementById('solicitud-form-container').style.display = 'block';
-      document.getElementById('solicitud-success').style.display = 'none';
-      document.getElementById('s-nombre').value = ''; document.getElementById('s-whatsapp').value = ''; document.getElementById('s-detalle').value = '';
-    }, 300);
-  }
-
-  async function enviarSolicitudConcierge() {
-    const n = document.getElementById('s-nombre'), w = document.getElementById('s-whatsapp'), d = document.getElementById('s-detalle');
-    if(!n.value || !w.value || !d.value) { alert("Por favor completa los 3 campos para poder ayudarte."); return; }
-    
-    const btn = document.getElementById('btn-enviar-solicitud');
-    btn.textContent = 'Enviando encargo...'; btn.disabled = true;
-
-    // Engañamos al backend enviando un "lead" pero con la información de la búsqueda a medida
-    const payload = {
-      tipo: 'lead',
-      nombre: n.value,
-      whatsapp: w.value,
-      email: 'Búsqueda por encargo',
-      especialidad: d.value.substring(0, 50), // Lo guardará en la columna especialidad
-      comuna: 'Pendiente', urgencia: 'Asistencia Concierge'
-    };
-
-    try {
-      await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      document.getElementById('solicitud-form-container').style.display = 'none';
-      document.getElementById('solicitud-success').style.display = 'block';
-    } catch(e) { alert('Error. Intenta de nuevo.'); }
-    finally { btn.textContent = 'Enviar solicitud de búsqueda'; btn.disabled = false; }
-  }
-
-  // Cierre de modal al hacer click fuera
-  document.getElementById('modal-solicitud').addEventListener('click', function(e) { if(e.target === this) cerrarModalSolicitud(); });
-
+  // Formato RUT chileno
   const rutInput = document.getElementById('p-rut');
-  if (rutInput) rutInput.addEventListener('input', function() { let val = this.value.replace(/[^0-9kK]/g, ''); if (val.length > 1) { const dv = val.slice(-1); const num = val.slice(0, -1).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); this.value = num + '-' + dv; } });
+  if (rutInput) {
+    rutInput.addEventListener('input', function() {
+      let val = this.value.replace(/[^0-9kK]/g, '');
+      if (val.length > 1) {
+        const dv = val.slice(-1);
+        const num = val.slice(0, -1).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        this.value = num + '-' + dv;
+      }
+    });
+  }
 </script>
 </body>
 </html>

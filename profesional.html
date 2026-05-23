@@ -126,7 +126,7 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
       <div class="card">
         <div class="filt"><input type="text" placeholder="Filtrar por paciente..." oninput="ft('citas-body',this.value)"></div>
         <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:15%">Fecha</th><th style="width:10%">Hora</th><th style="width:25%">Paciente</th><th>Modalidad</th><th>Origen</th><th>Estado</th><th style="width:15%">Acción</th></tr></thead>
+          <thead><tr><th style="width:13%">Fecha</th><th style="width:8%">Hora</th><th style="width:22%">Paciente</th><th>Modalidad</th><th>Dirección</th><th>Estado</th><th style="width:15%">Acción</th></tr></thead>
           <tbody id="citas-body"><tr><td colspan="7" class="loading">Cargando agenda...</td></tr></tbody>
         </table></div>
       </div>
@@ -238,7 +238,7 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
 <div id="toast"></div>
 
 <script>
-const SC = 'https://script.google.com/macros/s/AKfycbyn1kqivlJKUt-7bhJyk60As9bFaMCC6sMWF_OORTQd1bRcMIZ4Fl6lm9DmpQPQFMXoBA/exec';
+const SC = 'https://script.google.com/macros/s/AKfycbyhJyabLfcZmYlfYetU0s3yNfvydu__GZcMLEArjO-C8BedrYqFnKcerv5L-IqQcPnmCA/exec';
 
 let ME_PROF_NAME = ''; let ME_PROF_SPEC = ''; let ME_PROF_RUT = ''; let ME_PROF_FILA = null;
 let profFullData = null; // Para editar mi perfil
@@ -247,20 +247,33 @@ window.citasData = []; window.atData = []; window.recData = [];
 
 // ── FORMATEADOR DE FECHAS SEPARADAS ──
 function formatDT(dateStr) {
-  if(!dateStr) return { d: '—', t: '—' };
+  if(!dateStr || dateStr === '—') return { d: '—', t: '' };
   let dateObj;
   try {
-    if (dateStr.includes('-') && dateStr.includes(':')) {
-      const p = dateStr.split(' '); const dp = p[0].split('-'); const tp = p[1].split(':');
-      dateObj = new Date(dp[2], dp[1]-1, dp[0], tp[0], tp[1]);
-    } else { dateObj = new Date(dateStr); }
+    if (dateStr.includes('-')) {
+      const p = dateStr.split(' ');
+      const dp = p[0].split('-');
+      if (dp[0].length === 4) {
+        // yyyy-MM-dd
+        dateObj = new Date(dp[0], dp[1]-1, dp[2]);
+      } else {
+        // dd-MM-yyyy
+        dateObj = new Date(dp[2], dp[1]-1, dp[0]);
+      }
+    } else {
+      dateObj = new Date(dateStr);
+    }
     if(isNaN(dateObj)) return { d: dateStr.substring(0,10), t: '' };
-    const days = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+    const days   = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
     const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-    const d = `${days[dateObj.getDay()]} ${String(dateObj.getDate()).padStart(2,'0')}-${months[dateObj.getMonth()]}-${String(dateObj.getFullYear()).slice(-2)}`;
-    const t = `${String(dateObj.getHours()).padStart(2,'0')}:${String(dateObj.getMinutes()).padStart(2,'0')}`;
-    return { d, t };
+    const d = `${days[dateObj.getDay()]} ${months[dateObj.getMonth()]} ${dateObj.getDate()}`;
+    return { d, t: '' };
   } catch(e) { return { d: dateStr.substring(0,10), t: '' }; }
+}
+
+function formatHora(horaStr) {
+  if (!horaStr || horaStr === '—') return '—';
+  return horaStr.substring(0, 5);
 }
 
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('show'); }
@@ -315,22 +328,60 @@ async function loadProfDashboard() {
   document.getElementById('p-citas-count').textContent = miAgenda.filter(c => c.estado === 'Pendiente' || c.estado === 'Confirmada').length;
   document.getElementById('p-at-count').textContent = (atenciones.data || []).filter(a => a.profesional === ME_PROF_NAME).length;
   document.getElementById('p-rec-count').textContent = (recetas.data || []).filter(r => r.profesional === ME_PROF_NAME).length;
-  const proximas = miAgenda.slice(-4).reverse();
-  document.getElementById('dash-citas').innerHTML = proximas.length ? proximas.map(c => { const dt = formatDT(c.fechaCita + ' ' + (c.hora||'00:00:00')); return `<tr><td class="dt-fe">${dt.d} <span class="dt-ho">${c.hora||''}</span></td><td>${c.paciente}</td><td>${badge(c.estado)}</td></tr>`; }).join('') : '<tr><td class="empty">Agenda libre</td></tr>';
+  const proximas = miAgenda.filter(c => c.estado === 'Confirmada').slice(0, 4);
+  document.getElementById('dash-citas').innerHTML = proximas.length ? proximas.map(c => {
+    const dt = formatDT(c.fechaCita);
+    const hora = formatHora(c.hora);
+    return `<tr><td class="dt-fe">${dt.d} <span class="dt-ho">${hora}</span></td><td>${c.paciente}</td><td>${badge(c.estado)}</td></tr>`;
+  }).join('') : '<tr><td class="empty">Agenda libre</td></tr>';
 }
 
 async function loadProfCitas() {
   try {
     const d = (await fetch(`${SC}?action=getCitas`).then(r=>r.json())).data.filter(c => c.profesional === ME_PROF_NAME) || [];
     document.getElementById('citas-body').innerHTML = d.length ? d.map(c => {
-      const dt = formatDT(c.fechaCita + ' ' + (c.hora||'00:00'));
-      return `<tr><td><span class="dt-fe">${dt.d}</span></td><td><span class="dt-ho">${c.hora||'—'}</span></td><td><span class="av">${av(c.paciente)}</span><strong>${c.paciente||'—'}</strong></td><td>${c.modalidad||'—'}</td><td>${c.origen||'—'}</td><td>${badge(c.estado)}</td><td>${c.estado === 'Pendiente' ? `<button class="btn btn-p" onclick="accCita(${c.fila},'Confirmada')">✓</button>` : c.estado === 'Confirmada' ? `<button class="btn btn-p" onclick="abrirNuevaAtencion('${c.paciente}')">Evolución</button>` : '—'}</td></tr>`;
-    }).join('') : `<tr><td colspan="7" class="empty">Sin citas</td></tr>`;
-  } catch(e) { document.getElementById('citas-body').innerHTML = `<tr><td colspan="7" class="empty">Error visualizando tabla</td></tr>`; }
+      const dt = formatDT(c.fechaCita);
+      const hora = formatHora(c.hora);
+      const esDomicilio = (c.modalidad||'').toLowerCase().includes('domicilio');
+      const dirBtn = esDomicilio && c.direccion
+        ? `<button class="btn" onclick="verDireccion('${encodeURIComponent(c.direccion||'')}','${encodeURIComponent(c.paciente||'')}')"><i class="ti ti-map-pin"></i> Ver</button>`
+        : `<span style="color:var(--gris);font-size:11px">${esDomicilio ? 'Sin dirección' : '—'}</span>`;
+      const accion = c.estado === 'Confirmada'
+        ? `<button class="btn btn-p" onclick="abrirNuevaAtencion('${c.paciente}')">Evolución</button>
+           <button class="btn" style="color:#A32D2D;border-color:#F7C1C1" onclick="accCita(${c.fila},'Rechazada')">✕</button>`
+        : c.estado === 'Rechazada' ? '<span style="color:var(--gris);font-size:11px">Rechazada</span>'
+        : '—';
+      return `<tr>
+        <td><span class="dt-fe">${dt.d}</span></td>
+        <td><span style="font-size:12px;font-weight:500;color:var(--verde)">${hora}</span></td>
+        <td><span class="av">${av(c.paciente)}</span><strong>${c.paciente||'—'}</strong></td>
+        <td>${c.modalidad||'—'}</td>
+        <td>${dirBtn}</td>
+        <td>${badge(c.estado)}</td>
+        <td>${accion}</td>
+      </tr>`;
+    }).join('') : `<tr><td colspan="7" class="empty">Sin citas agendadas</td></tr>`;
+  } catch(e) { document.getElementById('citas-body').innerHTML = `<tr><td colspan="7" class="empty">Error al cargar</td></tr>`; }
 }
-async function accCita(fila, est) { toast('Actualizando...'); await fetch(`${SC}?action=updateCita&fila=${fila}&estado=${est}`); loadProfCitas(); }
 
-function abrirNuevaAtencion(pac = '') { document.getElementById('at-pac').value = pac; document.getElementById('at-rut').value = ''; document.getElementById('at-notas').value = ''; sp('atenciones', document.querySelectorAll('.nb')[2]); openModal('modal-atencion'); }
+function verDireccion(dirEnc, pacEnc) {
+  const dir = decodeURIComponent(dirEnc);
+  const pac = decodeURIComponent(pacEnc);
+  document.getElementById('dir-content').innerHTML = `
+    <div style="font-size:11px;color:var(--gris);margin-bottom:4px">Paciente</div>
+    <div style="font-weight:600;margin-bottom:12px">${pac}</div>
+    <div style="font-size:11px;color:var(--gris);margin-bottom:4px">Dirección</div>
+    <div>${dir}</div>`;
+  document.getElementById('dir-maps-link').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dir)}`;
+  openModal('modal-dir');
+}
+
+async function accCita(fila, est) {
+  toast('Actualizando...');
+  await fetch(`${SC}?action=updateCita&fila=${fila}&estado=${est}`);
+  toast(est === 'Rechazada' ? 'Cita rechazada' : '✓ Actualizado');
+  loadProfCitas();
+}(pac = '') { document.getElementById('at-pac').value = pac; document.getElementById('at-rut').value = ''; document.getElementById('at-notas').value = ''; sp('atenciones', document.querySelectorAll('.nb')[2]); openModal('modal-atencion'); }
 
 async function loadProfAtenciones() {
   try {
@@ -404,5 +455,19 @@ async function saveMiPerfil() {
   toast('✓ Perfil actualizado');
 }
 </script>
+<!-- MODAL DIRECCIÓN -->
+<div class="modal-bg" id="modal-dir">
+  <div class="modal" style="max-width:420px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+      <span style="font-size:15px;font-weight:500">Dirección de la cita</span>
+      <button onclick="closeModal('modal-dir')" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--gris)"><i class="ti ti-x"></i></button>
+    </div>
+    <div id="dir-content" style="font-size:14px;line-height:1.7;background:var(--bg2);padding:1rem;border-radius:8px;margin-bottom:1rem"></div>
+    <a id="dir-maps-link" href="#" target="_blank" class="btn btn-p" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-size:12px">
+      <i class="ti ti-map-pin"></i> Ver en Google Maps
+    </a>
+  </div>
+</div>
+
 </body>
 </html>
