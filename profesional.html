@@ -381,7 +381,15 @@ async function accCita(fila, est) {
   await fetch(`${SC}?action=updateCita&fila=${fila}&estado=${est}`);
   toast(est === 'Rechazada' ? 'Cita rechazada' : '✓ Actualizado');
   loadProfCitas();
-}(pac = '') { document.getElementById('at-pac').value = pac; document.getElementById('at-rut').value = ''; document.getElementById('at-notas').value = ''; sp('atenciones', document.querySelectorAll('.nb')[2]); openModal('modal-atencion'); }
+}
+
+function abrirNuevaAtencion(pac = '') {
+  document.getElementById('at-pac').value = pac;
+  document.getElementById('at-rut').value = '';
+  document.getElementById('at-notas').value = '';
+  sp('atenciones', document.querySelectorAll('.nb')[2]);
+  openModal('modal-atencion');
+}
 
 async function loadProfAtenciones() {
   try {
