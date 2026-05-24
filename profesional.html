@@ -90,6 +90,7 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
     
     <div class="nsec">Mi Consulta</div>
     <button class="nb on" onclick="sp('dashboard',this)"><i class="ti ti-home-heart"></i><span class="nb-text">Inicio</span></button>
+    <button class="nb" onclick="sp('pacientes',this);loadMisPacientes()"><i class="ti ti-users"></i><span class="nb-text">Mis Pacientes</span></button>
     <button class="nb" onclick="sp('citas',this);loadProfCitas()"><i class="ti ti-calendar-event"></i><span class="nb-text">Mis Citas</span></button>
     <button class="nb" onclick="sp('atenciones',this);loadProfAtenciones()"><i class="ti ti-notes"></i><span class="nb-text">Historial Clínico</span></button>
     <button class="nb" onclick="sp('recetas',this);loadProfRecetas()"><i class="ti ti-pill"></i><span class="nb-text">Mis Recetas</span></button>
@@ -150,20 +151,42 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
         <div class="ch"><span class="ct">Recetario Electrónico</span><button class="btn btn-p" onclick="openModal('modal-receta')"><i class="ti ti-plus"></i> Extender Receta</button></div>
         <div class="filt"><input type="text" placeholder="Buscar medicamento..." oninput="ft('recetas-body',this.value)"></div>
         <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:13%">Fecha</th><th style="width:18%">Paciente</th><th style="width:13%">RUT</th><th style="width:18%">Medicamento</th><th>Dosis</th><th>Duración</th><th style="width:10%">Alerta</th></tr></thead>
-          <tbody id="recetas-body"><tr><td colspan="7" class="loading">Cargando recetario...</td></tr></tbody>
+          <thead><tr><th style="width:15%">Fecha Emisión</th><th style="width:20%">Paciente</th><th style="width:15%">RUT</th><th style="width:20%">Medicamento</th><th>Dosis</th><th>Duración</th></tr></thead>
+          <tbody id="recetas-body"><tr><td colspan="6" class="loading">Cargando recetario...</td></tr></tbody>
         </table></div>
       </div>
     </div>
 
+    <!-- MIS PACIENTES -->
+    <div id="pg-pacientes" class="pg">
+      <div class="ph"><h1>Mis Pacientes</h1><p>Pacientes asignados a tu perfil.</p></div>
+      <div class="card">
+        <div class="ch">
+          <div class="filt" style="margin:0;flex:1"><input type="text" id="sp-pac" placeholder="Buscar por nombre o RUT..." oninput="ft('mis-pac-body',this.value)"></div>
+          <button class="btn btn-p btn-sm" onclick="loadMisPacientes()"><i class="ti ti-refresh"></i> Actualizar</button>
+        </div>
+        <div class="tbl-scroll"><table>
+          <thead><tr><th style="width:25%">Nombre</th><th style="width:13%">RUT</th><th style="width:20%">Diagnóstico</th><th style="width:12%">Modo gestión</th><th style="width:10%">Estado</th><th style="width:20%">Acciones</th></tr></thead>
+          <tbody id="mis-pac-body"><tr><td colspan="6" class="loading">Cargando pacientes...</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ALERTAS -->
     <div id="pg-alertas" class="pg">
       <div class="ph"><h1>Alertas de Mis Pacientes</h1><p>Seguimiento de medicación y controles.</p></div>
       <div class="card">
         <div class="ch"><span class="ct">Alertas configuradas</span><button class="btn btn-p" onclick="openModal('modal-alerta-nueva')"><i class="ti ti-plus"></i> Crear alerta</button></div>
-        <div class="filt"><input type="text" placeholder="Buscar paciente o mensaje..." oninput="ft('alertas-body',this.value)"></div>
+        <div class="filt">
+          <input type="text" placeholder="Buscar paciente o mensaje..." oninput="ft('alertas-body',this.value)">
+          <select onchange="ft('alertas-body','',this.value)">
+            <option value="">Todos los estados</option>
+            <option>Activa</option><option>Pausada</option><option>Cancelada</option>
+          </select>
+        </div>
         <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:13%">Fecha</th><th style="width:18%">Paciente</th><th>Tipo</th><th style="width:28%">Mensaje</th><th>Frecuencia</th><th>Estado</th></tr></thead>
-          <tbody id="alertas-body"><tr><td colspan="6" class="loading">Cargando alertas...</td></tr></tbody>
+          <thead><tr><th style="width:13%">Fecha</th><th style="width:16%">Paciente</th><th style="width:9%">Tipo</th><th style="width:25%">Mensaje</th><th style="width:12%">Frecuencia</th><th style="width:8%">Estado</th><th style="width:17%">Acciones</th></tr></thead>
+          <tbody id="alertas-body"><tr><td colspan="7" class="loading">Cargando alertas...</td></tr></tbody>
         </table></div>
       </div>
     </div>
@@ -236,6 +259,46 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
   </div>
 </div>
 
+<!-- MODAL DETALLE PACIENTE -->
+<div class="modal-bg" id="modal-paciente-det">
+  <div class="modal" style="max-width:640px">
+    <div class="modal-header">
+      <span class="modal-title" id="pac-det-titulo">Ficha del paciente</span>
+      <button class="modal-close" onclick="closeModal('modal-paciente-det')">×</button>
+    </div>
+    <div style="display:flex;gap:4px;border-bottom:0.5px solid var(--bdr);margin-bottom:1rem">
+      <button class="tab on" onclick="showPacTab('pdt-ficha',this)">Ficha</button>
+      <button class="tab" onclick="showPacTab('pdt-historial',this)">Historial</button>
+      <button class="tab" onclick="showPacTab('pdt-recetas',this)">Recetas</button>
+      <button class="tab" onclick="showPacTab('pdt-alertas',this)">Alertas</button>
+    </div>
+    <div id="pdt-ficha" class="tab-pane on"><div class="loading">Cargando...</div></div>
+    <div id="pdt-historial" class="tab-pane"><div class="loading">Cargando...</div></div>
+    <div id="pdt-recetas" class="tab-pane"><div class="loading">Cargando...</div></div>
+    <div id="pdt-alertas" class="tab-pane"><div class="loading">Cargando...</div></div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR ALERTA -->
+<div class="modal-bg" id="modal-editar-alerta">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Editar alerta</span><button class="modal-close" onclick="closeModal('modal-editar-alerta')">×</button></div>
+    <input type="hidden" id="ea-fila">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem">
+      <div class="fg"><label>Paciente</label><input type="text" id="ea-pac" readonly style="background:var(--bg2)"></div>
+      <div class="fg"><label>Tipo</label><select id="ea-tipo"><option>Medicamento</option><option>Cita</option><option>Examen</option><option>Control médico</option></select></div>
+      <div class="fg" style="grid-column:1/-1"><label>Mensaje</label><input type="text" id="ea-msg"></div>
+      <div class="fg"><label>Frecuencia</label><select id="ea-frec"><option>Diario</option><option>Cada 8 horas</option><option>Cada 12 horas</option><option>Semanal</option><option>Una vez</option></select></div>
+      <div class="fg"><label>Canal</label><select id="ea-canal"><option>WhatsApp</option><option>Email</option><option>WhatsApp + Email</option><option>SMS</option></select></div>
+      <div class="fg"><label>Estado</label><select id="ea-estado"><option>Activa</option><option>Pausada</option><option>Cancelada</option></select></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px">
+      <button class="btn" onclick="closeModal('modal-editar-alerta')">Cancelar</button>
+      <button class="btn btn-p" onclick="guardarEdicionAlerta()">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL ALERTA DESDE RECETA -->
 <div class="modal-bg" id="modal-alerta-receta">
   <div class="modal">
@@ -269,10 +332,19 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
   </div>
 </div>
 
+<!-- MODAL VER DIRECCIÓN -->
+<div class="modal-bg" id="modal-dir-prof">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header"><span class="modal-title">Dirección completa</span><button class="modal-close" onclick="closeModal('modal-dir-prof')">×</button></div>
+    <div id="dir-prof-content" style="font-size:14px;line-height:1.8;background:var(--bg2);padding:1rem;border-radius:8px;margin-bottom:1rem"></div>
+    <a id="dir-prof-maps" href="#" target="_blank" class="btn btn-p" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-size:13px">📍 Ver en Google Maps</a>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
-const SC = 'https://script.google.com/macros/s/AKfycbyQSw-9ZZcJxoBHxn2cKw8HKU3qaE4XTGFQupwxtECCUhAhFPGCycck-QN3qhtw6ZNGGQ/exec';
+const SC = 'https://script.google.com/macros/s/AKfycbxgGvJYqjyajmIPEsejQj4ljr9eipOkeMVdSX6X_B78bVTev4wHmJHvsjn6LCZHOubD3A/exec';
 
 let ME_PROF_NAME = ''; let ME_PROF_SPEC = ''; let ME_PROF_RUT = ''; let ME_PROF_FILA = null;
 let profFullData = null; // Para editar mi perfil
@@ -357,17 +429,312 @@ function initPortal() {
 }
 
 async function loadProfDashboard() {
-  const [citas, atenciones, recetas] = await Promise.all([ fetch(`${SC}?action=getCitas`).then(r=>r.json()), fetch(`${SC}?action=getAtenciones`).then(r=>r.json()), fetch(`${SC}?action=getRecetas`).then(r=>r.json()) ]);
-  const miAgenda = (citas.data || []).filter(c => c.profesional === ME_PROF_NAME);
-  document.getElementById('p-citas-count').textContent = miAgenda.filter(c => c.estado === 'Pendiente' || c.estado === 'Confirmada').length;
-  document.getElementById('p-at-count').textContent = (atenciones.data || []).filter(a => a.profesional === ME_PROF_NAME).length;
-  document.getElementById('p-rec-count').textContent = (recetas.data || []).filter(r => r.profesional === ME_PROF_NAME).length;
-  const proximas = miAgenda.filter(c => c.estado === 'Confirmada').slice(0, 4);
-  document.getElementById('dash-citas').innerHTML = proximas.length ? proximas.map(c => {
-    const dt = formatDT(c.fechaCita);
-    const hora = formatHora(c.hora);
-    return `<tr><td class="dt-fe">${dt.d} <span class="dt-ho">${hora}</span></td><td>${c.paciente}</td><td>${badge(c.estado)}</td></tr>`;
+  const [citas, atenciones, recetas, alertas] = await Promise.all([
+    fetch(`${SC}?action=getCitas`).then(r=>r.json()),
+    fetch(`${SC}?action=getAtenciones`).then(r=>r.json()),
+    fetch(`${SC}?action=getRecetas`).then(r=>r.json()),
+    fetch(`${SC}?action=getAlertas`).then(r=>r.json())
+  ]);
+  const miAgenda   = (citas.data||[]).filter(c => c.profesional === ME_PROF_NAME);
+  const misAt      = (atenciones.data||[]).filter(a => a.profesional === ME_PROF_NAME);
+  const misRec     = (recetas.data||[]).filter(r => r.profesional === ME_PROF_NAME);
+  const citasPacs  = [...new Set(miAgenda.map(c=>(c.paciente||'').toLowerCase()))];
+  const misAlertas = (alertas.data||[]).filter(a => a.profesional===ME_PROF_RUT || citasPacs.includes((a.paciente||'').toLowerCase()));
+
+  document.getElementById('p-citas-count').textContent = miAgenda.filter(c=>c.estado==='Confirmada').length;
+  document.getElementById('p-at-count').textContent    = misAt.length;
+  document.getElementById('p-rec-count').textContent   = misRec.length;
+  if(document.getElementById('p-alert-count')) document.getElementById('p-alert-count').textContent = misAlertas.filter(a=>a.estado==='Activa').length;
+
+  const proximas = miAgenda.filter(c=>c.estado==='Confirmada').slice(0,4);
+  document.getElementById('dash-citas').innerHTML = proximas.length ? proximas.map(c=>{
+    const dt=formatDT(c.fechaCita); return `<tr><td class="dt-fe">${dt.d} <span class="dt-ho">${formatHora(c.hora)}</span></td><td>${c.paciente}</td><td>${badge(c.estado)}</td></tr>`;
   }).join('') : '<tr><td class="empty">Agenda libre</td></tr>';
+
+  if(document.getElementById('dash-ultimos-pac')) {
+    const ultimos = misAt.slice(-5).reverse();
+    document.getElementById('dash-ultimos-pac').innerHTML = ultimos.length ? ultimos.map(a=>
+      `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--bdr)"><span class="av">${av(a.paciente)}</span><div><div style="font-size:13px;font-weight:500">${a.paciente}</div><div style="font-size:11px;color:var(--gris)">${formatDT(a.fecha).d}</div></div></div>`
+    ).join('') : '<div class="empty">Sin atenciones registradas</div>';
+  }
+  if(document.getElementById('dash-alertas-resumen')) {
+    const activas = misAlertas.filter(a=>a.estado==='Activa').slice(0,4);
+    document.getElementById('dash-alertas-resumen').innerHTML = activas.length ? activas.map(a=>
+      `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--bdr)"><span style="font-size:18px">${a.tipo==='Medicamento'?'💊':a.tipo==='Cita'?'📅':'🔔'}</span><div style="flex:1"><div style="font-size:12px;font-weight:500">${a.paciente} — ${a.tipo}</div><div style="font-size:11px;color:var(--gris)">${a.mensaje}</div></div>${badge(a.estado)}</div>`
+    ).join('') : '<div class="empty">Sin alertas activas</div>';
+  }
+}
+
+async function loadMisPacientes() {
+  document.getElementById('mis-pac-body').innerHTML = '<tr><td colspan="6" class="loading"><span class="spin"></span>Cargando...</td></tr>';
+  try {
+    const d = (await fetch(`${SC}?action=getPacientes`).then(r=>r.json())).data.filter(p => p.profesional === ME_PROF_NAME) || [];
+    document.getElementById('mis-pac-body').innerHTML = d.length ? d.map(p =>
+      `<tr>
+        <td><span class="av">${av(p.nombre)}</span><strong>${p.nombre||'—'}</strong></td>
+        <td style="font-size:11px">${p.rut||'—'}</td>
+        <td style="color:var(--gris)">${p.diagnostico||'—'}</td>
+        <td>${p.modo||'—'}</td>
+        <td>${badge(p.estado)}</td>
+        <td><button class="btn btn-p btn-sm" onclick="verDetallePaciente('${encodeURIComponent(p.nombre||'')}','${encodeURIComponent(p.rut||'')}')">Ver ficha</button></td>
+      </tr>`
+    ).join('') : '<tr><td colspan="6" class="empty">No tienes pacientes asignados aún</td></tr>';
+  } catch(e) { document.getElementById('mis-pac-body').innerHTML = '<tr><td colspan="6" class="empty">Error al cargar</td></tr>'; }
+}
+
+async function verDetallePaciente(nomEnc, rutEnc) {
+  const nombre = decodeURIComponent(nomEnc);
+  const rut    = decodeURIComponent(rutEnc);
+  document.getElementById('pac-det-titulo').textContent = nombre;
+  openModal('modal-paciente-det');
+  ['pdt-ficha','pdt-historial','pdt-recetas','pdt-alertas'].forEach(id => {
+    document.getElementById(id).innerHTML = '<div class="loading"><span class="spin"></span>Cargando...</div>';
+  });
+  showPacTab('pdt-ficha', document.querySelector('#modal-paciente-det .tab'));
+
+  const [pacReq, atReq, recReq, alReq] = await Promise.all([
+    fetch(`${SC}?action=getPacientes`).then(r=>r.json()),
+    fetch(`${SC}?action=getAtenciones`).then(r=>r.json()),
+    fetch(`${SC}?action=getRecetas`).then(r=>r.json()),
+    fetch(`${SC}?action=getAlertas`).then(r=>r.json())
+  ]);
+
+  const pac = (pacReq.data||[]).find(p => p.rut === rut || p.nombre === nombre) || {};
+  document.getElementById('pdt-ficha').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;font-size:13px">
+      <div><div style="font-size:11px;color:var(--gris)">Nombre</div><strong>${pac.nombre||'—'}</strong></div>
+      <div><div style="font-size:11px;color:var(--gris)">RUT</div>${pac.rut||'—'}</div>
+      <div><div style="font-size:11px;color:var(--gris)">Fecha de nacimiento</div>${pac.fechaNac||'—'}</div>
+      <div><div style="font-size:11px;color:var(--gris)">Modo de gestión</div>${pac.modo||'—'}</div>
+      <div><div style="font-size:11px;color:var(--gris)">Coordinador</div>${pac.coordNombre||'—'} ${pac.coordRelacion?'('+pac.coordRelacion+')':''}</div>
+      <div><div style="font-size:11px;color:var(--gris)">Contacto coordinador</div>${pac.coordWa||pac.coordEmail||'—'}</div>
+      <div style="grid-column:1/-1"><div style="font-size:11px;color:var(--gris)">Diagnóstico</div>${pac.diagnostico||'—'}</div>
+      <div style="grid-column:1/-1"><div style="font-size:11px;color:var(--gris)">Medicamentos</div>${pac.medicamentos||'—'}</div>
+      <div style="grid-column:1/-1"><div style="font-size:11px;color:var(--gris)">Alergias</div>${pac.alergias||'—'}</div>
+    </div>`;
+
+  const ats = (atReq.data||[]).filter(a => a.rut===rut || a.paciente===nombre);
+  document.getElementById('pdt-historial').innerHTML = ats.length ?
+    '<table style="font-size:12px"><thead><tr><th>Fecha</th><th>Notas clínicas</th><th>Próx. sesión</th></tr></thead><tbody>' +
+    ats.map(a=>`<tr><td style="white-space:nowrap">${formatDT(a.fecha).d}</td><td>${a.notas||'—'}</td><td>${formatDT(a.proximaSesion).d}</td></tr>`).join('')+
+    '</tbody></table>' : '<div class="empty">Sin historial clínico</div>';
+
+  const recs = (recReq.data||[]).filter(r => r.rut===rut || r.paciente===nombre);
+  document.getElementById('pdt-recetas').innerHTML = recs.length ?
+    '<table style="font-size:12px"><thead><tr><th>Fecha</th><th>Medicamento</th><th>Dosis</th><th>Duración</th></tr></thead><tbody>' +
+    recs.map(r=>`<tr><td>${formatDT(r.fecha).d}</td><td><strong>${r.medicamento||'—'}</strong></td><td>${r.dosis||'—'}</td><td>${r.duracion||'—'}</td></tr>`).join('')+
+    '</tbody></table>' : '<div class="empty">Sin recetas registradas</div>';
+
+  const als = (alReq.data||[]).filter(a => a.rut===rut || (a.paciente||'').toLowerCase()===(nombre||'').toLowerCase());
+  document.getElementById('pdt-alertas').innerHTML = als.length ?
+    '<table style="font-size:12px"><thead><tr><th>Tipo</th><th>Mensaje</th><th>Frecuencia</th><th>Canal</th><th>Estado</th></tr></thead><tbody>' +
+    als.map(a=>`<tr><td>${a.tipo||'—'}</td><td>${a.mensaje||'—'}</td><td>${a.frecuencia||'—'}</td><td>${a.canal||'—'}</td><td>${badge(a.estado)}</td></tr>`).join('')+
+    '</tbody></table>' : '<div class="empty">Sin alertas configuradas</div>';
+}
+
+function showPacTab(id, btn) {
+  document.querySelectorAll('#modal-paciente-det .tab-pane').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('#modal-paciente-det .tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  if(btn) btn.classList.add('on');
+}
+
+async function loadProfCitas() {
+  try {
+    const d = (await fetch(`${SC}?action=getCitas`).then(r=>r.json())).data.filter(c => c.profesional === ME_PROF_NAME) || [];
+    document.getElementById('citas-body').innerHTML = d.length ? d.map(c => {
+      const dt = formatDT(c.fechaCita);
+      const hora = formatHora(c.hora);
+      const esDom = (c.modalidad||'').toLowerCase().includes('domicilio');
+      let dirCol = '—';
+      if (esDom && c.direccion) {
+        const partes = c.direccion.split(',');
+        const comuna = partes[partes.length-1]?.trim() || c.direccion;
+        dirCol = `${comuna} <button class="btn btn-sm" style="font-size:10px;padding:2px 6px" onclick="verDireccionProf('${encodeURIComponent(c.direccion||'')}','${encodeURIComponent(c.paciente||'')}')">Ver</button>`;
+      } else if (esDom) {
+        dirCol = '<span style="color:var(--gris);font-size:11px">Sin dirección</span>';
+      }
+      const accion = c.estado==='Confirmada'
+        ? `<button class="btn btn-p" onclick="abrirNuevaAtencion('${c.paciente}')">Evolución</button><button class="btn" style="color:#A32D2D;border-color:#F7C1C1" onclick="accCita(${c.fila},'Rechazada')">✕</button>`
+        : c.estado==='Rechazada' ? '<span style="color:var(--gris);font-size:11px">Rechazada</span>' : '—';
+      return `<tr>
+        <td><span class="dt-fe">${dt.d}</span></td>
+        <td style="font-weight:500;color:var(--verde)">${hora}</td>
+        <td><span class="av">${av(c.paciente)}</span><strong>${c.paciente||'—'}</strong></td>
+        <td>${c.modalidad||'—'}</td>
+        <td>${dirCol}</td>
+        <td>${badge(c.estado)}</td>
+        <td>${accion}</td>
+      </tr>`;
+    }).join('') : `<tr><td colspan="7" class="empty">Sin citas agendadas</td></tr>`;
+  } catch(e) { document.getElementById('citas-body').innerHTML = `<tr><td colspan="7" class="empty">Error al cargar</td></tr>`; }
+}
+
+function verDireccionProf(dirEnc, pacEnc) {
+  const dir = decodeURIComponent(dirEnc);
+  const pac = decodeURIComponent(pacEnc);
+  document.getElementById('dir-prof-content').innerHTML = `<div style="font-size:11px;color:var(--gris);margin-bottom:4px">Paciente</div><div style="font-weight:600;margin-bottom:12px">${pac}</div><div style="font-size:11px;color:var(--gris);margin-bottom:4px">Dirección completa</div><div>${dir}</div>`;
+  document.getElementById('dir-prof-maps').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dir)}`;
+  openModal('modal-dir-prof');
+}
+
+async function accCita(fila, est) {
+  toast('Actualizando...');
+  await fetch(`${SC}?action=updateCita&fila=${fila}&estado=${est}`);
+  toast(est==='Rechazada'?'Cita rechazada':'✓ Actualizado');
+  loadProfCitas();
+}
+
+function abrirNuevaAtencion(pac='') {
+  document.getElementById('at-pac').value = pac;
+  document.getElementById('at-rut').value = '';
+  document.getElementById('at-notas').value = '';
+  sp('atenciones', document.querySelectorAll('.nb')[3]);
+  openModal('modal-atencion');
+}
+
+async function loadProfAtenciones() {
+  try {
+    const d = (await fetch(`${SC}?action=getAtenciones`).then(r=>r.json())).data.filter(a => a.profesional === ME_PROF_NAME) || [];
+    document.getElementById('atenciones-body').innerHTML = d.length ? d.map(a => {
+      const dt=formatDT(a.fecha); const dp=formatDT(a.proximaSesion);
+      return `<tr><td><span class="dt-fe">${dt.d}</span></td><td><span class="av">${av(a.paciente)}</span>${a.paciente||'—'}</td><td>${a.rut||'—'}</td><td style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${a.notas}">${a.notas||'—'}</td><td>${dp.d!=='—'?dp.d:'—'}</td></tr>`;
+    }).join('') : `<tr><td colspan="5" class="empty">Sin evoluciones</td></tr>`;
+  } catch(e) { document.getElementById('atenciones-body').innerHTML = `<tr><td colspan="5" class="empty">Error de tabla</td></tr>`; }
+}
+
+async function guardarAtencionProf() {
+  const p=document.getElementById('at-pac').value; const n=document.getElementById('at-notas').value;
+  if(!p||!n) return;
+  toast('Guardando...');
+  await fetch(SC,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({tipo:'atencion',paciente:p,rut:document.getElementById('at-rut').value,profesional:ME_PROF_NAME,especialidad:ME_PROF_SPEC,notas:n,proximaSesion:document.getElementById('at-prox').value})});
+  closeModal('modal-atencion'); toast('✓ Firmado'); setTimeout(loadProfAtenciones,1000);
+}
+
+async function loadProfRecetas() {
+  try {
+    const d = (await fetch(`${SC}?action=getRecetas`).then(r=>r.json())).data.filter(r => r.profesional === ME_PROF_NAME) || [];
+    document.getElementById('recetas-body').innerHTML = d.length ? d.map(r => {
+      const dt=formatDT(r.fecha);
+      const alertaBtn=`<button class="btn btn-sm" style="font-size:10px" onclick="abrirAlertaReceta('${encodeURIComponent(r.paciente||'')}','${encodeURIComponent(r.rut||'')}','${encodeURIComponent(r.medicamento||'')}','${encodeURIComponent(r.dosis||'')}')">🔔 Crear</button>`;
+      return `<tr><td><span class="dt-fe">${dt.d}</span></td><td><span class="av">${av(r.paciente)}</span>${r.paciente||'—'}</td><td>${r.rut||'—'}</td><td><strong>${r.medicamento||'—'}</strong></td><td>${r.dosis||'—'}</td><td>${r.duracion||'—'}</td><td>${alertaBtn}</td></tr>`;
+    }).join('') : `<tr><td colspan="7" class="empty">Sin recetas</td></tr>`;
+  } catch(e) { document.getElementById('recetas-body').innerHTML=`<tr><td colspan="7" class="empty">Error de tabla</td></tr>`; }
+}
+
+async function emitirRecetaProf() {
+  const p=document.getElementById('rec-pac').value; const m=document.getElementById('rec-med').value;
+  if(!p||!m) return;
+  toast('Emitiendo...');
+  await fetch(SC,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({tipo:'receta',paciente:p,rut:document.getElementById('rec-rut').value,profesional:ME_PROF_NAME,medicamento:m,dosis:document.getElementById('rec-dosis').value,duracion:document.getElementById('rec-dur').value})});
+  closeModal('modal-receta'); toast('✓ Emitido'); setTimeout(loadProfRecetas,1000);
+}
+
+function abrirAlertaReceta(pacEnc,rutEnc,medEnc,dosisEnc) {
+  document.getElementById('ar-pac').value = decodeURIComponent(pacEnc);
+  document.getElementById('ar-rut').value = decodeURIComponent(rutEnc);
+  document.getElementById('ar-msg').value = `Recuerda tomar ${decodeURIComponent(medEnc)}${dosisEnc?` — ${decodeURIComponent(dosisEnc)}`:''}`;
+  openModal('modal-alerta-receta');
+}
+
+async function guardarAlertaReceta() {
+  const p=document.getElementById('ar-pac').value; const m=document.getElementById('ar-msg').value;
+  if(!p||!m){toast('Completa los campos');return;}
+  const hora=document.getElementById('ar-hora').value;
+  const frec=document.getElementById('ar-frec').value+(hora?` a las ${hora}`:'');
+  await fetch(`${SC}?action=addAlerta&paciente=${encodeURIComponent(p)}&rut=${encodeURIComponent(document.getElementById('ar-rut').value)}&tipo=Medicamento&mensaje=${encodeURIComponent(m)}&frecuencia=${encodeURIComponent(frec)}&canal=${encodeURIComponent(document.getElementById('ar-canal').value)}&profesional=${encodeURIComponent(ME_PROF_RUT)}`);
+  closeModal('modal-alerta-receta'); toast('✓ Alerta activada');
+}
+
+async function guardarAlertaNueva() {
+  const p=document.getElementById('an-pac').value; const m=document.getElementById('an-msg').value;
+  if(!p||!m){toast('Completa los campos');return;}
+  const hora=document.getElementById('an-hora').value;
+  const frec=document.getElementById('an-frec').value+(hora?` a las ${hora}`:'');
+  await fetch(`${SC}?action=addAlerta&paciente=${encodeURIComponent(p)}&rut=${encodeURIComponent(document.getElementById('an-rut').value)}&tipo=${encodeURIComponent(document.getElementById('an-tipo').value)}&mensaje=${encodeURIComponent(m)}&frecuencia=${encodeURIComponent(frec)}&canal=${encodeURIComponent(document.getElementById('an-canal').value)}&profesional=${encodeURIComponent(ME_PROF_RUT)}`);
+  closeModal('modal-alerta-nueva'); toast('✓ Alerta creada'); setTimeout(loadProfAlertas,1000);
+}
+
+// MÓDULO ALERTAS
+async function loadProfAlertas() {
+  try {
+    document.getElementById('alertas-body').innerHTML = '<tr><td colspan="7" class="loading"><span class="spin"></span>Cargando...</td></tr>';
+    const [citasReq, alReq] = await Promise.all([
+      fetch(`${SC}?action=getCitas`).then(r=>r.json()),
+      fetch(`${SC}?action=getAlertas`).then(r=>r.json())
+    ]);
+    const misPacs = [...new Set((citasReq.data||[]).filter(c=>c.profesional===ME_PROF_NAME).map(c=>(c.paciente||'').toLowerCase()))];
+    const misAlertas = (alReq.data||[]).filter(a =>
+      (a.profesional && a.profesional===ME_PROF_RUT) ||
+      misPacs.includes((a.paciente||'').toLowerCase())
+    );
+    document.getElementById('alertas-body').innerHTML = misAlertas.length ? misAlertas.map(a => {
+      const dt=formatDT(a.fecha);
+      const acciones = `
+        <button class="btn btn-sm" onclick="abrirEditarAlerta(${a.fila},'${encodeURIComponent(a.paciente||'')}','${encodeURIComponent(a.tipo||'')}','${encodeURIComponent(a.mensaje||'')}','${encodeURIComponent(a.frecuencia||'')}','${encodeURIComponent(a.canal||'')}','${a.estado||''}')">Editar</button>
+        ${a.estado==='Activa'?`<button class="btn btn-sm" style="color:var(--amber)" onclick="cambiarEstadoAlerta(${a.fila},'Pausada')">Pausar</button>`:''}
+        ${a.estado==='Pausada'?`<button class="btn btn-sm btn-p" onclick="cambiarEstadoAlerta(${a.fila},'Activa')">Activar</button>`:''}
+        ${a.estado!=='Cancelada'?`<button class="btn btn-sm" style="color:#A32D2D" onclick="cambiarEstadoAlerta(${a.fila},'Cancelada')">Cancelar</button>`:''}`;
+      return `<tr><td><span class="dt-fe">${dt.d}</span></td><td><span class="av">${av(a.paciente)}</span>${a.paciente||'—'}</td><td>${badge(a.tipo)}</td><td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.mensaje||'—'}</td><td>${a.frecuencia||'—'}</td><td>${badge(a.estado)}</td><td>${acciones}</td></tr>`;
+    }).join('') : `<tr><td colspan="7" class="empty">Sin alertas configuradas</td></tr>`;
+  } catch(e) { document.getElementById('alertas-body').innerHTML=`<tr><td colspan="7" class="empty">Error de tabla</td></tr>`; }
+}
+
+function abrirEditarAlerta(fila, pacEnc, tipoEnc, msgEnc, frecEnc, canalEnc, estado) {
+  document.getElementById('ea-fila').value  = fila;
+  document.getElementById('ea-pac').value   = decodeURIComponent(pacEnc);
+  document.getElementById('ea-tipo').value  = decodeURIComponent(tipoEnc);
+  document.getElementById('ea-msg').value   = decodeURIComponent(msgEnc);
+  document.getElementById('ea-frec').value  = decodeURIComponent(frecEnc).split(' a las ')[0];
+  document.getElementById('ea-canal').value = decodeURIComponent(canalEnc);
+  document.getElementById('ea-estado').value= estado;
+  openModal('modal-editar-alerta');
+}
+
+async function guardarEdicionAlerta() {
+  const fila   = document.getElementById('ea-fila').value;
+  const estado = document.getElementById('ea-estado').value;
+  const msg    = document.getElementById('ea-msg').value;
+  const frec   = document.getElementById('ea-frec').value;
+  const canal  = document.getElementById('ea-canal').value;
+  const tipo   = document.getElementById('ea-tipo').value;
+  await fetch(`${SC}?action=updateAlertaDetalle&fila=${fila}&estado=${encodeURIComponent(estado)}&mensaje=${encodeURIComponent(msg)}&frecuencia=${encodeURIComponent(frec)}&canal=${encodeURIComponent(canal)}&tipo=${encodeURIComponent(tipo)}`);
+  closeModal('modal-editar-alerta'); toast('✓ Alerta actualizada'); setTimeout(loadProfAlertas,1000);
+}
+
+async function cambiarEstadoAlerta(fila, estado) {
+  await fetch(`${SC}?action=updateAlerta&fila=${fila}&estado=${encodeURIComponent(estado)}`);
+  toast(`✓ Alerta ${estado.toLowerCase()}`); setTimeout(loadProfAlertas,800);
+}
+
+// MÓDULO MI PERFIL (PROFESIONAL)
+async function loadMiPerfil() {
+  if(!profFullData) return;
+  document.getElementById('pe-nombre-display').textContent = profFullData.nombre;
+  document.getElementById('pe-estado-display').textContent = `Estado en plataforma: ${profFullData.estado}`;
+  document.getElementById('pe-wa').value       = profFullData.whatsapp||'';
+  document.getElementById('pe-expt').value     = profFullData.expTotal||'';
+  document.getElementById('pe-expam').value    = profFullData.expAm||'';
+  document.getElementById('pe-idiomas').value  = profFullData.idiomas||'';
+  document.getElementById('pe-comunas').value  = profFullData.comunas||'';
+  document.getElementById('pe-mod').value      = profFullData.modalidad||'Domicilio';
+  document.getElementById('pe-cal').value      = profFullData.calLink||'';
+  document.getElementById('pe-precio').value   = profFullData.precio||'';
+  document.getElementById('pe-duracion').value = profFullData.duracion||'';
+  document.getElementById('pe-isa').value      = profFullData.isapre||'Sí';
+  document.getElementById('pe-fon').value      = profFullData.fonasa||'Sí';
+  document.getElementById('pe-pub').value      = profFullData.publico||'Sí';
+  if(document.getElementById('pe-foto')) document.getElementById('pe-foto').value = profFullData.foto||'';
+  if(document.getElementById('pe-foto-preview')) document.getElementById('pe-foto-preview').src = profFullData.foto||'https://via.placeholder.com/80';
+  const bioReq = await fetch(`${SC}?action=getBioProf&rut=${profFullData.rut}`).then(r=>r.json());
+  document.getElementById('pe-bio').value = bioReq.data?.bio||'';
+}
+
+async function saveMiPerfil() {
+  toast('Actualizando perfil público...');
+  const params=`fila=${ME_PROF_FILA}&rut=${ME_PROF_RUT}&whatsapp=${encodeURIComponent(document.getElementById('pe-wa').value)}&expTotal=${document.getElementById('pe-expt').value}&expAm=${document.getElementById('pe-expam').value}&idiomas=${encodeURIComponent(document.getElementById('pe-idiomas').value)}&comunas=${encodeURIComponent(document.getElementById('pe-comunas').value)}&modalidad=${encodeURIComponent(document.getElementById('pe-mod').value)}&calLink=${encodeURIComponent(document.getElementById('pe-cal').value)}&precio=${document.getElementById('pe-precio').value}&duracion=${document.getElementById('pe-duracion').value}&isapre=${document.getElementById('pe-isa').value}&fonasa=${document.getElementById('pe-fon').value}&publico=${document.getElementById('pe-pub').value}&bio=${encodeURIComponent(document.getElementById('pe-bio').value)}`;
+  await fetch(`${SC}?action=updateProfFicha&${params}`);
+  toast('✓ Perfil actualizado');
 }
 
 async function loadProfCitas() {
@@ -441,73 +808,27 @@ async function loadProfRecetas() {
     const d = (await fetch(`${SC}?action=getRecetas`).then(r=>r.json())).data.filter(r => r.profesional === ME_PROF_NAME) || [];
     document.getElementById('recetas-body').innerHTML = d.length ? d.map(r => {
       const dt = formatDT(r.fecha);
-      const alertaBtn = `<button class="btn btn-sm" style="font-size:10px" onclick="abrirAlertaReceta('${encodeURIComponent(r.paciente||'')}','${encodeURIComponent(r.rut||'')}','${encodeURIComponent(r.medicamento||'')}','${encodeURIComponent(r.dosis||'')}')">🔔 Crear</button>`;
-      return `<tr><td><span class="dt-fe">${dt.d}</span></td><td><span class="av">${av(r.paciente)}</span>${r.paciente||'—'}</td><td>${r.rut||'—'}</td><td><strong>${r.medicamento||'—'}</strong></td><td>${r.dosis||'—'}</td><td>${r.duracion||'—'}</td><td>${alertaBtn}</td></tr>`;
-    }).join('') : `<tr><td colspan="7" class="empty">Sin recetas</td></tr>`;
-  } catch(e) { document.getElementById('recetas-body').innerHTML = `<tr><td colspan="7" class="empty">Error de tabla</td></tr>`; }
+      return `<tr><td><span class="dt-fe">${dt.d}</span> <span class="dt-ho">${dt.t}</span></td><td><span class="av">${av(r.paciente)}</span>${r.paciente||'—'}</td><td>${r.rut||'—'}</td><td><strong>${r.medicamento||'—'}</strong></td><td>${r.dosis||'—'}</td><td>${r.duracion||'—'}</td></tr>`;
+    }).join('') : `<tr><td colspan="6" class="empty">Sin recetas</td></tr>`;
+  } catch(e) { document.getElementById('recetas-body').innerHTML = `<tr><td colspan="6" class="empty">Error de tabla</td></tr>`; }
 }
-
-async function emitirRecetaProf() {
-  const p = document.getElementById('rec-pac').value;
-  const m = document.getElementById('rec-med').value;
-  if(!p||!m) return;
-  toast('Emitiendo...');
-  await fetch(SC, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tipo: 'receta', paciente: p, rut: document.getElementById('rec-rut').value, profesional: ME_PROF_NAME, medicamento: m, dosis: document.getElementById('rec-dosis').value, duracion: document.getElementById('rec-dur').value }) });
-  closeModal('modal-receta'); toast('✓ Emitido'); setTimeout(loadProfRecetas, 1000);
-}
-
-function abrirAlertaReceta(pacEnc, rutEnc, medEnc, dosisEnc) {
-  const pac   = decodeURIComponent(pacEnc);
-  const rut   = decodeURIComponent(rutEnc);
-  const med   = decodeURIComponent(medEnc);
-  const dosis = decodeURIComponent(dosisEnc);
-  document.getElementById('ar-pac').value = pac;
-  document.getElementById('ar-rut').value = rut;
-  document.getElementById('ar-msg').value = `Recuerda tomar ${med}${dosis ? ' — ' + dosis : ''}`;
-  openModal('modal-alerta-receta');
-}
-
-async function guardarAlertaReceta() {
-  const p = document.getElementById('ar-pac').value;
-  const r = document.getElementById('ar-rut').value;
-  const m = document.getElementById('ar-msg').value;
-  if(!p || !m) { toast('Completa los campos'); return; }
-  const hora = document.getElementById('ar-hora').value;
-  const frec = document.getElementById('ar-frec').value + (hora ? ' a las ' + hora : '');
-  await fetch(`${SC}?action=addAlerta&paciente=${encodeURIComponent(p)}&rut=${encodeURIComponent(r)}&tipo=Medicamento&mensaje=${encodeURIComponent(m)}&frecuencia=${encodeURIComponent(frec)}&canal=${encodeURIComponent(document.getElementById('ar-canal').value)}&profesional=${encodeURIComponent(ME_PROF_RUT)}`);
-  closeModal('modal-alerta-receta');
-  toast('✓ Alerta activada');
-}
-
-async function guardarAlertaNueva() {
-  const p = document.getElementById('an-pac').value;
-  const m = document.getElementById('an-msg').value;
-  const t = document.getElementById('an-tipo').value;
-  if(!p || !m) { toast('Completa los campos'); return; }
-  const hora = document.getElementById('an-hora').value;
-  const frec = document.getElementById('an-frec').value + (hora ? ' a las ' + hora : '');
-  await fetch(`${SC}?action=addAlerta&paciente=${encodeURIComponent(p)}&rut=${encodeURIComponent(document.getElementById('an-rut').value)}&tipo=${encodeURIComponent(t)}&mensaje=${encodeURIComponent(m)}&frecuencia=${encodeURIComponent(frec)}&canal=${encodeURIComponent(document.getElementById('an-canal').value)}&profesional=${encodeURIComponent(ME_PROF_RUT)}`);
-  closeModal('modal-alerta-nueva');
-  toast('✓ Alerta creada');
-  setTimeout(loadProfAlertas, 1000);
-}
+async function emitirRecetaProf() { const p = document.getElementById('rec-pac').value; const m = document.getElementById('rec-med').value; if(!p||!m)return; toast('Emitiendo...'); await fetch(SC, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tipo: 'receta', paciente: p, rut: document.getElementById('rec-rut').value, profesional: ME_PROF_NAME, medicamento: m, dosis: document.getElementById('rec-dosis').value, duracion: document.getElementById('rec-dur').value, comentarios: document.getElementById('rec-com').value }) }); closeModal('modal-receta'); toast('✓ Emitido'); setTimeout(loadProfRecetas, 1000); }
 
 // MÓDULO ALERTAS DEL PROFESIONAL
 async function loadProfAlertas() {
   try {
-    document.getElementById('alertas-body').innerHTML = '<tr><td colspan="6" class="loading"><span class="spin"></span>Cargando alertas...</td></tr>';
+    document.getElementById('alertas-body').innerHTML = '<tr><td colspan="6" class="loading"><span class="spin"></span>Cruzando datos de pacientes...</td></tr>';
+    // 1. Traemos pacientes para saber cuáles RUT son de este profesional
+    const pacReq = await fetch(`${SC}?action=getPacientes`).then(r=>r.json());
+    const misRuts = (pacReq.data||[]).filter(p => p.profesional === ME_PROF_NAME).map(p => p.rut);
+    // 2. Traemos alertas y filtramos las que correspondan a sus pacientes
     const alReq = await fetch(`${SC}?action=getAlertas`).then(r=>r.json());
-    // Filtrar por profesional (campo nuevo) O por pacientes de sus citas
-    const citasReq = await fetch(`${SC}?action=getCitas`).then(r=>r.json());
-    const misPacientes = [...new Set((citasReq.data||[]).filter(c => c.profesional === ME_PROF_NAME).map(c => (c.paciente||'').toLowerCase()))];
-    const misAlertas = (alReq.data||[]).filter(a =>
-      (a.profesional && a.profesional === ME_PROF_RUT) ||
-      misPacientes.includes((a.paciente||'').toLowerCase())
-    );
+    const misAlertas = (alReq.data||[]).filter(a => misRuts.includes(a.rut));
+    
     document.getElementById('alertas-body').innerHTML = misAlertas.length ? misAlertas.map(a => {
       const dt = formatDT(a.fecha);
       return `<tr><td><span class="dt-fe">${dt.d}</span></td><td><span class="av">${av(a.paciente)}</span>${a.paciente||'—'}</td><td>${a.tipo||'—'}</td><td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.mensaje||'—'}</td><td>${a.frecuencia||'—'}</td><td>${badge(a.estado)}</td></tr>`;
-    }).join('') : `<tr><td colspan="6" class="empty">Sin alertas configuradas</td></tr>`;
+    }).join('') : `<tr><td colspan="6" class="empty">Tus pacientes no tienen alertas configuradas</td></tr>`;
   } catch(e) { document.getElementById('alertas-body').innerHTML = `<tr><td colspan="6" class="empty">Error de tabla</td></tr>`; }
 }
 
@@ -543,19 +864,5 @@ async function saveMiPerfil() {
   toast('✓ Perfil actualizado');
 }
 </script>
-<!-- MODAL DIRECCIÓN -->
-<div class="modal-bg" id="modal-dir">
-  <div class="modal" style="max-width:420px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-      <span style="font-size:15px;font-weight:500">Dirección de la cita</span>
-      <button onclick="closeModal('modal-dir')" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--gris)"><i class="ti ti-x"></i></button>
-    </div>
-    <div id="dir-content" style="font-size:14px;line-height:1.7;background:var(--bg2);padding:1rem;border-radius:8px;margin-bottom:1rem"></div>
-    <a id="dir-maps-link" href="#" target="_blank" class="btn btn-p" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-size:12px">
-      <i class="ti ti-map-pin"></i> Ver en Google Maps
-    </a>
-  </div>
-</div>
-
 </body>
 </html>
