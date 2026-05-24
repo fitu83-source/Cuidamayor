@@ -150,8 +150,8 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
         <div class="ch"><span class="ct">Recetario Electrónico</span><button class="btn btn-p" onclick="openModal('modal-receta')"><i class="ti ti-plus"></i> Extender Receta</button></div>
         <div class="filt"><input type="text" placeholder="Buscar medicamento..." oninput="ft('recetas-body',this.value)"></div>
         <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:15%">Fecha Emisión</th><th style="width:20%">Paciente</th><th style="width:15%">RUT</th><th style="width:20%">Medicamento</th><th>Dosis</th><th>Duración</th></tr></thead>
-          <tbody id="recetas-body"><tr><td colspan="6" class="loading">Cargando recetario...</td></tr></tbody>
+          <thead><tr><th style="width:13%">Fecha</th><th style="width:18%">Paciente</th><th style="width:13%">RUT</th><th style="width:18%">Medicamento</th><th>Dosis</th><th>Duración</th><th style="width:10%">Alerta</th></tr></thead>
+          <tbody id="recetas-body"><tr><td colspan="7" class="loading">Cargando recetario...</td></tr></tbody>
         </table></div>
       </div>
     </div>
@@ -159,10 +159,11 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
     <div id="pg-alertas" class="pg">
       <div class="ph"><h1>Alertas de Mis Pacientes</h1><p>Seguimiento de medicación y controles.</p></div>
       <div class="card">
+        <div class="ch"><span class="ct">Alertas configuradas</span><button class="btn btn-p" onclick="openModal('modal-alerta-nueva')"><i class="ti ti-plus"></i> Crear alerta</button></div>
         <div class="filt"><input type="text" placeholder="Buscar paciente o mensaje..." oninput="ft('alertas-body',this.value)"></div>
         <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:15%">Fecha Creación</th><th style="width:20%">Paciente</th><th>Tipo</th><th style="width:30%">Mensaje Recordatorio</th><th>Frecuencia</th><th>Estado</th></tr></thead>
-          <tbody id="alertas-body"><tr><td colspan="6" class="loading">Cargando alertas vigentes...</td></tr></tbody>
+          <thead><tr><th style="width:13%">Fecha</th><th style="width:18%">Paciente</th><th>Tipo</th><th style="width:28%">Mensaje</th><th>Frecuencia</th><th>Estado</th></tr></thead>
+          <tbody id="alertas-body"><tr><td colspan="6" class="loading">Cargando alertas...</td></tr></tbody>
         </table></div>
       </div>
     </div>
@@ -235,6 +236,39 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
   </div>
 </div>
 
+<!-- MODAL ALERTA DESDE RECETA -->
+<div class="modal-bg" id="modal-alerta-receta">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Crear alerta de medicamento</span><button class="modal-close" onclick="closeModal('modal-alerta-receta')">×</button></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem">
+      <div class="fg"><label>Paciente</label><input type="text" id="ar-pac" readonly style="background:var(--bg2)"></div>
+      <div class="fg"><label>RUT</label><input type="text" id="ar-rut" readonly style="background:var(--bg2)"></div>
+      <div class="fg" style="grid-column:1/-1"><label>Mensaje</label><input type="text" id="ar-msg" placeholder="Ej: Tomar Losartán 50mg con el desayuno"></div>
+      <div class="fg"><label>Frecuencia</label><select id="ar-frec"><option>Diario</option><option>Cada 8 horas</option><option>Cada 12 horas</option><option>Semanal</option><option>Una vez</option></select></div>
+      <div class="fg"><label>Hora de envío</label><input type="time" id="ar-hora" value="09:00"></div>
+      <div class="fg"><label>Canal</label><select id="ar-canal"><option>WhatsApp</option><option>Email</option><option>WhatsApp + Email</option><option>SMS</option></select></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px"><button class="btn" onclick="closeModal('modal-alerta-receta')">Cancelar</button><button class="btn btn-p" onclick="guardarAlertaReceta()">🔔 Activar alerta</button></div>
+  </div>
+</div>
+
+<!-- MODAL NUEVA ALERTA -->
+<div class="modal-bg" id="modal-alerta-nueva">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Nueva alerta de paciente</span><button class="modal-close" onclick="closeModal('modal-alerta-nueva')">×</button></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem">
+      <div class="fg"><label>Paciente *</label><input type="text" id="an-pac" placeholder="Nombre del paciente"></div>
+      <div class="fg"><label>RUT</label><input type="text" id="an-rut" placeholder="12.345.678-9"></div>
+      <div class="fg"><label>Tipo</label><select id="an-tipo"><option>Medicamento</option><option>Cita</option><option>Examen</option><option>Control médico</option></select></div>
+      <div class="fg"><label>Canal</label><select id="an-canal"><option>WhatsApp</option><option>Email</option><option>WhatsApp + Email</option><option>SMS</option></select></div>
+      <div class="fg"><label>Frecuencia</label><select id="an-frec"><option>Diario</option><option>Cada 8 horas</option><option>Cada 12 horas</option><option>Semanal</option><option>Una vez</option></select></div>
+      <div class="fg"><label>Hora de envío</label><input type="time" id="an-hora" value="09:00"></div>
+      <div class="fg" style="grid-column:1/-1"><label>Mensaje *</label><textarea id="an-msg" placeholder="Ej: Recuerda tomar tu medicamento con el desayuno"></textarea></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px"><button class="btn" onclick="closeModal('modal-alerta-nueva')">Cancelar</button><button class="btn btn-p" onclick="guardarAlertaNueva()">🔔 Activar alerta</button></div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -273,11 +307,7 @@ function formatDT(dateStr) {
 
 function formatHora(horaStr) {
   if (!horaStr || horaStr === '—') return '—';
-  // Si contiene letras de día/mes, es una fecha mal mapeada
-  if (/[a-zA-Z]{3}/.test(horaStr) && !horaStr.includes(':')) return '—';
-  // Extraer solo HH:MM
-  const match = horaStr.match(/\d{1,2}:\d{2}/);
-  return match ? match[0] : horaStr.substring(0, 5);
+  return horaStr.substring(0, 5);
 }
 
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('show'); }
@@ -411,38 +441,73 @@ async function loadProfRecetas() {
     const d = (await fetch(`${SC}?action=getRecetas`).then(r=>r.json())).data.filter(r => r.profesional === ME_PROF_NAME) || [];
     document.getElementById('recetas-body').innerHTML = d.length ? d.map(r => {
       const dt = formatDT(r.fecha);
-      return `<tr><td><span class="dt-fe">${dt.d}</span> <span class="dt-ho">${dt.t}</span></td><td><span class="av">${av(r.paciente)}</span>${r.paciente||'—'}</td><td>${r.rut||'—'}</td><td><strong>${r.medicamento||'—'}</strong></td><td>${r.dosis||'—'}</td><td>${r.duracion||'—'}</td></tr>`;
-    }).join('') : `<tr><td colspan="6" class="empty">Sin recetas</td></tr>`;
-  } catch(e) { document.getElementById('recetas-body').innerHTML = `<tr><td colspan="6" class="empty">Error de tabla</td></tr>`; }
+      const alertaBtn = `<button class="btn btn-sm" style="font-size:10px" onclick="abrirAlertaReceta('${encodeURIComponent(r.paciente||'')}','${encodeURIComponent(r.rut||'')}','${encodeURIComponent(r.medicamento||'')}','${encodeURIComponent(r.dosis||'')}')">🔔 Crear</button>`;
+      return `<tr><td><span class="dt-fe">${dt.d}</span></td><td><span class="av">${av(r.paciente)}</span>${r.paciente||'—'}</td><td>${r.rut||'—'}</td><td><strong>${r.medicamento||'—'}</strong></td><td>${r.dosis||'—'}</td><td>${r.duracion||'—'}</td><td>${alertaBtn}</td></tr>`;
+    }).join('') : `<tr><td colspan="7" class="empty">Sin recetas</td></tr>`;
+  } catch(e) { document.getElementById('recetas-body').innerHTML = `<tr><td colspan="7" class="empty">Error de tabla</td></tr>`; }
 }
-async function emitirRecetaProf() { const p = document.getElementById('rec-pac').value; const m = document.getElementById('rec-med').value; if(!p||!m)return; toast('Emitiendo...'); await fetch(SC, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tipo: 'receta', paciente: p, rut: document.getElementById('rec-rut').value, profesional: ME_PROF_NAME, medicamento: m, dosis: document.getElementById('rec-dosis').value, duracion: document.getElementById('rec-dur').value, comentarios: document.getElementById('rec-com').value }) }); closeModal('modal-receta'); toast('✓ Emitido'); setTimeout(loadProfRecetas, 1000); }
+
+async function emitirRecetaProf() {
+  const p = document.getElementById('rec-pac').value;
+  const m = document.getElementById('rec-med').value;
+  if(!p||!m) return;
+  toast('Emitiendo...');
+  await fetch(SC, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tipo: 'receta', paciente: p, rut: document.getElementById('rec-rut').value, profesional: ME_PROF_NAME, medicamento: m, dosis: document.getElementById('rec-dosis').value, duracion: document.getElementById('rec-dur').value }) });
+  closeModal('modal-receta'); toast('✓ Emitido'); setTimeout(loadProfRecetas, 1000);
+}
+
+function abrirAlertaReceta(pacEnc, rutEnc, medEnc, dosisEnc) {
+  const pac   = decodeURIComponent(pacEnc);
+  const rut   = decodeURIComponent(rutEnc);
+  const med   = decodeURIComponent(medEnc);
+  const dosis = decodeURIComponent(dosisEnc);
+  document.getElementById('ar-pac').value = pac;
+  document.getElementById('ar-rut').value = rut;
+  document.getElementById('ar-msg').value = `Recuerda tomar ${med}${dosis ? ' — ' + dosis : ''}`;
+  openModal('modal-alerta-receta');
+}
+
+async function guardarAlertaReceta() {
+  const p = document.getElementById('ar-pac').value;
+  const r = document.getElementById('ar-rut').value;
+  const m = document.getElementById('ar-msg').value;
+  if(!p || !m) { toast('Completa los campos'); return; }
+  const hora = document.getElementById('ar-hora').value;
+  const frec = document.getElementById('ar-frec').value + (hora ? ' a las ' + hora : '');
+  await fetch(`${SC}?action=addAlerta&paciente=${encodeURIComponent(p)}&rut=${encodeURIComponent(r)}&tipo=Medicamento&mensaje=${encodeURIComponent(m)}&frecuencia=${encodeURIComponent(frec)}&canal=${encodeURIComponent(document.getElementById('ar-canal').value)}&profesional=${encodeURIComponent(ME_PROF_RUT)}`);
+  closeModal('modal-alerta-receta');
+  toast('✓ Alerta activada');
+}
+
+async function guardarAlertaNueva() {
+  const p = document.getElementById('an-pac').value;
+  const m = document.getElementById('an-msg').value;
+  const t = document.getElementById('an-tipo').value;
+  if(!p || !m) { toast('Completa los campos'); return; }
+  const hora = document.getElementById('an-hora').value;
+  const frec = document.getElementById('an-frec').value + (hora ? ' a las ' + hora : '');
+  await fetch(`${SC}?action=addAlerta&paciente=${encodeURIComponent(p)}&rut=${encodeURIComponent(document.getElementById('an-rut').value)}&tipo=${encodeURIComponent(t)}&mensaje=${encodeURIComponent(m)}&frecuencia=${encodeURIComponent(frec)}&canal=${encodeURIComponent(document.getElementById('an-canal').value)}&profesional=${encodeURIComponent(ME_PROF_RUT)}`);
+  closeModal('modal-alerta-nueva');
+  toast('✓ Alerta creada');
+  setTimeout(loadProfAlertas, 1000);
+}
 
 // MÓDULO ALERTAS DEL PROFESIONAL
 async function loadProfAlertas() {
   try {
     document.getElementById('alertas-body').innerHTML = '<tr><td colspan="6" class="loading"><span class="spin"></span>Cargando alertas...</td></tr>';
-    // Traer pacientes de este profesional (por nombre y rut)
-    const [pacReq, citasReq, alReq] = await Promise.all([
-      fetch(`${SC}?action=getPacientes`).then(r=>r.json()),
-      fetch(`${SC}?action=getCitas`).then(r=>r.json()),
-      fetch(`${SC}?action=getAlertas`).then(r=>r.json())
-    ]);
-    // Nombres y RUTs de sus pacientes
-    const misPacientes = (pacReq.data||[]).filter(p => p.profesional === ME_PROF_NAME);
-    const misNombres = misPacientes.map(p => (p.nombre||'').toLowerCase());
-    const misRuts    = misPacientes.map(p => p.rut).filter(Boolean);
-    // También incluir pacientes de sus citas
-    const pacCitas   = (citasReq.data||[]).filter(c => c.profesional === ME_PROF_NAME).map(c => (c.paciente||'').toLowerCase());
-    const todosNombres = [...new Set([...misNombres, ...pacCitas])];
-    // Filtrar alertas por nombre o rut
+    const alReq = await fetch(`${SC}?action=getAlertas`).then(r=>r.json());
+    // Filtrar por profesional (campo nuevo) O por pacientes de sus citas
+    const citasReq = await fetch(`${SC}?action=getCitas`).then(r=>r.json());
+    const misPacientes = [...new Set((citasReq.data||[]).filter(c => c.profesional === ME_PROF_NAME).map(c => (c.paciente||'').toLowerCase()))];
     const misAlertas = (alReq.data||[]).filter(a =>
-      todosNombres.includes((a.paciente||'').toLowerCase()) ||
-      (a.rut && misRuts.includes(a.rut))
+      (a.profesional && a.profesional === ME_PROF_RUT) ||
+      misPacientes.includes((a.paciente||'').toLowerCase())
     );
     document.getElementById('alertas-body').innerHTML = misAlertas.length ? misAlertas.map(a => {
       const dt = formatDT(a.fecha);
       return `<tr><td><span class="dt-fe">${dt.d}</span></td><td><span class="av">${av(a.paciente)}</span>${a.paciente||'—'}</td><td>${a.tipo||'—'}</td><td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.mensaje||'—'}</td><td>${a.frecuencia||'—'}</td><td>${badge(a.estado)}</td></tr>`;
-    }).join('') : `<tr><td colspan="6" class="empty">Sin alertas configuradas para tus pacientes</td></tr>`;
+    }).join('') : `<tr><td colspan="6" class="empty">Sin alertas configuradas</td></tr>`;
   } catch(e) { document.getElementById('alertas-body').innerHTML = `<tr><td colspan="6" class="empty">Error de tabla</td></tr>`; }
 }
 
