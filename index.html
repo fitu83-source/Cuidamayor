@@ -712,6 +712,14 @@
 
   <div class="buscador-box reveal">
     <div class="buscador-filtros">
+      <select id="filtro-region" onchange="buscarProfesionales()">
+        <option value="">Todas las regiones</option>
+        <option value="rm">Región Metropolitana</option>
+        <option value="v">Región de Valparaíso</option>
+        <option value="viii">Región del Biobío</option>
+        <option value="ix">Región de La Araucanía</option>
+        <option value="x">Región de Los Lagos</option>
+      </select>
       <select id="filtro-esp" onchange="buscarProfesionales()">
         <option value="">Todas las especialidades</option>
         <option>Kinesiología</option>
@@ -964,28 +972,46 @@
     }
   }
 
-  function buscarProfesionales() {
-    const esp      = document.getElementById('filtro-esp').value.toLowerCase();
-    const modal    = document.getElementById('filtro-modalidad').value.toLowerCase();
-    const query    = document.getElementById('filtro-comuna').value.toLowerCase();
+  // Comunas de la RM para el filtro de región
+  const COMUNAS_RM = ['providencia','las condes','vitacura','lo barnechea','ñuñoa','santiago','macul','la florida','peñalolén','san miguel','maipú','pudahuel','quilicura','recoleta','independencia','san joaquín','la cisterna','el bosque','pedro aguirre cerda','lo espejo','colina','lampa','buin','puente alto','la granja','san bernardo','pirque'];
 
-    const filtrados = todosLosProfesionales.filter(p => {
-      const matchEsp   = !esp    || (p.especialidad||'').toLowerCase().includes(esp);
-      const matchMod   = !modal  || (p.modalidad||'').toLowerCase().includes(modal);
-      const matchQuery = !query  || (p.nombre||'').toLowerCase().includes(query) || (p.comunas||'').toLowerCase().includes(query);
-      return matchEsp && matchMod && matchQuery;
+  let resultadosFiltrados = [];
+  const POR_PAGINA = 8;
+  let paginaActual = 1;
+
+  function buscarProfesionales() {
+    const region = document.getElementById('filtro-region').value.toLowerCase();
+    const esp    = document.getElementById('filtro-esp').value.toLowerCase();
+    const modal  = document.getElementById('filtro-modalidad').value.toLowerCase();
+    const query  = document.getElementById('filtro-comuna').value.toLowerCase();
+
+    resultadosFiltrados = todosLosProfesionales.filter(p => {
+      const comunasProf = (p.comunas || '').toLowerCase();
+      const matchRegion = !region || (region === 'rm' && COMUNAS_RM.some(c => comunasProf.includes(c)));
+      const matchEsp    = !esp   || (p.especialidad||'').toLowerCase().includes(esp);
+      const matchMod    = !modal || (p.modalidad||'').toLowerCase().includes(modal);
+      const matchQuery  = !query || (p.nombre||'').toLowerCase().includes(query) || comunasProf.includes(query);
+      return matchRegion && matchEsp && matchMod && matchQuery;
     });
 
-    renderProfesionales(filtrados);
+    paginaActual = 1;
+    renderProfesionales();
   }
 
-  function renderProfesionales(lista) {
+  function renderProfesionales() {
     const el = document.getElementById('prof-lista');
-    if (!lista.length) {
+    if (!resultadosFiltrados.length) {
       el.innerHTML = '<div class="buscador-empty">No encontramos profesionales con esos filtros.<br>Prueba cambiando la especialidad o la comuna.</div>';
       return;
     }
-    el.innerHTML = lista.map(p => {
+
+    const total   = resultadosFiltrados.length;
+    const inicio  = (paginaActual - 1) * POR_PAGINA;
+    const pagina  = resultadosFiltrados.slice(inicio, inicio + POR_PAGINA);
+    const hayMas  = inicio + POR_PAGINA < total;
+    const hayAntes = paginaActual > 1;
+
+    el.innerHTML = pagina.map(p => {
       const precio  = formatPrecio(p.precio);
       const calLink = p.calLink ? (p.calLink.startsWith('http') ? p.calLink : 'https://' + p.calLink) : null;
       const expAm   = p.expAm ? `${p.expAm} años con adulto mayor` : null;
@@ -1011,6 +1037,16 @@
           </div>
         </div>`;
     }).join('');
+
+    // Paginación
+    const info = `<div style="text-align:center;font-size:13px;color:var(--gris);margin-top:1rem">
+      Mostrando ${inicio+1}–${Math.min(inicio+POR_PAGINA, total)} de ${total} profesionales
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:.75rem">
+        ${hayAntes ? `<button onclick="paginaActual--;renderProfesionales()" style="padding:6px 16px;border:1.5px solid var(--verde);border-radius:8px;background:white;color:var(--verde);font-weight:600;cursor:pointer;font-family:inherit">← Anterior</button>` : ''}
+        ${hayMas ? `<button onclick="paginaActual++;renderProfesionales();document.getElementById('buscador').scrollIntoView({behavior:'smooth'})" style="padding:6px 16px;border:1.5px solid var(--verde);border-radius:8px;background:var(--verde);color:white;font-weight:600;cursor:pointer;font-family:inherit">Ver más →</button>` : ''}
+      </div>
+    </div>`;
+    el.innerHTML += info;
   }
 
   // Cargar profesionales cuando el DOM esté listo
