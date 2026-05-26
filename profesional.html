@@ -414,9 +414,12 @@ async function loadProfCitas() {
 
 function parseFecha(fechaStr) {
   if (!fechaStr) return new Date(0);
-  // Limpiar espacios
-  fechaStr = String(fechaStr).trim().split(' ')[0];
-  const p = fechaStr.split('-');
+  fechaStr = String(fechaStr).trim();
+  // Si es formato JS Date string (Mon May 31 2026...)
+  if (/^[A-Z][a-z]{2}/.test(fechaStr)) return new Date(fechaStr);
+  // Solo tomar la parte de fecha (antes del espacio)
+  const soloFecha = fechaStr.split(' ')[0];
+  const p = soloFecha.split('-');
   if (p.length !== 3) return new Date(0);
   // yyyy-MM-dd
   if (p[0].length === 4) return new Date(parseInt(p[0]), parseInt(p[1])-1, parseInt(p[2]));
