@@ -414,9 +414,22 @@ async function loadProfCitas() {
 
 function parseFecha(fechaStr) {
   if (!fechaStr) return new Date(0);
+  // Limpiar espacios
+  fechaStr = String(fechaStr).trim().split(' ')[0];
   const p = fechaStr.split('-');
-  if (p[0].length === 4) return new Date(p[0], p[1]-1, p[2]);
-  return new Date(p[2], p[1]-1, p[0]);
+  if (p.length !== 3) return new Date(0);
+  // yyyy-MM-dd
+  if (p[0].length === 4) return new Date(parseInt(p[0]), parseInt(p[1])-1, parseInt(p[2]));
+  // dd-MM-yyyy
+  return new Date(parseInt(p[2]), parseInt(p[1])-1, parseInt(p[0]));
+}
+
+function formatHora(horaStr) {
+  if (!horaStr || horaStr === '—') return '—';
+  // Si contiene letras (fecha mal mapeada), devolver —
+  if (/[a-zA-Z]/.test(horaStr)) return '—';
+  const match = String(horaStr).match(/\d{1,2}:\d{2}/);
+  return match ? match[0] : '—';
 }
 
 function semanaAnterior() { semanaOffset--; renderCalendario(); }
@@ -474,6 +487,7 @@ function renderCalendario() {
 
   document.getElementById('cal-semana').innerHTML = html;
 }
+
 
 function verDireccion(dirEnc, pacEnc) {
   const dir = decodeURIComponent(dirEnc);
