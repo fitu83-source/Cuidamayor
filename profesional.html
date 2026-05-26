@@ -151,8 +151,8 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
         <div class="ch"><span class="ct">Recetario Electrónico</span><button class="btn btn-p" onclick="openModal('modal-receta')"><i class="ti ti-plus"></i> Extender Receta</button></div>
         <div class="filt"><input type="text" placeholder="Buscar medicamento..." oninput="ft('recetas-body',this.value)"></div>
         <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:15%">Fecha Emisión</th><th style="width:20%">Paciente</th><th style="width:15%">RUT</th><th style="width:20%">Medicamento</th><th>Dosis</th><th>Duración</th></tr></thead>
-          <tbody id="recetas-body"><tr><td colspan="6" class="loading">Cargando recetario...</td></tr></tbody>
+          <thead><tr><th style="width:13%">Fecha</th><th style="width:18%">Paciente</th><th style="width:13%">RUT</th><th style="width:18%">Medicamento</th><th>Dosis</th><th>Duración</th><th style="width:10%">Alerta</th></tr></thead>
+          <tbody id="recetas-body"><tr><td colspan="7" class="loading">Cargando recetario...</td></tr></tbody>
         </table></div>
       </div>
     </div>
@@ -803,66 +803,6 @@ async function loadProfAtenciones() {
 }
 async function guardarAtencionProf() { const p = document.getElementById('at-pac').value; const n = document.getElementById('at-notas').value; if(!p || !n) return; toast('Guardando...'); await fetch(SC, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tipo: 'atencion', paciente: p, rut: document.getElementById('at-rut').value, profesional: ME_PROF_NAME, especialidad: ME_PROF_SPEC, notas: n, proximaSesion: document.getElementById('at-prox').value }) }); closeModal('modal-atencion'); toast('✓ Firmado'); setTimeout(loadProfAtenciones, 1000); }
 
-async function loadProfRecetas() {
-  try {
-    const d = (await fetch(`${SC}?action=getRecetas`).then(r=>r.json())).data.filter(r => r.profesional === ME_PROF_NAME) || [];
-    document.getElementById('recetas-body').innerHTML = d.length ? d.map(r => {
-      const dt = formatDT(r.fecha);
-      return `<tr><td><span class="dt-fe">${dt.d}</span> <span class="dt-ho">${dt.t}</span></td><td><span class="av">${av(r.paciente)}</span>${r.paciente||'—'}</td><td>${r.rut||'—'}</td><td><strong>${r.medicamento||'—'}</strong></td><td>${r.dosis||'—'}</td><td>${r.duracion||'—'}</td></tr>`;
-    }).join('') : `<tr><td colspan="6" class="empty">Sin recetas</td></tr>`;
-  } catch(e) { document.getElementById('recetas-body').innerHTML = `<tr><td colspan="6" class="empty">Error de tabla</td></tr>`; }
-}
-async function emitirRecetaProf() { const p = document.getElementById('rec-pac').value; const m = document.getElementById('rec-med').value; if(!p||!m)return; toast('Emitiendo...'); await fetch(SC, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tipo: 'receta', paciente: p, rut: document.getElementById('rec-rut').value, profesional: ME_PROF_NAME, medicamento: m, dosis: document.getElementById('rec-dosis').value, duracion: document.getElementById('rec-dur').value, comentarios: document.getElementById('rec-com').value }) }); closeModal('modal-receta'); toast('✓ Emitido'); setTimeout(loadProfRecetas, 1000); }
-
-// MÓDULO ALERTAS DEL PROFESIONAL
-async function loadProfAlertas() {
-  try {
-    document.getElementById('alertas-body').innerHTML = '<tr><td colspan="6" class="loading"><span class="spin"></span>Cruzando datos de pacientes...</td></tr>';
-    // 1. Traemos pacientes para saber cuáles RUT son de este profesional
-    const pacReq = await fetch(`${SC}?action=getPacientes`).then(r=>r.json());
-    const misRuts = (pacReq.data||[]).filter(p => p.profesional === ME_PROF_NAME).map(p => p.rut);
-    // 2. Traemos alertas y filtramos las que correspondan a sus pacientes
-    const alReq = await fetch(`${SC}?action=getAlertas`).then(r=>r.json());
-    const misAlertas = (alReq.data||[]).filter(a => misRuts.includes(a.rut));
-    
-    document.getElementById('alertas-body').innerHTML = misAlertas.length ? misAlertas.map(a => {
-      const dt = formatDT(a.fecha);
-      return `<tr><td><span class="dt-fe">${dt.d}</span></td><td><span class="av">${av(a.paciente)}</span>${a.paciente||'—'}</td><td>${a.tipo||'—'}</td><td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.mensaje||'—'}</td><td>${a.frecuencia||'—'}</td><td>${badge(a.estado)}</td></tr>`;
-    }).join('') : `<tr><td colspan="6" class="empty">Tus pacientes no tienen alertas configuradas</td></tr>`;
-  } catch(e) { document.getElementById('alertas-body').innerHTML = `<tr><td colspan="6" class="empty">Error de tabla</td></tr>`; }
-}
-
-// MÓDULO MI PERFIL (PROFESIONAL)
-async function loadMiPerfil() {
-  if(!profFullData) return;
-  document.getElementById('pe-nombre-display').textContent = profFullData.nombre;
-  document.getElementById('pe-estado-display').textContent = `Estado en plataforma: ${profFullData.estado}`;
-  document.getElementById('pe-wa').value = profFullData.whatsapp || '';
-  document.getElementById('pe-expt').value = profFullData.expTotal || '';
-  document.getElementById('pe-expam').value = profFullData.expAm || '';
-  document.getElementById('pe-idiomas').value = profFullData.idiomas || '';
-  document.getElementById('pe-comunas').value = profFullData.comunas || '';
-  document.getElementById('pe-mod').value = profFullData.modalidad || 'Domicilio';
-  document.getElementById('pe-cal').value = profFullData.calLink || '';
-  document.getElementById('pe-precio').value = profFullData.precio || '';
-  document.getElementById('pe-duracion').value = profFullData.duracion || '';
-  document.getElementById('pe-isa').value = profFullData.isapre || 'Sí';
-  document.getElementById('pe-fon').value = profFullData.fonasa || 'Sí';
-  document.getElementById('pe-pub').value = profFullData.publico || 'Sí';
-  document.getElementById('pe-foto').value = profFullData.foto || '';
-  document.getElementById('pe-foto-preview').src = profFullData.foto || 'https://via.placeholder.com/80';
-  
-  // Buscar Bio
-  const bioReq = await fetch(`${SC}?action=getBioProf&rut=${profFullData.rut}`).then(r=>r.json());
-  document.getElementById('pe-bio').value = bioReq.data?.bio || '';
-}
-
-async function saveMiPerfil() {
-  toast('Actualizando perfil público...');
-  const params = `fila=${ME_PROF_FILA}&rut=${ME_PROF_RUT}&whatsapp=${encodeURIComponent(document.getElementById('pe-wa').value)}&expTotal=${document.getElementById('pe-expt').value}&expAm=${document.getElementById('pe-expam').value}&idiomas=${encodeURIComponent(document.getElementById('pe-idiomas').value)}&comunas=${encodeURIComponent(document.getElementById('pe-comunas').value)}&modalidad=${encodeURIComponent(document.getElementById('pe-mod').value)}&calLink=${encodeURIComponent(document.getElementById('pe-cal').value)}&precio=${document.getElementById('pe-precio').value}&duracion=${document.getElementById('pe-duracion').value}&isapre=${document.getElementById('pe-isa').value}&fonasa=${document.getElementById('pe-fon').value}&publico=${document.getElementById('pe-pub').value}&foto=${encodeURIComponent(document.getElementById('pe-foto').value)}&bio=${encodeURIComponent(document.getElementById('pe-bio').value)}`;
-  await fetch(`${SC}?action=updateProfFicha&${params}`);
-  toast('✓ Perfil actualizado');
-}
 </script>
 </body>
 </html>
