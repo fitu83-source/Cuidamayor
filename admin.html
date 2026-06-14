@@ -304,6 +304,7 @@ tr:hover td{background:var(--bg2)}
     <button class="nb" onclick="sp('leads',this);loadLeads()"><i class="ti ti-users-group" aria-hidden="true"></i><span class="nb-text">Leads</span><span class="chip" id="lchip"></span></button>
     <button class="nb" onclick="sp('citas',this);loadCitas()"><i class="ti ti-calendar" aria-hidden="true"></i><span class="nb-text">Citas agendadas</span></button>
     <button class="nb" onclick="sp('verificacion',this);loadVerificacion()"><i class="ti ti-shield-check" aria-hidden="true"></i><span class="nb-text">Verificación RNPI</span><span class="chip" id="vchip"></span></button>
+    <button class="nb" onclick="sp('cuidadores',this);loadCuidadoresAdmin()"><i class="ti ti-user-shield" aria-hidden="true"></i><span class="nb-text">Cuidadores</span></button>
     <div class="sfoot">
       famhealthcl@gmail.com<br>
       <a href="https://docs.google.com/spreadsheets/d/1zL7by07oR7yqBZPiMcPcH18_OfGhahuahq43ChwNW_Q/edit" target="_blank">Ver Google Sheets →</a>
@@ -691,6 +692,22 @@ tr:hover td{background:var(--bg2)}
       <div id="ver-list"><div class="loading"><span class="spin"></span>Cargando...</div></div>
     </div>
 
+    <!-- CUIDADORES -->
+    <div id="pg-cuidadores" class="pg">
+      <div class="ph"><h1>Cuidadores</h1><p>Gestiona los cuidadores asociados a pacientes.</p></div>
+      <div class="card">
+        <div class="ch">
+          <span class="ct">Listado de cuidadores</span>
+          <button class="btn btn-p" onclick="openCuidadorAdminModal()"><i class="ti ti-plus"></i> Agregar cuidador</button>
+        </div>
+        <div class="filt"><input type="text" placeholder="Buscar por nombre, RUT o paciente..." oninput="ft('cuid-body',this.value)"></div>
+        <div class="tbl-scroll"><table>
+          <thead><tr><th style="width:13%">Fecha</th><th>Nombre</th><th style="width:12%">RUT</th><th>Email</th><th>WhatsApp</th><th>RUT Paciente</th><th>Estado</th><th style="width:14%">Acciones</th></tr></thead>
+          <tbody id="cuid-body"><tr><td colspan="8" class="loading">Cargando...</td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
   </main>
 </div>
 
@@ -833,11 +850,13 @@ tr:hover td{background:var(--bg2)}
       <button class="tab" onclick="showTab('det-atenciones',this)">Atenciones</button>
       <button class="tab" onclick="showTab('det-recetas',this)">Recetas</button>
       <button class="tab" onclick="showTab('det-alertas',this)">Alertas</button>
+      <button class="tab" onclick="showTab('det-registro',this)">Registro</button>
     </div>
     <div id="det-ficha" class="tab-pane on"><div class="loading"><span class="spin"></span>Cargando...</div></div>
     <div id="det-atenciones" class="tab-pane"><div class="loading"><span class="spin"></span>Cargando...</div></div>
     <div id="det-recetas" class="tab-pane"><div class="loading"><span class="spin"></span>Cargando...</div></div>
     <div id="det-alertas" class="tab-pane"><div class="loading"><span class="spin"></span>Cargando...</div></div>
+    <div id="det-registro" class="tab-pane"><div class="loading"><span class="spin"></span>Cargando...</div></div>
   </div>
 </div>
 
@@ -855,10 +874,32 @@ tr:hover td{background:var(--bg2)}
   </div>
 </div>
 
+<!-- MODAL CUIDADOR ADMIN -->
+<div class="modal-bg" id="modal-cuid-admin">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Agregar cuidador</span>
+      <button class="modal-close" onclick="closeModal('modal-cuid-admin')"><i class="ti ti-x" aria-hidden="true"></i></button>
+    </div>
+    <div class="form-grid">
+      <div class="fg"><label>Nombre completo *</label><input type="text" id="cua-nombre" placeholder="Nombre del cuidador"/></div>
+      <div class="fg"><label>RUT cuidador *</label><input type="text" id="cua-rut" placeholder="12.345.678-9"/></div>
+      <div class="fg"><label>Email</label><input type="email" id="cua-email" placeholder="correo@ejemplo.cl"/></div>
+      <div class="fg"><label>WhatsApp</label><input type="text" id="cua-wa" placeholder="+56 9 1234 5678"/></div>
+      <div class="fg"><label>RUT paciente asociado *</label><input type="text" id="cua-rutpac" placeholder="RUT del paciente que gestionará"/></div>
+      <div class="fg"><label>Clave alfanumérica *</label><input type="text" id="cua-clave" placeholder="Mínimo 6 caracteres"/></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:1rem">
+      <button class="btn" onclick="closeModal('modal-cuid-admin')">Cancelar</button>
+      <button class="btn btn-p" onclick="guardarCuidadorAdmin()">Agregar</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
-const SC = 'https://script.google.com/macros/s/AKfycbx01Q0HhuwURO8mYozpKaVZxWBlKA5NuBBpX-wm-IydqcNbBXnvgXvgXWhZZU92gf_c2A/exec';
+const SC = 'https://script.google.com/macros/s/AKfycbyQSw-9ZZcJxoBHxn2cKw8HKU3qaE4XTGFQupwxtECCUhAhFPGCycck-QN3qhtw6ZNGGQ/exec';
 const PWD = '1111';
 
 // ── SIDEBAR TOGGLE ──
@@ -1447,7 +1488,7 @@ async function loadVerificacion() {
 async function verDetalle(rut, nombre) {
   document.getElementById('det-titulo').textContent = 'Ficha — ' + nombre;
   openModal('modal-detalle');
-  ['det-ficha', 'det-atenciones', 'det-recetas', 'det-alertas'].forEach(id => {
+  ['det-ficha', 'det-atenciones', 'det-recetas', 'det-alertas', 'det-registro'].forEach(id => {
     document.getElementById(id).innerHTML = '<div class="loading"><span class="spin"></span>Cargando...</div>';
   });
   const d = await get('getPacienteDetalle', 'rut=' + encodeURIComponent(rut));
@@ -1480,6 +1521,71 @@ async function verDetalle(rut, nombre) {
   document.getElementById('det-alertas').innerHTML = als.length ? '<table><thead><tr><th>Tipo</th><th>Mensaje</th><th>Frecuencia</th><th>Canal</th><th>Estado</th></tr></thead><tbody>' +
     als.map(a => `<tr><td>${badge(a.tipo)}</td><td>${a.mensaje||'—'}</td><td>${a.frecuencia||'—'}</td><td>${a.canal||'—'}</td><td>${badge(a.estado)}</td></tr>`).join('') + '</tbody></table>' :
     '<div class="empty">Sin alertas configuradas</div>';
+
+  // Cargar registro de cambios para este paciente
+  try {
+    const logR = await fetch(`${SC}?action=getLog&rutPaciente=${encodeURIComponent(rut)}`).then(r => r.json());
+    const logs = (logR.data || []).sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''));
+    document.getElementById('det-registro').innerHTML = logs.length ?
+      '<table style="font-size:12px"><thead><tr><th>Fecha</th><th>Acción</th><th>Detalle</th><th>Usuario</th><th>Tipo</th></tr></thead><tbody>' +
+      logs.map(l => `<tr><td>${(l.fecha||'').substring(0,16)}</td><td><strong>${l.accion||'—'}</strong></td><td>${l.detalle||'—'}</td><td>${l.usuarioRut||'—'}</td><td>${l.usuarioTipo||'—'}</td></tr>`).join('') +
+      '</tbody></table>' :
+      '<div class="empty">Sin registros de cambios aún</div>';
+  } catch(e) {
+    document.getElementById('det-registro').innerHTML = '<div class="empty">Error al cargar registro</div>';
+  }
+}
+
+// ── CUIDADORES (ADMIN) ──
+async function loadCuidadoresAdmin() {
+  document.getElementById('cuid-body').innerHTML = '<tr><td colspan="8" class="loading"><span class="spin"></span>Cargando...</td></tr>';
+  try {
+    const d = (await fetch(`${SC}?action=getCuidadores`).then(r => r.json())).data || [];
+    document.getElementById('cuid-body').innerHTML = d.length ? d.map(c => {
+      const colorEstado = c.estado === 'Activo' ? 'b-ok' : 'b-x';
+      const acciones = c.estado === 'Activo'
+        ? `<button class="btn btn-sm" onclick="cambiarEstadoCuidadorAdmin(${c.fila},'Inactivo','${encodeURIComponent(c.rutPaciente||'')}')">Pausar</button>`
+        : `<button class="btn btn-sm btn-p" onclick="cambiarEstadoCuidadorAdmin(${c.fila},'Activo','${encodeURIComponent(c.rutPaciente||'')}')">Activar</button>`;
+      return `<tr>
+        <td>${(c.fecha||'').substring(0,10)}</td>
+        <td><strong>${c.nombre||'—'}</strong></td>
+        <td>${c.rutCuidador||'—'}</td>
+        <td>${c.email||'—'}</td>
+        <td>${c.whatsapp||'—'}</td>
+        <td>${c.rutPaciente||'—'}</td>
+        <td>${badge(c.estado)}</td>
+        <td>${acciones}</td>
+      </tr>`;
+    }).join('') : '<tr><td colspan="8" class="empty">No hay cuidadores registrados</td></tr>';
+  } catch(e) {
+    document.getElementById('cuid-body').innerHTML = '<tr><td colspan="8" class="empty">Error al cargar</td></tr>';
+  }
+}
+
+function openCuidadorAdminModal() {
+  ['cua-nombre','cua-rut','cua-email','cua-wa','cua-rutpac','cua-clave'].forEach(id => document.getElementById(id).value = '');
+  openModal('modal-cuid-admin');
+}
+
+async function guardarCuidadorAdmin() {
+  const nombre = document.getElementById('cua-nombre').value.trim();
+  const rut    = document.getElementById('cua-rut').value.trim();
+  const rutPac = document.getElementById('cua-rutpac').value.trim();
+  const clave  = document.getElementById('cua-clave').value.trim();
+  if (!nombre || !rut || !rutPac || !clave) { toast('Nombre, RUT cuidador, RUT paciente y clave son obligatorios', false); return; }
+  if (clave.length < 6) { toast('La clave debe tener al menos 6 caracteres', false); return; }
+  const email = document.getElementById('cua-email').value.trim();
+  const wa    = document.getElementById('cua-wa').value.trim();
+  await fetch(`${SC}?action=addCuidador&rutCuidador=${encodeURIComponent(rut)}&nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}&whatsapp=${encodeURIComponent(wa)}&clave=${encodeURIComponent(clave)}&rutPaciente=${encodeURIComponent(rutPac)}&usuarioRut=admin&usuarioTipo=admin`);
+  closeModal('modal-cuid-admin');
+  toast('✓ Cuidador agregado');
+  setTimeout(loadCuidadoresAdmin, 800);
+}
+
+async function cambiarEstadoCuidadorAdmin(fila, estado, rutPacEnc) {
+  await fetch(`${SC}?action=updateCuidador&fila=${fila}&estado=${encodeURIComponent(estado)}&rutPaciente=${decodeURIComponent(rutPacEnc)}&usuarioRut=admin&usuarioTipo=admin`);
+  toast(`✓ Cuidador ${estado.toLowerCase()}`);
+  setTimeout(loadCuidadoresAdmin, 800);
 }
 
 // ── SAVE FORMS ──
