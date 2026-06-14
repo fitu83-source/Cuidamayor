@@ -60,7 +60,8 @@ body{font-family:'Inter',sans-serif;background:var(--crema);color:var(--texto);f
 .ph p{font-size:13px;color:var(--gris)}
 
 .mets{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:1rem}
-.met{background:var(--blanco);border:1px solid var(--bdr);border-radius:12px;padding:1rem}
+.met{background:var(--blanco);border:1px solid var(--bdr);border-radius:12px;padding:1rem;transition:border-color .15s,transform .15s}
+.met[onclick]:hover{border-color:var(--verde);transform:translateY(-2px)}
 .ml{font-size:11px;color:var(--gris);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;font-weight:500}
 .mv{font-size:24px;font-weight:700;color:var(--verde)}
 .mvsub{font-size:11px;color:var(--gris);margin-top:2px}
@@ -193,10 +194,10 @@ table tr:last-child td{border-bottom:none}
           <p>Resumen del cuidado de tu familiar mayor.</p>
         </div>
         <div class="mets">
-          <div class="met"><div class="ml">Próxima cita</div><div class="mv" id="m-cita" style="font-size:16px">—</div><div class="mvsub" id="m-cita-sub">—</div></div>
-          <div class="met"><div class="ml">Profesionales activos</div><div class="mv" id="m-prof">0</div></div>
-          <div class="met"><div class="ml">Recetas vigentes</div><div class="mv" id="m-rec">0</div></div>
-          <div class="met"><div class="ml">Alertas activas</div><div class="mv" id="m-al">0</div></div>
+          <div class="met" style="cursor:pointer" onclick="sp('citas',document.querySelectorAll('.nb')[2]);loadCitas()"><div class="ml">Próxima cita</div><div class="mv" id="m-cita" style="font-size:16px">—</div><div class="mvsub" id="m-cita-sub">—</div></div>
+          <div class="met" style="cursor:pointer" onclick="sp('profesionales',document.querySelectorAll('.nb')[6]);loadProfesionales()"><div class="ml">Profesionales activos</div><div class="mv" id="m-prof">0</div></div>
+          <div class="met" style="cursor:pointer" onclick="sp('recetas',document.querySelectorAll('.nb')[4]);loadRecetas()"><div class="ml">Recetas vigentes</div><div class="mv" id="m-rec">0</div></div>
+          <div class="met" style="cursor:pointer" onclick="sp('alertas',document.querySelectorAll('.nb')[5]);loadAlertas()"><div class="ml">Alertas activas</div><div class="mv" id="m-al">0</div></div>
         </div>
         <div class="two">
           <div class="card">
@@ -279,6 +280,7 @@ table tr:last-child td{border-bottom:none}
       <div id="pg-alertas" class="pg">
         <div class="ph"><h1>Alertas Activas</h1><p>Recordatorios configurados para tu cuidado.</p></div>
         <div class="card">
+          <div class="ch"><span class="ct">Mis alertas</span><button class="btn btn-p" onclick="openAlertaModal()"><i class="ti ti-plus"></i> Crear alerta</button></div>
           <div class="filt"><input type="text" placeholder="Buscar..." oninput="ft('al-body',this.value)"></div>
           <div class="tbl-scroll"><table>
             <thead><tr><th style="width:13%">Fecha</th><th style="width:11%">Tipo</th><th>Mensaje</th><th>Frecuencia</th><th>Canal</th><th>Estado</th></tr></thead>
@@ -295,6 +297,60 @@ table tr:last-child td{border-bottom:none}
         </div>
       </div>
     </main>
+  </div>
+</div>
+
+<!-- MODAL CREAR ALERTA -->
+<div class="modal-bg" id="modal-alerta">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Nueva alerta personal</span><button class="modal-close" onclick="document.getElementById('modal-alerta').classList.remove('open')">×</button></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem">
+      <div style="grid-column:1/-1">
+        <label style="font-size:11px;color:var(--gris);font-weight:600">Tipo de alerta</label>
+        <select id="na-tipo" class="login-input" style="margin-top:4px">
+          <option>Medicamento</option>
+          <option>Cita</option>
+          <option>Examen</option>
+          <option>Control médico</option>
+          <option>Hidratación</option>
+          <option>Ejercicio</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--gris);font-weight:600">Frecuencia</label>
+        <select id="na-frec" class="login-input" style="margin-top:4px">
+          <option>Diario</option>
+          <option>Cada 8 horas</option>
+          <option>Cada 12 horas</option>
+          <option>Semanal</option>
+          <option>Una vez</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--gris);font-weight:600">Hora</label>
+        <input type="time" id="na-hora" class="login-input" value="09:00" style="margin-top:4px">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--gris);font-weight:600">Canal</label>
+        <select id="na-canal" class="login-input" style="margin-top:4px">
+          <option>WhatsApp</option>
+          <option>Email</option>
+          <option>WhatsApp + Email</option>
+          <option>SMS</option>
+        </select>
+      </div>
+      <div style="grid-column:1/-1">
+        <label style="font-size:11px;color:var(--gris);font-weight:600">Mensaje</label>
+        <textarea id="na-msg" class="login-input" style="margin-top:4px;min-height:70px;resize:vertical" placeholder="Ej: Recuerda tomar tu medicamento con el desayuno"></textarea>
+      </div>
+    </div>
+    <div style="background:var(--verde-clar);padding:.6rem .85rem;border-radius:6px;font-size:11px;color:var(--verde);margin-bottom:1rem;font-style:italic">
+      <i class="ti ti-info-circle"></i> Esta alerta es personal — la creas tú directamente. Las alertas médicas las configura tu profesional.
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px">
+      <button class="btn" onclick="document.getElementById('modal-alerta').classList.remove('open')">Cancelar</button>
+      <button class="btn btn-p" onclick="guardarAlerta()">🔔 Activar alerta</button>
+    </div>
   </div>
 </div>
 
@@ -548,6 +604,31 @@ async function loadProfesionales(){
       </div>`;
     }).join(''):'<div class="empty">No tienes profesionales asignados aún</div>';
   }catch(e){document.getElementById('prof-list').innerHTML='<div class="empty">Error al cargar</div>'}
+}
+
+// ── CREAR ALERTA ──
+function openAlertaModal(){
+  document.getElementById('na-tipo').value='Medicamento';
+  document.getElementById('na-frec').value='Diario';
+  document.getElementById('na-hora').value='09:00';
+  document.getElementById('na-canal').value='WhatsApp';
+  document.getElementById('na-msg').value='';
+  document.getElementById('modal-alerta').classList.add('open');
+}
+
+async function guardarAlerta(){
+  const tipo=document.getElementById('na-tipo').value;
+  const msg=document.getElementById('na-msg').value.trim();
+  if(!msg){toast('Escribe el mensaje de la alerta',false);return}
+  const hora=document.getElementById('na-hora').value;
+  const frec=document.getElementById('na-frec').value+(hora?` a las ${hora}`:'');
+  const canal=document.getElementById('na-canal').value;
+  try{
+    await fetch(`${SC}?action=addAlerta&paciente=${encodeURIComponent(ME_NAME)}&rut=${encodeURIComponent(ME_RUT)}&tipo=${encodeURIComponent(tipo)}&mensaje=${encodeURIComponent(msg)}&frecuencia=${encodeURIComponent(frec)}&canal=${encodeURIComponent(canal)}&profesional=${encodeURIComponent(ME_RUT)}`);
+    document.getElementById('modal-alerta').classList.remove('open');
+    toast('✓ Alerta creada');
+    setTimeout(loadAlertas,800);
+  }catch(e){toast('Error al crear alerta',false)}
 }
 
 // ── INIT ──
