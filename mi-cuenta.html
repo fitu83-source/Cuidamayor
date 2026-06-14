@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Cuenta — FamHealth</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css" rel="stylesheet">
+<style>
+:root{
+  --verde:#2D6A4F; --verde-sup:#1B4332; --verde-clar:#D8F3DC; --verde-suave:#52B788;
+  --crema:#FAFAF8; --blanco:#FFFFFF; --bg2:#F4F4F0; --bdr:#E5E5E0;
+  --texto:#1F2937; --gris:#6B7280; --arena:#E5E5DC;
+  --rojo:#DC2626; --amber:#D97706; --azul:#1D4ED8;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--crema);color:var(--texto);font-size:14px;line-height:1.5}
+
+/* LOGIN */
+.login-bg{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;background:linear-gradient(135deg,var(--verde-sup) 0%,var(--verde) 100%)}
+.login-box{background:var(--blanco);border-radius:16px;padding:2rem;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.login-logo{font-size:22px;font-weight:700;margin-bottom:.25rem}
+.login-logo .h{color:var(--verde)}
+.login-sub{font-size:13px;color:var(--gris);margin-bottom:1.5rem}
+.login-label{font-size:12px;font-weight:500;color:var(--texto);margin-bottom:6px;display:block}
+.login-input{width:100%;padding:12px 14px;border:1.5px solid var(--bdr);border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:border-color .15s}
+.login-input:focus{border-color:var(--verde)}
+.login-btn{width:100%;padding:12px;background:var(--verde);color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:1rem;transition:background .15s}
+.login-btn:hover{background:var(--verde-sup)}
+.login-err{background:#FEE2E2;color:#991B1B;padding:10px 14px;border-radius:8px;font-size:13px;margin-top:1rem;display:none}
+.login-err.show{display:block}
+.login-hint{font-size:11px;color:var(--gris);margin-top:1rem;text-align:center}
+
+/* APP */
+.app{display:none;min-height:100vh}
+.app.on{display:block}
+.layout{display:flex;min-height:100vh}
+.sb{width:240px;background:var(--blanco);border-right:1px solid var(--bdr);padding:1.25rem 1rem;display:flex;flex-direction:column;flex-shrink:0;transition:width .2s}
+.sb.collapsed{width:0;overflow:hidden;padding:0}
+.logo{font-size:16px;font-weight:700;margin-bottom:1.5rem;padding:0 8px}
+.logo .h{color:var(--verde)}
+.logo-sub{font-size:10px;color:var(--gris);font-weight:400}
+.nb-cat{font-size:10px;font-weight:600;color:var(--gris);text-transform:uppercase;letter-spacing:.05em;margin:1rem 8px .5rem}
+.nb{display:flex;align-items:center;gap:10px;padding:8px 10px;background:none;border:none;color:var(--texto);font-size:13px;font-family:inherit;cursor:pointer;border-radius:8px;width:100%;text-align:left;transition:background .15s}
+.nb:hover{background:var(--bg2)}
+.nb.on{background:var(--verde-clar);color:var(--verde);font-weight:600}
+.nb .ti{font-size:18px}
+.user-card{margin-top:auto;padding:12px;background:var(--bg2);border-radius:10px;font-size:12px}
+.user-name{font-weight:600;margin-bottom:2px}
+.user-rut{color:var(--gris);font-size:11px}
+.logout{margin-top:8px;background:none;border:none;color:var(--rojo);font-size:11px;cursor:pointer;font-family:inherit;padding:0}
+
+.main{flex:1;padding:1.5rem 2rem;overflow-x:auto;background:var(--crema)}
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:1.25rem}
+.toggle-sb{background:var(--blanco);border:1px solid var(--bdr);width:36px;height:36px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--gris)}
+.pg{display:none}
+.pg.on{display:block}
+.ph{margin-bottom:1rem}
+.ph h1{font-size:22px;font-weight:700;color:var(--texto);margin-bottom:4px}
+.ph p{font-size:13px;color:var(--gris)}
+
+.mets{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:1rem}
+.met{background:var(--blanco);border:1px solid var(--bdr);border-radius:12px;padding:1rem}
+.ml{font-size:11px;color:var(--gris);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;font-weight:500}
+.mv{font-size:24px;font-weight:700;color:var(--verde)}
+.mvsub{font-size:11px;color:var(--gris);margin-top:2px}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:768px){.two{grid-template-columns:1fr}}
+
+.card{background:var(--blanco);border:1px solid var(--bdr);border-radius:12px;padding:1rem;margin-bottom:.75rem}
+.ch{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:.75rem}
+.ct{font-size:13px;font-weight:600;color:var(--texto)}
+.filt{display:flex;gap:8px;margin-bottom:.75rem;flex-wrap:wrap}
+.filt input,.filt select{flex:1;min-width:140px;padding:8px 12px;border:1px solid var(--bdr);border-radius:8px;font-size:13px;font-family:inherit;background:var(--bg2);color:var(--texto);outline:none}
+.filt input:focus,.filt select:focus{border-color:var(--verde)}
+
+.tbl-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px;text-align:left}
+table th{background:var(--bg2);font-weight:600;color:var(--gris);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:8px 10px;border-bottom:1px solid var(--bdr)}
+table td{padding:10px;border-bottom:0.5px solid var(--bdr);color:var(--texto);vertical-align:middle}
+table tr:last-child td{border-bottom:none}
+.empty{text-align:center;color:var(--gris);padding:1.5rem;font-size:13px}
+.loading{text-align:center;color:var(--gris);padding:1.5rem;font-size:13px}
+.spin{display:inline-block;width:10px;height:10px;border:2px solid var(--bdr);border-top-color:var(--verde);border-radius:50%;animation:sp .8s linear infinite;margin-right:6px;vertical-align:middle}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+.av{display:inline-flex;width:26px;height:26px;border-radius:50%;background:var(--verde-clar);color:var(--verde);align-items:center;justify-content:center;font-size:10px;font-weight:600;margin-right:8px;vertical-align:middle}
+.av-lg{width:64px;height:64px;font-size:22px}
+
+.badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:600}
+.bg{background:var(--verde-clar);color:var(--verde)}
+.bgr{background:var(--bg2);color:var(--gris)}
+.bb{background:#DBEAFE;color:#1D4ED8}
+.ba{background:#FEF3C7;color:#92400E}
+.br{background:#FEE2E2;color:#991B1B}
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--blanco);border:1px solid var(--bdr);border-radius:8px;font-size:12px;font-family:inherit;cursor:pointer;color:var(--texto);transition:all .15s}
+.btn:hover{border-color:var(--verde);color:var(--verde)}
+.btn-p{background:var(--verde);color:white;border-color:var(--verde)}
+.btn-p:hover{background:var(--verde-sup);color:white}
+.btn-sm{padding:4px 10px;font-size:11px}
+
+.dt-fe{font-weight:500;color:var(--texto);white-space:nowrap}
+.dt-ho{color:var(--verde);font-weight:500;margin-left:4px}
+
+/* PERFIL PACIENTE */
+.perfil-head{display:flex;gap:1rem;align-items:center;background:var(--blanco);padding:1.25rem;border:1px solid var(--bdr);border-radius:12px;margin-bottom:1rem}
+.perfil-info h2{font-size:20px;font-weight:700;margin-bottom:2px}
+.perfil-info p{font-size:13px;color:var(--gris)}
+.ficha-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;font-size:13px}
+@media(max-width:640px){.ficha-grid{grid-template-columns:1fr}}
+.ficha-label{font-size:10px;color:var(--gris);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;font-weight:600}
+.ficha-val{font-weight:500}
+
+/* PROFESIONALES */
+.prof-card{display:flex;align-items:center;gap:12px;padding:14px;background:var(--bg2);border-radius:10px;margin-bottom:8px}
+.prof-info{flex:1;min-width:0}
+.prof-name{font-size:14px;font-weight:600;margin-bottom:2px}
+.prof-meta{font-size:12px;color:var(--gris)}
+.prof-actions{display:flex;gap:6px;flex-shrink:0}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-bg.open{display:flex}
+.modal{background:var(--blanco);border-radius:14px;padding:1.5rem;width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid var(--bdr)}
+.modal-title{font-size:15px;font-weight:600}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--gris);width:28px;height:28px;display:flex;align-items:center;justify-content:center}
+
+/* TOAST */
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--verde-sup);color:white;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;opacity:0;transition:all .3s}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+@media(max-width:768px){
+  .sb{position:fixed;left:0;top:0;height:100vh;z-index:100;box-shadow:4px 0 16px rgba(0,0,0,.1);transform:translateX(-100%);transition:transform .25s}
+  .sb.show{transform:translateX(0)}
+  .main{padding:1rem}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-bg" id="login">
+  <div class="login-box">
+    <div class="login-logo"><span class="h">Fam</span>Health <span class="logo-sub">Mi Cuenta</span></div>
+    <p class="login-sub">Accede al historial clínico de tu familiar mayor</p>
+    <label class="login-label">RUT del paciente</label>
+    <input type="text" id="login-rut" class="login-input" placeholder="12.345.678-9" autofocus>
+    <button class="login-btn" onclick="doLogin()">Ingresar →</button>
+    <div class="login-err" id="login-err">No encontramos un paciente con ese RUT. Verifica el formato (ej: 12.345.678-9).</div>
+    <p class="login-hint">¿Aún no estás registrado? <a href="index.html" style="color:var(--verde);text-decoration:none;font-weight:500">Regístrate aquí</a></p>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+  <div class="layout">
+    <aside class="sb" id="sb">
+      <div class="logo"><span class="h">Fam</span>Health <span class="logo-sub">Mi Cuenta</span></div>
+
+      <div class="nb-cat">Resumen</div>
+      <button class="nb on" onclick="sp('dashboard',this)"><i class="ti ti-home-heart"></i><span>Inicio</span></button>
+      <button class="nb" onclick="sp('ficha',this);loadFicha()"><i class="ti ti-user"></i><span>Mi Ficha</span></button>
+
+      <div class="nb-cat">Salud</div>
+      <button class="nb" onclick="sp('citas',this);loadCitas()"><i class="ti ti-calendar-event"></i><span>Próximas Citas</span></button>
+      <button class="nb" onclick="sp('historial',this);loadHistorial()"><i class="ti ti-notes"></i><span>Historial Clínico</span></button>
+      <button class="nb" onclick="sp('recetas',this);loadRecetas()"><i class="ti ti-pill"></i><span>Recetas</span></button>
+      <button class="nb" onclick="sp('alertas',this);loadAlertas()"><i class="ti ti-bell-ringing"></i><span>Alertas Activas</span></button>
+
+      <div class="nb-cat">Equipo</div>
+      <button class="nb" onclick="sp('profesionales',this);loadProfesionales()"><i class="ti ti-stethoscope"></i><span>Mis Profesionales</span></button>
+
+      <div class="user-card">
+        <div class="user-name" id="user-name">—</div>
+        <div class="user-rut" id="user-rut">—</div>
+        <button class="logout" onclick="doLogout()">Cerrar sesión</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <button class="toggle-sb" onclick="document.getElementById('sb').classList.toggle('show');document.getElementById('sb').classList.toggle('collapsed')"><i class="ti ti-menu-2"></i></button>
+        <h2 style="font-size:14px;font-weight:600" id="page-title">Inicio</h2>
+      </div>
+
+      <!-- INICIO -->
+      <div id="pg-dashboard" class="pg on">
+        <div class="ph">
+          <h1 id="dash-welcome">¡Hola!</h1>
+          <p>Resumen del cuidado de tu familiar mayor.</p>
+        </div>
+        <div class="mets">
+          <div class="met"><div class="ml">Próxima cita</div><div class="mv" id="m-cita" style="font-size:16px">—</div><div class="mvsub" id="m-cita-sub">—</div></div>
+          <div class="met"><div class="ml">Profesionales activos</div><div class="mv" id="m-prof">0</div></div>
+          <div class="met"><div class="ml">Recetas vigentes</div><div class="mv" id="m-rec">0</div></div>
+          <div class="met"><div class="ml">Alertas activas</div><div class="mv" id="m-al">0</div></div>
+        </div>
+        <div class="two">
+          <div class="card">
+            <div class="ch"><span class="ct">Próximas citas</span><button class="btn btn-sm" onclick="sp('citas',document.querySelectorAll('.nb')[2])">Ver todas</button></div>
+            <div id="dash-citas"><div class="loading">Cargando...</div></div>
+          </div>
+          <div class="card">
+            <div class="ch"><span class="ct">Alertas activas</span><button class="btn btn-sm" onclick="sp('alertas',document.querySelectorAll('.nb')[5])">Ver todas</button></div>
+            <div id="dash-alertas"><div class="loading">Cargando...</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FICHA -->
+      <div id="pg-ficha" class="pg">
+        <div class="ph"><h1>Mi Ficha</h1><p>Tu información personal y clínica registrada en FamHealth.</p></div>
+        <div class="perfil-head">
+          <div class="av av-lg" id="pf-av">—</div>
+          <div class="perfil-info">
+            <h2 id="pf-nombre">—</h2>
+            <p><span id="pf-rut">—</span> · <span id="pf-modo">—</span></p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ct">Datos clínicos</span></div>
+          <div class="ficha-grid">
+            <div><div class="ficha-label">Fecha de nacimiento</div><div class="ficha-val" id="pf-nac">—</div></div>
+            <div><div class="ficha-label">Modo de gestión</div><div class="ficha-val" id="pf-modo2">—</div></div>
+            <div><div class="ficha-label">Coordinador familiar</div><div class="ficha-val" id="pf-coord">—</div></div>
+            <div><div class="ficha-label">Relación</div><div class="ficha-val" id="pf-coord-rel">—</div></div>
+            <div><div class="ficha-label">Email coordinador</div><div class="ficha-val" id="pf-coord-email">—</div></div>
+            <div><div class="ficha-label">WhatsApp coordinador</div><div class="ficha-val" id="pf-coord-wa">—</div></div>
+            <div style="grid-column:1/-1"><div class="ficha-label">Diagnóstico</div><div class="ficha-val" id="pf-diag">—</div></div>
+            <div style="grid-column:1/-1"><div class="ficha-label">Medicamentos en uso</div><div class="ficha-val" id="pf-meds">—</div></div>
+            <div style="grid-column:1/-1"><div class="ficha-label">Alergias</div><div class="ficha-val" id="pf-aler">—</div></div>
+          </div>
+        </div>
+        <div style="background:var(--verde-clar);padding:.85rem 1rem;border-radius:8px;font-size:12px;color:var(--verde);font-style:italic">
+          <i class="ti ti-info-circle"></i> Si necesitas actualizar tus datos clínicos, contacta a contacto@famhealth.cl o pídelo a tu coordinador familiar.
+        </div>
+      </div>
+
+      <!-- CITAS -->
+      <div id="pg-citas" class="pg">
+        <div class="ph"><h1>Próximas Citas</h1><p>Tus citas agendadas con profesionales de salud.</p></div>
+        <div class="card">
+          <div class="filt"><input type="text" placeholder="Buscar por profesional o especialidad..." oninput="ft('citas-body',this.value)"></div>
+          <div class="tbl-scroll"><table>
+            <thead><tr><th style="width:13%">Fecha</th><th style="width:8%">Hora</th><th>Profesional</th><th>Especialidad</th><th>Modalidad</th><th>Estado</th></tr></thead>
+            <tbody id="citas-body"><tr><td colspan="6" class="loading">Cargando...</td></tr></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- HISTORIAL -->
+      <div id="pg-historial" class="pg">
+        <div class="ph"><h1>Historial Clínico</h1><p>Todas las atenciones registradas por tus profesionales.</p></div>
+        <div class="card">
+          <div class="filt"><input type="text" placeholder="Buscar por profesional o nota..." oninput="ft('hist-body',this.value)"></div>
+          <div class="tbl-scroll"><table>
+            <thead><tr><th style="width:13%">Fecha</th><th>Profesional</th><th>Especialidad</th><th>Notas clínicas</th><th>Próxima sesión</th></tr></thead>
+            <tbody id="hist-body"><tr><td colspan="5" class="loading">Cargando...</td></tr></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- RECETAS -->
+      <div id="pg-recetas" class="pg">
+        <div class="ph"><h1>Recetas</h1><p>Medicamentos prescritos por tus profesionales.</p></div>
+        <div class="card">
+          <div class="filt"><input type="text" placeholder="Buscar medicamento..." oninput="ft('rec-body',this.value)"></div>
+          <div class="tbl-scroll"><table>
+            <thead><tr><th style="width:13%">Fecha</th><th>Medicamento</th><th>Dosis</th><th>Duración</th><th>Prescrito por</th></tr></thead>
+            <tbody id="rec-body"><tr><td colspan="5" class="loading">Cargando...</td></tr></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- ALERTAS -->
+      <div id="pg-alertas" class="pg">
+        <div class="ph"><h1>Alertas Activas</h1><p>Recordatorios configurados para tu cuidado.</p></div>
+        <div class="card">
+          <div class="filt"><input type="text" placeholder="Buscar..." oninput="ft('al-body',this.value)"></div>
+          <div class="tbl-scroll"><table>
+            <thead><tr><th style="width:13%">Fecha</th><th style="width:11%">Tipo</th><th>Mensaje</th><th>Frecuencia</th><th>Canal</th><th>Estado</th></tr></thead>
+            <tbody id="al-body"><tr><td colspan="6" class="loading">Cargando...</td></tr></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- PROFESIONALES -->
+      <div id="pg-profesionales" class="pg">
+        <div class="ph"><h1>Mis Profesionales</h1><p>Equipo de salud que te atiende en FamHealth.</p></div>
+        <div class="card">
+          <div id="prof-list"><div class="loading">Cargando...</div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const SC = 'https://script.google.com/macros/s/AKfycbx01Q0HhuwURO8mYozpKaVZxWBlKA5NuBBpX-wm-IydqcNbBXnvgXvgXWhZZU92gf_c2A/exec';
+
+let ME_RUT = '', ME_NAME = '';
+let pacienteData = null;
+
+const DIAS  = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const MESES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+function av(n){if(!n)return'?';const p=n.trim().split(' ');return(p[0][0]+(p[1]?p[1][0]:'')).toUpperCase()}
+
+function formatDT(d){
+  if(!d||d==='—')return{d:'—'};
+  let dt;
+  const s=String(d).trim();
+  if(/^[A-Z][a-z]{2}/.test(s))dt=new Date(s);
+  else{
+    const p=s.split(' ')[0].split('-');
+    if(p.length!==3)return{d:s};
+    dt=p[0].length===4?new Date(p[0],p[1]-1,p[2]):new Date(p[2],p[1]-1,p[0]);
+  }
+  if(isNaN(dt))return{d:s};
+  return{d:`${DIAS[dt.getDay()]} ${MESES[dt.getMonth()]} ${dt.getDate()}`};
+}
+
+function formatHora(h){
+  if(!h||h==='—')return'—';
+  if(/[a-zA-Z]/.test(h))return'—';
+  const m=String(h).match(/\d{1,2}:\d{2}/);
+  return m?m[0]:'—';
+}
+
+function badge(s){
+  if(!s)return'—';
+  const map={'Confirmada':'bg','Completada':'bg','Pendiente':'ba','Rechazada':'br','Activa':'bg','Pausada':'ba','Cancelada':'br','Medicamento':'bb','Cita':'ba','Examen':'bb','Control médico':'bb'};
+  return`<span class="badge ${map[s]||'bgr'}">${s}</span>`;
+}
+
+function toast(m,ok=true){
+  const t=document.getElementById('toast');
+  t.textContent=m;
+  t.style.background=ok?'var(--verde-sup)':'var(--rojo)';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+function sp(name,btn){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-'+name).classList.add('on');
+  if(btn)btn.classList.add('on');
+  const titles={dashboard:'Inicio',ficha:'Mi Ficha',citas:'Próximas Citas',historial:'Historial Clínico',recetas:'Recetas',alertas:'Alertas Activas',profesionales:'Mis Profesionales'};
+  document.getElementById('page-title').textContent=titles[name]||'Mi Cuenta';
+}
+
+function ft(id,q,extra){
+  const rows=document.querySelectorAll('#'+id+' tr');
+  const ql=q.toLowerCase();
+  rows.forEach(r=>{
+    if(r.querySelector('.loading')||r.querySelector('.empty'))return;
+    r.style.display=r.textContent.toLowerCase().includes(ql)?'':'none';
+  });
+}
+
+// ── LOGIN ──
+function doLogin(){
+  const rut=document.getElementById('login-rut').value.trim();
+  if(!rut){document.getElementById('login-err').classList.add('show');return}
+  document.getElementById('login-err').classList.remove('show');
+  loginPaciente(rut);
+}
+
+document.getElementById('login-rut').addEventListener('keypress',e=>{if(e.key==='Enter')doLogin()});
+
+async function loginPaciente(rut){
+  try{
+    const r=await fetch(`${SC}?action=getPacientes`);
+    const d=await r.json();
+    const pac=(d.data||[]).find(p=>p.rut===rut||p.rut===rut.replace(/\./g,''));
+    if(!pac){
+      document.getElementById('login-err').classList.add('show');
+      return;
+    }
+    ME_RUT=pac.rut;
+    ME_NAME=pac.nombre;
+    pacienteData=pac;
+    // Guardar sesión
+    sessionStorage.setItem('fh_rut',ME_RUT);
+    document.getElementById('login').style.display='none';
+    document.getElementById('app').classList.add('on');
+    document.getElementById('user-name').textContent=pac.nombre;
+    document.getElementById('user-rut').textContent=pac.rut;
+    document.getElementById('dash-welcome').textContent=`¡Hola, ${pac.nombre.split(' ')[0]}!`;
+    loadDashboard();
+  }catch(e){
+    document.getElementById('login-err').textContent='Error de conexión. Intenta más tarde.';
+    document.getElementById('login-err').classList.add('show');
+  }
+}
+
+function doLogout(){
+  sessionStorage.removeItem('fh_rut');
+  location.reload();
+}
+
+// ── DASHBOARD ──
+async function loadDashboard(){
+  try{
+    const [citasR,recR,alR,atR]=await Promise.all([
+      fetch(`${SC}?action=getCitas`).then(r=>r.json()),
+      fetch(`${SC}?action=getRecetas`).then(r=>r.json()),
+      fetch(`${SC}?action=getAlertas`).then(r=>r.json()),
+      fetch(`${SC}?action=getAtenciones`).then(r=>r.json()),
+    ]);
+    const misCitas=(citasR.data||[]).filter(c=>c.paciente===ME_NAME);
+    const misRec=(recR.data||[]).filter(r=>r.rut===ME_RUT||r.paciente===ME_NAME);
+    const misAl=(alR.data||[]).filter(a=>a.rut===ME_RUT||a.paciente===ME_NAME);
+    const profesionales=[...new Set([
+      ...misCitas.map(c=>c.profesional),
+      ...(atR.data||[]).filter(a=>a.rut===ME_RUT||a.paciente===ME_NAME).map(a=>a.profesional)
+    ])].filter(Boolean);
+
+    document.getElementById('m-prof').textContent=profesionales.length;
+    document.getElementById('m-rec').textContent=misRec.length;
+    document.getElementById('m-al').textContent=misAl.filter(a=>a.estado==='Activa').length;
+
+    const proxima=misCitas.filter(c=>c.estado==='Confirmada'||c.estado==='Pendiente').sort((a,b)=>{
+      const da=parseFecha(a.fechaCita),db=parseFecha(b.fechaCita);
+      return da-db;
+    })[0];
+    if(proxima){
+      document.getElementById('m-cita').textContent=formatDT(proxima.fechaCita).d;
+      document.getElementById('m-cita-sub').textContent=`${formatHora(proxima.hora)} con ${proxima.profesional}`;
+    }else{
+      document.getElementById('m-cita').textContent='Sin citas';
+      document.getElementById('m-cita-sub').textContent='—';
+    }
+
+    const proximas=misCitas.filter(c=>c.estado==='Confirmada'||c.estado==='Pendiente').slice(0,4);
+    document.getElementById('dash-citas').innerHTML=proximas.length?
+      `<table><tbody>${proximas.map(c=>`<tr><td><span class="dt-fe">${formatDT(c.fechaCita).d}</span><span class="dt-ho">${formatHora(c.hora)}</span></td><td>${c.profesional}</td><td>${badge(c.estado)}</td></tr>`).join('')}</tbody></table>`:
+      '<div class="empty">Sin citas próximas</div>';
+
+    const alertasActivas=misAl.filter(a=>a.estado==='Activa').slice(0,4);
+    document.getElementById('dash-alertas').innerHTML=alertasActivas.length?
+      alertasActivas.map(a=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--bdr)"><span style="font-size:18px">${a.tipo==='Medicamento'?'💊':a.tipo==='Cita'?'📅':'🔔'}</span><div style="flex:1"><div style="font-size:12px;font-weight:500">${a.tipo}</div><div style="font-size:11px;color:var(--gris)">${a.mensaje}</div></div>${badge(a.estado)}</div>`).join(''):
+      '<div class="empty">Sin alertas activas</div>';
+  }catch(e){console.error(e)}
+}
+
+function parseFecha(s){
+  if(!s)return new Date(0);
+  s=String(s).trim();
+  if(/^[A-Z][a-z]{2}/.test(s))return new Date(s);
+  const p=s.split(' ')[0].split('-');
+  if(p.length!==3)return new Date(0);
+  return p[0].length===4?new Date(+p[0],+p[1]-1,+p[2]):new Date(+p[2],+p[1]-1,+p[0]);
+}
+
+// ── FICHA ──
+function loadFicha(){
+  if(!pacienteData)return;
+  document.getElementById('pf-av').textContent=av(pacienteData.nombre);
+  document.getElementById('pf-nombre').textContent=pacienteData.nombre;
+  document.getElementById('pf-rut').textContent=pacienteData.rut;
+  document.getElementById('pf-modo').textContent=pacienteData.modo||'—';
+  document.getElementById('pf-nac').textContent=pacienteData.fechaNac||'—';
+  document.getElementById('pf-modo2').textContent=pacienteData.modo||'—';
+  document.getElementById('pf-coord').textContent=pacienteData.coordNombre||'—';
+  document.getElementById('pf-coord-rel').textContent=pacienteData.coordRelacion||'—';
+  document.getElementById('pf-coord-email').textContent=pacienteData.coordEmail||'—';
+  document.getElementById('pf-coord-wa').textContent=pacienteData.coordWa||'—';
+  document.getElementById('pf-diag').textContent=pacienteData.diagnostico||'No registrado';
+  document.getElementById('pf-meds').textContent=pacienteData.medicamentos||'No registrado';
+  document.getElementById('pf-aler').textContent=pacienteData.alergias||'Sin alergias conocidas';
+}
+
+// ── CITAS ──
+async function loadCitas(){
+  try{
+    const d=(await fetch(`${SC}?action=getCitas`).then(r=>r.json())).data.filter(c=>c.paciente===ME_NAME)||[];
+    const sorted=d.sort((a,b)=>parseFecha(b.fechaCita)-parseFecha(a.fechaCita));
+    document.getElementById('citas-body').innerHTML=sorted.length?sorted.map(c=>
+      `<tr><td><span class="dt-fe">${formatDT(c.fechaCita).d}</span></td><td style="color:var(--verde);font-weight:500">${formatHora(c.hora)}</td><td><span class="av">${av(c.profesional)}</span>${c.profesional||'—'}</td><td>${c.especialidad||'—'}</td><td>${c.modalidad||'—'}</td><td>${badge(c.estado)}</td></tr>`
+    ).join(''):'<tr><td colspan="6" class="empty">No tienes citas registradas</td></tr>';
+  }catch(e){document.getElementById('citas-body').innerHTML='<tr><td colspan="6" class="empty">Error al cargar</td></tr>'}
+}
+
+// ── HISTORIAL ──
+async function loadHistorial(){
+  try{
+    const d=(await fetch(`${SC}?action=getAtenciones`).then(r=>r.json())).data.filter(a=>a.rut===ME_RUT||a.paciente===ME_NAME)||[];
+    const sorted=d.sort((a,b)=>parseFecha(b.fecha)-parseFecha(a.fecha));
+    document.getElementById('hist-body').innerHTML=sorted.length?sorted.map(a=>
+      `<tr><td><span class="dt-fe">${formatDT(a.fecha).d}</span></td><td><span class="av">${av(a.profesional)}</span>${a.profesional||'—'}</td><td>${a.especialidad||'—'}</td><td style="max-width:300px">${a.notas||'—'}</td><td>${formatDT(a.proximaSesion).d}</td></tr>`
+    ).join(''):'<tr><td colspan="5" class="empty">Sin historial clínico aún</td></tr>';
+  }catch(e){document.getElementById('hist-body').innerHTML='<tr><td colspan="5" class="empty">Error al cargar</td></tr>'}
+}
+
+// ── RECETAS ──
+async function loadRecetas(){
+  try{
+    const d=(await fetch(`${SC}?action=getRecetas`).then(r=>r.json())).data.filter(r=>r.rut===ME_RUT||r.paciente===ME_NAME)||[];
+    const sorted=d.sort((a,b)=>parseFecha(b.fecha)-parseFecha(a.fecha));
+    document.getElementById('rec-body').innerHTML=sorted.length?sorted.map(r=>
+      `<tr><td><span class="dt-fe">${formatDT(r.fecha).d}</span></td><td><strong>${r.medicamento||'—'}</strong></td><td>${r.dosis||'—'}</td><td>${r.duracion||'—'}</td><td>${r.profesional||'—'}</td></tr>`
+    ).join(''):'<tr><td colspan="5" class="empty">Sin recetas registradas</td></tr>';
+  }catch(e){document.getElementById('rec-body').innerHTML='<tr><td colspan="5" class="empty">Error al cargar</td></tr>'}
+}
+
+// ── ALERTAS ──
+async function loadAlertas(){
+  try{
+    const d=(await fetch(`${SC}?action=getAlertas`).then(r=>r.json())).data.filter(a=>a.rut===ME_RUT||a.paciente===ME_NAME)||[];
+    const sorted=d.sort((a,b)=>parseFecha(b.fecha)-parseFecha(a.fecha));
+    document.getElementById('al-body').innerHTML=sorted.length?sorted.map(a=>
+      `<tr><td><span class="dt-fe">${formatDT(a.fecha).d}</span></td><td>${badge(a.tipo)}</td><td>${a.mensaje||'—'}</td><td>${a.frecuencia||'—'}</td><td>${a.canal||'—'}</td><td>${badge(a.estado)}</td></tr>`
+    ).join(''):'<tr><td colspan="6" class="empty">Sin alertas configuradas</td></tr>';
+  }catch(e){document.getElementById('al-body').innerHTML='<tr><td colspan="6" class="empty">Error al cargar</td></tr>'}
+}
+
+// ── PROFESIONALES ──
+async function loadProfesionales(){
+  try{
+    const [citasR,atR,profR]=await Promise.all([
+      fetch(`${SC}?action=getCitas`).then(r=>r.json()),
+      fetch(`${SC}?action=getAtenciones`).then(r=>r.json()),
+      fetch(`${SC}?action=getProfesionales`).then(r=>r.json())
+    ]);
+    const profsCitas=(citasR.data||[]).filter(c=>c.paciente===ME_NAME).map(c=>c.profesional);
+    const profsAt=(atR.data||[]).filter(a=>a.rut===ME_RUT||a.paciente===ME_NAME).map(a=>a.profesional);
+    const nombresUnicos=[...new Set([...profsCitas,...profsAt])].filter(Boolean);
+    const detalles=nombresUnicos.map(n=>(profR.data||[]).find(p=>p.nombre===n)).filter(Boolean);
+
+    document.getElementById('prof-list').innerHTML=detalles.length?detalles.map(p=>{
+      const calLink=p.calLink?(p.calLink.startsWith('http')?p.calLink:'https://'+p.calLink):null;
+      return`<div class="prof-card">
+        <div class="av" style="width:48px;height:48px;font-size:16px">${av(p.nombre)}</div>
+        <div class="prof-info">
+          <div class="prof-name">${p.nombre} <span style="font-size:10px;color:var(--verde);font-weight:500">✓ Verificado MINSAL</span></div>
+          <div class="prof-meta">${p.especialidad||'—'} · ${p.modalidad||'—'} · ${p.comunas||'—'}</div>
+        </div>
+        <div class="prof-actions">
+          ${calLink?`<a href="${calLink}" target="_blank" class="btn btn-p btn-sm">Agendar hora →</a>`:'<button class="btn btn-sm" disabled>Sin agenda</button>'}
+        </div>
+      </div>`;
+    }).join(''):'<div class="empty">No tienes profesionales asignados aún</div>';
+  }catch(e){document.getElementById('prof-list').innerHTML='<div class="empty">Error al cargar</div>'}
+}
+
+// ── INIT ──
+const savedRut=sessionStorage.getItem('fh_rut');
+if(savedRut){
+  document.getElementById('login-rut').value=savedRut;
+  loginPaciente(savedRut);
+}
+</script>
+</body>
+</html>
