@@ -147,10 +147,37 @@ table tr:last-child td{border-bottom:none}
   <div class="login-box">
     <div class="login-logo"><span class="h">Fam</span>Health <span class="logo-sub">Mi Cuenta</span></div>
     <p class="login-sub">Accede al historial clínico de tu familiar mayor</p>
-    <label class="login-label">RUT del paciente</label>
-    <input type="text" id="login-rut" class="login-input" placeholder="12.345.678-9" autofocus>
-    <button class="login-btn" onclick="doLogin()">Ingresar →</button>
-    <div class="login-err" id="login-err">No encontramos un paciente con ese RUT. Verifica el formato (ej: 12.345.678-9).</div>
+
+    <!-- Tabs -->
+    <div style="display:flex;gap:4px;margin-bottom:1rem;background:var(--bg2);padding:4px;border-radius:10px">
+      <button id="tab-pac" onclick="switchTab('pac')" style="flex:1;padding:8px;border:none;background:var(--blanco);color:var(--verde);font-weight:600;border-radius:6px;cursor:pointer;font-family:inherit;font-size:12px;box-shadow:0 1px 3px rgba(0,0,0,.05)">Soy paciente</button>
+      <button id="tab-cui" onclick="switchTab('cui')" style="flex:1;padding:8px;border:none;background:transparent;color:var(--gris);font-weight:500;border-radius:6px;cursor:pointer;font-family:inherit;font-size:12px">Soy cuidador</button>
+    </div>
+
+    <!-- Paciente -->
+    <div id="form-pac">
+      <label class="login-label">RUT del paciente</label>
+      <input type="text" id="login-rut" class="login-input" placeholder="12.345.678-9" autofocus>
+      <button class="login-btn" onclick="doLogin()">Ingresar →</button>
+    </div>
+
+    <!-- Cuidador -->
+    <div id="form-cui" style="display:none">
+      <label class="login-label">RUT del cuidador</label>
+      <input type="text" id="login-rut-cui" class="login-input" placeholder="12.345.678-9">
+      <label class="login-label" style="margin-top:.75rem">Clave</label>
+      <input type="password" id="login-clave-cui" class="login-input" placeholder="Tu clave alfanumérica">
+      <button class="login-btn" onclick="doLoginCuidador()">Ingresar →</button>
+    </div>
+
+    <!-- Selector paciente para cuidador -->
+    <div id="form-selector" style="display:none">
+      <label class="login-label">¿Qué paciente quieres gestionar?</label>
+      <div id="pac-options" style="display:flex;flex-direction:column;gap:8px;margin-top:8px"></div>
+      <button onclick="document.getElementById('form-selector').style.display='none';document.getElementById('form-cui').style.display='block'" style="background:none;border:none;color:var(--gris);font-size:11px;cursor:pointer;margin-top:.75rem;text-align:center;width:100%">← Volver</button>
+    </div>
+
+    <div class="login-err" id="login-err">No encontramos un paciente con ese RUT.</div>
     <p class="login-hint">¿Aún no estás registrado? <a href="index.html" style="color:var(--verde);text-decoration:none;font-weight:500">Regístrate aquí</a></p>
   </div>
 </div>
@@ -173,6 +200,9 @@ table tr:last-child td{border-bottom:none}
 
       <div class="nb-cat">Equipo</div>
       <button class="nb" onclick="sp('profesionales',this);loadProfesionales()"><i class="ti ti-stethoscope"></i><span>Mis Profesionales</span></button>
+
+      <div class="nb-cat">Cuenta</div>
+      <button class="nb" onclick="sp('registro',this);loadRegistro()"><i class="ti ti-history"></i><span>Registro</span></button>
 
       <div class="user-card">
         <div class="user-name" id="user-name">—</div>
@@ -235,8 +265,26 @@ table tr:last-child td{border-bottom:none}
             <div style="grid-column:1/-1"><div class="ficha-label">Alergias</div><div class="ficha-val" id="pf-aler">—</div></div>
           </div>
         </div>
+        <div class="card">
+          <div class="ch"><span class="ct">Cuidadores asociados</span><button class="btn btn-p btn-sm" onclick="openCuidadorModal()"><i class="ti ti-plus"></i> Agregar cuidador</button></div>
+          <p style="font-size:12px;color:var(--gris);margin-bottom:.75rem">Personas autorizadas para gestionar tu cuenta. Ingresan con su propio RUT y clave.</p>
+          <div id="cuidadores-list"><div class="loading">Cargando...</div></div>
+        </div>
+
         <div style="background:var(--verde-clar);padding:.85rem 1rem;border-radius:8px;font-size:12px;color:var(--verde);font-style:italic">
           <i class="ti ti-info-circle"></i> Si necesitas actualizar tus datos clínicos, contacta a contacto@famhealth.cl o pídelo a tu coordinador familiar.
+        </div>
+      </div>
+
+      <!-- REGISTRO -->
+      <div id="pg-registro" class="pg">
+        <div class="ph"><h1>Registro de Cambios</h1><p>Historial completo de cambios realizados en tu cuenta. Esta información no puede ser modificada.</p></div>
+        <div class="card">
+          <div class="filt"><input type="text" placeholder="Buscar por acción o usuario..." oninput="ft('reg-body',this.value)"></div>
+          <div class="tbl-scroll"><table>
+            <thead><tr><th style="width:13%">Fecha</th><th>Acción</th><th>Detalle</th><th>Usuario</th><th>Tipo</th></tr></thead>
+            <tbody id="reg-body"><tr><td colspan="5" class="loading">Cargando...</td></tr></tbody>
+          </table></div>
         </div>
       </div>
 
@@ -354,6 +402,42 @@ table tr:last-child td{border-bottom:none}
   </div>
 </div>
 
+<!-- MODAL AGREGAR CUIDADOR -->
+<div class="modal-bg" id="modal-cuidador">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Agregar cuidador</span><button class="modal-close" onclick="document.getElementById('modal-cuidador').classList.remove('open')">×</button></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem">
+      <div style="grid-column:1/-1">
+        <label style="font-size:11px;color:var(--gris);font-weight:600">Nombre completo *</label>
+        <input type="text" id="nc-nombre" class="login-input" style="margin-top:4px" placeholder="Nombre del cuidador">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--gris);font-weight:600">RUT *</label>
+        <input type="text" id="nc-rut" class="login-input" style="margin-top:4px" placeholder="12.345.678-9">
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--gris);font-weight:600">WhatsApp</label>
+        <input type="text" id="nc-wa" class="login-input" style="margin-top:4px" placeholder="+56 9 1234 5678">
+      </div>
+      <div style="grid-column:1/-1">
+        <label style="font-size:11px;color:var(--gris);font-weight:600">Email</label>
+        <input type="email" id="nc-email" class="login-input" style="margin-top:4px" placeholder="correo@ejemplo.cl">
+      </div>
+      <div style="grid-column:1/-1">
+        <label style="font-size:11px;color:var(--gris);font-weight:600">Clave para ingresar *</label>
+        <input type="text" id="nc-clave" class="login-input" style="margin-top:4px" placeholder="Mínimo 6 caracteres alfanuméricos">
+      </div>
+    </div>
+    <div style="background:var(--verde-clar);padding:.6rem .85rem;border-radius:6px;font-size:11px;color:var(--verde);margin-bottom:1rem;font-style:italic">
+      <i class="ti ti-info-circle"></i> El cuidador podrá ingresar a mi-cuenta.html con su RUT y clave para gestionar tu cuenta.
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px">
+      <button class="btn" onclick="document.getElementById('modal-cuidador').classList.remove('open')">Cancelar</button>
+      <button class="btn btn-p" onclick="guardarCuidador()">Agregar cuidador</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -407,7 +491,7 @@ function sp(name,btn){
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
   document.getElementById('pg-'+name).classList.add('on');
   if(btn)btn.classList.add('on');
-  const titles={dashboard:'Inicio',ficha:'Mi Ficha',citas:'Próximas Citas',historial:'Historial Clínico',recetas:'Recetas',alertas:'Alertas Activas',profesionales:'Mis Profesionales'};
+  const titles={dashboard:'Inicio',ficha:'Mi Ficha',citas:'Próximas Citas',historial:'Historial Clínico',recetas:'Recetas',alertas:'Alertas Activas',profesionales:'Mis Profesionales',registro:'Registro de Cambios'};
   document.getElementById('page-title').textContent=titles[name]||'Mi Cuenta';
 }
 
@@ -421,6 +505,25 @@ function ft(id,q,extra){
 }
 
 // ── LOGIN ──
+function switchTab(tab){
+  if(tab==='pac'){
+    document.getElementById('form-pac').style.display='block';
+    document.getElementById('form-cui').style.display='none';
+    document.getElementById('form-selector').style.display='none';
+    document.getElementById('tab-pac').style.cssText='flex:1;padding:8px;border:none;background:var(--blanco);color:var(--verde);font-weight:600;border-radius:6px;cursor:pointer;font-family:inherit;font-size:12px;box-shadow:0 1px 3px rgba(0,0,0,.05)';
+    document.getElementById('tab-cui').style.cssText='flex:1;padding:8px;border:none;background:transparent;color:var(--gris);font-weight:500;border-radius:6px;cursor:pointer;font-family:inherit;font-size:12px';
+  }else{
+    document.getElementById('form-pac').style.display='none';
+    document.getElementById('form-cui').style.display='block';
+    document.getElementById('form-selector').style.display='none';
+    document.getElementById('tab-pac').style.cssText='flex:1;padding:8px;border:none;background:transparent;color:var(--gris);font-weight:500;border-radius:6px;cursor:pointer;font-family:inherit;font-size:12px';
+    document.getElementById('tab-cui').style.cssText='flex:1;padding:8px;border:none;background:var(--blanco);color:var(--verde);font-weight:600;border-radius:6px;cursor:pointer;font-family:inherit;font-size:12px;box-shadow:0 1px 3px rgba(0,0,0,.05)';
+  }
+  document.getElementById('login-err').classList.remove('show');
+}
+
+let cuidadorActivo = null; // {rut, nombre, email} si logueado como cuidador
+
 function doLogin(){
   const rut=document.getElementById('login-rut').value.trim();
   if(!rut){document.getElementById('login-err').classList.add('show');return}
@@ -428,7 +531,58 @@ function doLogin(){
   loginPaciente(rut);
 }
 
+async function doLoginCuidador(){
+  const rut=document.getElementById('login-rut-cui').value.trim();
+  const clave=document.getElementById('login-clave-cui').value.trim();
+  if(!rut||!clave){
+    document.getElementById('login-err').textContent='Ingresa RUT y clave';
+    document.getElementById('login-err').classList.add('show');
+    return;
+  }
+  document.getElementById('login-err').classList.remove('show');
+  try{
+    const r=await fetch(`${SC}?action=loginCuidador&rut=${encodeURIComponent(rut)}&clave=${encodeURIComponent(clave)}`);
+    const d=await r.json();
+    if(!d.data||!d.data.success){
+      document.getElementById('login-err').textContent=(d.data&&d.data.message)||'RUT o clave incorrectos';
+      document.getElementById('login-err').classList.add('show');
+      return;
+    }
+    cuidadorActivo = d.data.cuidador;
+    const pacs = d.data.pacientes || [];
+    if(pacs.length===0){
+      document.getElementById('login-err').textContent='No tienes pacientes asociados aún';
+      document.getElementById('login-err').classList.add('show');
+      return;
+    }
+    if(pacs.length===1){
+      // Entra directo
+      sessionStorage.setItem('fh_cuidador',JSON.stringify(cuidadorActivo));
+      loginPaciente(pacs[0].rut);
+      return;
+    }
+    // Mostrar selector
+    document.getElementById('form-cui').style.display='none';
+    document.getElementById('form-selector').style.display='block';
+    document.getElementById('pac-options').innerHTML=pacs.map(p=>`
+      <button onclick="seleccionarPaciente('${p.rut}')" style="padding:12px;background:var(--bg2);border:1.5px solid var(--bdr);border-radius:10px;cursor:pointer;font-family:inherit;text-align:left;transition:all .15s" onmouseover="this.style.borderColor='var(--verde)'" onmouseout="this.style.borderColor='var(--bdr)'">
+        <div style="font-weight:600;font-size:13px;color:var(--texto)">${p.nombre}</div>
+        <div style="font-size:11px;color:var(--gris);margin-top:2px">${p.rut} · ${p.modo||'—'}</div>
+      </button>
+    `).join('');
+  }catch(e){
+    document.getElementById('login-err').textContent='Error de conexión';
+    document.getElementById('login-err').classList.add('show');
+  }
+}
+
+function seleccionarPaciente(rut){
+  sessionStorage.setItem('fh_cuidador',JSON.stringify(cuidadorActivo));
+  loginPaciente(rut);
+}
+
 document.getElementById('login-rut').addEventListener('keypress',e=>{if(e.key==='Enter')doLogin()});
+document.getElementById('login-clave-cui').addEventListener('keypress',e=>{if(e.key==='Enter')doLoginCuidador()});
 
 async function loginPaciente(rut){
   try{
@@ -447,7 +601,11 @@ async function loginPaciente(rut){
     document.getElementById('login').style.display='none';
     document.getElementById('app').classList.add('on');
     document.getElementById('user-name').textContent=pac.nombre;
-    document.getElementById('user-rut').textContent=pac.rut;
+    if(cuidadorActivo){
+      document.getElementById('user-rut').innerHTML=`${pac.rut}<br><span style="color:var(--verde);font-size:10px;font-weight:500">Gestionando como ${cuidadorActivo.nombre}</span>`;
+    }else{
+      document.getElementById('user-rut').textContent=pac.rut;
+    }
     document.getElementById('dash-welcome').textContent=`¡Hola, ${pac.nombre.split(' ')[0]}!`;
     loadDashboard();
   }catch(e){
@@ -458,6 +616,7 @@ async function loginPaciente(rut){
 
 function doLogout(){
   sessionStorage.removeItem('fh_rut');
+  sessionStorage.removeItem('fh_cuidador');
   location.reload();
 }
 
@@ -531,6 +690,73 @@ function loadFicha(){
   document.getElementById('pf-diag').textContent=pacienteData.diagnostico||'No registrado';
   document.getElementById('pf-meds').textContent=pacienteData.medicamentos||'No registrado';
   document.getElementById('pf-aler').textContent=pacienteData.alergias||'Sin alergias conocidas';
+  loadCuidadores();
+}
+
+async function loadCuidadores(){
+  try{
+    const d=(await fetch(`${SC}?action=getCuidadores`).then(r=>r.json())).data.filter(c=>c.rutPaciente===ME_RUT)||[];
+    document.getElementById('cuidadores-list').innerHTML=d.length?d.map(c=>{
+      const colorEstado=c.estado==='Activo'?'bg':'bgr';
+      return`<div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;margin-bottom:6px">
+        <span class="av">${av(c.nombre)}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:600">${c.nombre} <span class="badge ${colorEstado}" style="margin-left:6px">${c.estado}</span></div>
+          <div style="font-size:11px;color:var(--gris)">${c.rutCuidador} · ${c.email||'sin email'} · ${c.whatsapp||'sin WhatsApp'}</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          ${c.estado==='Activo'?`<button class="btn btn-sm" onclick="cambiarEstadoCuidador(${c.fila},'Inactivo')">Pausar</button>`:`<button class="btn btn-sm btn-p" onclick="cambiarEstadoCuidador(${c.fila},'Activo')">Activar</button>`}
+        </div>
+      </div>`;
+    }).join(''):'<div class="empty">No tienes cuidadores asociados aún</div>';
+  }catch(e){document.getElementById('cuidadores-list').innerHTML='<div class="empty">Error al cargar</div>'}
+}
+
+function openCuidadorModal(){
+  document.getElementById('nc-nombre').value='';
+  document.getElementById('nc-rut').value='';
+  document.getElementById('nc-wa').value='';
+  document.getElementById('nc-email').value='';
+  document.getElementById('nc-clave').value='';
+  document.getElementById('modal-cuidador').classList.add('open');
+}
+
+async function guardarCuidador(){
+  const nombre=document.getElementById('nc-nombre').value.trim();
+  const rut=document.getElementById('nc-rut').value.trim();
+  const clave=document.getElementById('nc-clave').value.trim();
+  if(!nombre||!rut||!clave){toast('Nombre, RUT y clave son obligatorios',false);return}
+  if(clave.length<6){toast('La clave debe tener al menos 6 caracteres',false);return}
+  const email=document.getElementById('nc-email').value.trim();
+  const wa=document.getElementById('nc-wa').value.trim();
+  const usuarioRut=cuidadorActivo?cuidadorActivo.rut:ME_RUT;
+  const usuarioTipo=cuidadorActivo?'cuidador':'paciente';
+  try{
+    await fetch(`${SC}?action=addCuidador&rutCuidador=${encodeURIComponent(rut)}&nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}&whatsapp=${encodeURIComponent(wa)}&clave=${encodeURIComponent(clave)}&rutPaciente=${encodeURIComponent(ME_RUT)}&usuarioRut=${encodeURIComponent(usuarioRut)}&usuarioTipo=${usuarioTipo}`);
+    document.getElementById('modal-cuidador').classList.remove('open');
+    toast('✓ Cuidador agregado');
+    setTimeout(loadCuidadores,800);
+  }catch(e){toast('Error al agregar cuidador',false)}
+}
+
+async function cambiarEstadoCuidador(fila,estado){
+  const usuarioRut=cuidadorActivo?cuidadorActivo.rut:ME_RUT;
+  const usuarioTipo=cuidadorActivo?'cuidador':'paciente';
+  await fetch(`${SC}?action=updateCuidador&fila=${fila}&estado=${encodeURIComponent(estado)}&rutPaciente=${encodeURIComponent(ME_RUT)}&usuarioRut=${encodeURIComponent(usuarioRut)}&usuarioTipo=${usuarioTipo}`);
+  toast(`✓ Cuidador ${estado.toLowerCase()}`);
+  setTimeout(loadCuidadores,800);
+}
+
+// ── REGISTRO ──
+async function loadRegistro(){
+  try{
+    const d=(await fetch(`${SC}?action=getLog&rutPaciente=${encodeURIComponent(ME_RUT)}`).then(r=>r.json())).data||[];
+    const sorted=d.sort((a,b)=>parseFecha(b.fecha)-parseFecha(a.fecha));
+    document.getElementById('reg-body').innerHTML=sorted.length?sorted.map(r=>{
+      const tipoBadge={admin:'bb',profesional:'bg',paciente:'ba',cuidador:'bb',sistema:'bgr'}[r.usuarioTipo]||'bgr';
+      return`<tr><td><span class="dt-fe">${formatDT(r.fecha).d}</span></td><td><strong>${r.accion||'—'}</strong></td><td style="max-width:300px">${r.detalle||'—'}</td><td>${r.usuarioRut||'—'}</td><td><span class="badge ${tipoBadge}">${r.usuarioTipo||'—'}</span></td></tr>`;
+    }).join(''):'<tr><td colspan="5" class="empty">Sin registros de cambios aún</td></tr>';
+  }catch(e){document.getElementById('reg-body').innerHTML='<tr><td colspan="5" class="empty">Error al cargar</td></tr>'}
 }
 
 // ── CITAS ──
@@ -623,8 +849,10 @@ async function guardarAlerta(){
   const hora=document.getElementById('na-hora').value;
   const frec=document.getElementById('na-frec').value+(hora?` a las ${hora}`:'');
   const canal=document.getElementById('na-canal').value;
+  const usuarioRut=cuidadorActivo?cuidadorActivo.rut:ME_RUT;
+  const usuarioTipo=cuidadorActivo?'cuidador':'paciente';
   try{
-    await fetch(`${SC}?action=addAlerta&paciente=${encodeURIComponent(ME_NAME)}&rut=${encodeURIComponent(ME_RUT)}&tipo=${encodeURIComponent(tipo)}&mensaje=${encodeURIComponent(msg)}&frecuencia=${encodeURIComponent(frec)}&canal=${encodeURIComponent(canal)}&profesional=${encodeURIComponent(ME_RUT)}`);
+    await fetch(`${SC}?action=addAlerta&paciente=${encodeURIComponent(ME_NAME)}&rut=${encodeURIComponent(ME_RUT)}&tipo=${encodeURIComponent(tipo)}&mensaje=${encodeURIComponent(msg)}&frecuencia=${encodeURIComponent(frec)}&canal=${encodeURIComponent(canal)}&profesional=${encodeURIComponent(ME_RUT)}&usuarioRut=${encodeURIComponent(usuarioRut)}&usuarioTipo=${usuarioTipo}`);
     document.getElementById('modal-alerta').classList.remove('open');
     toast('✓ Alerta creada');
     setTimeout(loadAlertas,800);
@@ -632,6 +860,10 @@ async function guardarAlerta(){
 }
 
 // ── INIT ──
+const savedCui=sessionStorage.getItem('fh_cuidador');
+if(savedCui){
+  try{cuidadorActivo=JSON.parse(savedCui)}catch(e){}
+}
 const savedRut=sessionStorage.getItem('fh_rut');
 if(savedRut){
   document.getElementById('login-rut').value=savedRut;
