@@ -695,7 +695,10 @@ function loadFicha(){
 
 async function loadCuidadores(){
   try{
-    const d=(await fetch(`${SC}?action=getCuidadores`).then(r=>r.json())).data.filter(c=>c.rutPaciente===ME_RUT)||[];
+    const all=(await fetch(`${SC}?action=getCuidadores`).then(r=>r.json())).data||[];
+    // Normalizar RUT para comparación (sin puntos, con guion)
+    const normalize=r=>String(r||'').replace(/\./g,'').trim().toLowerCase();
+    const d=all.filter(c=>normalize(c.rutPaciente)===normalize(ME_RUT));
     document.getElementById('cuidadores-list').innerHTML=d.length?d.map(c=>{
       const colorEstado=c.estado==='Activo'?'bg':'bgr';
       return`<div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;margin-bottom:6px">
@@ -864,11 +867,13 @@ const savedCui=sessionStorage.getItem('fh_cuidador');
 if(savedCui){
   try{cuidadorActivo=JSON.parse(savedCui)}catch(e){}
 }
+// NO auto-login — siempre mostrar pantalla de login para que el usuario elija su modo
 const savedRut=sessionStorage.getItem('fh_rut');
 if(savedRut){
   document.getElementById('login-rut').value=savedRut;
-  loginPaciente(savedRut);
 }
+sessionStorage.removeItem('fh_rut');
+sessionStorage.removeItem('fh_cuidador');
 </script>
 </body>
 </html>
