@@ -422,14 +422,13 @@
 
     /* ── FORMULARIOS ── */
     .forms-section { background: var(--crema); }
-    .forms-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      margin-top: 3rem;
-    }
-    @media(max-width:768px){ .forms-grid { grid-template-columns: 1fr; } }
-
+   .forms-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin: 3rem auto 0;
+  max-width: 520px;
+}
     .form-card {
       background: var(--blanco);
       border-radius: 24px;
@@ -674,7 +673,7 @@
       <p class="section-label reveal">Para profesionales</p>
       <h2 class="section-title reveal">Llega a familias que te buscan activamente</h2>
       <p class="section-sub reveal">Gratis durante todo el período de lanzamiento. Sin comisiones ocultas.</p>
-      <a href="#registro-prof" class="btn-primary reveal" style="display:inline-flex;margin-top:.5rem">Registrar mi perfil →</a>
+      <a href="profesional.html?registro=1" class="btn-primary reveal" style="display:inline-flex;margin-top:.5rem">Registrar mi perfil →</a>
     </div>
     <div>
       <ul class="beneficio-list">
@@ -828,75 +827,7 @@
       </div>
     </div>
 
-    <!-- FORMULARIO PROFESIONALES -->
-    <div class="form-card reveal" id="registro-prof">
-      <span class="form-tag">👩‍⚕️ Para profesionales</span>
-      <h3>Quiero registrar mi perfil profesional</h3>
-      <p>Gratis durante el lanzamiento. Revisamos tus credenciales y activamos tu perfil en 48 horas.</p>
-
-      <div id="form-profesionales">
-        <div class="form-group">
-          <label for="p-nombre">Nombre completo</label>
-          <input type="text" id="p-nombre" placeholder="Ej: María González" autocomplete="name" />
-        </div>
-        <div class="form-group">
-          <label for="p-rut">RUT</label>
-          <input type="text" id="p-rut" placeholder="12.345.678-9" />
-        </div>
-        <div class="form-group">
-          <label for="p-especialidad">Especialidad principal</label>
-          <select id="p-especialidad">
-            <option value="">Selecciona tu especialidad</option>
-            <option>Kinesiología</option>
-            <option>Geriatría</option>
-            <option>Enfermería</option>
-            <option>Fonoaudiología</option>
-            <option>Medicina General</option>
-            <option>Psicología</option>
-            <option>Nutrición</option>
-            <option>Otra</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="p-comunas">¿En qué comunas atiendes?</label>
-          <input type="text" id="p-comunas" placeholder="Ej: Providencia, Las Condes" />
-        </div>
-        <div class="form-group">
-          <label for="p-modalidad">Modalidad de atención</label>
-          <select id="p-modalidad">
-            <option value="">Selecciona modalidad</option>
-            <option>Presencial en clínica</option>
-            <option>Domicilio</option>
-            <option>Teleconsulta</option>
-            <option>Domicilio y teleconsulta</option>
-            <option>Todas las anteriores</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="p-registro">¿Tienes registro MINSAL vigente?</label>
-          <select id="p-registro">
-            <option value="">Selecciona una opción</option>
-            <option>Sí, vigente</option>
-            <option>En trámite</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="p-email">Email profesional</label>
-          <input type="email" id="p-email" placeholder="correo@email.com" autocomplete="email" />
-        </div>
-        <div class="form-group">
-          <label for="p-whatsapp">WhatsApp</label>
-          <input type="tel" id="p-whatsapp" placeholder="+56 9 XXXX XXXX" autocomplete="tel" />
-        </div>
-        <button class="form-submit" onclick="submitForm('profesionales')">Registrar mi perfil →</button>
-        <p class="form-note">🔒 Verificamos tus credenciales antes de publicar tu perfil</p>
-      </div>
-      <div class="success-msg" id="success-profesionales">
-        <div class="success-icon">🎉</div>
-        <h4>¡Solicitud recibida!</h4>
-        <p>Revisaremos tus credenciales y te contactamos en 48 horas para activar tu perfil. ¡Bienvenido/a a la plataforma!</p>
-      </div>
-    </div>
+    
 
   </div>
 </section>
