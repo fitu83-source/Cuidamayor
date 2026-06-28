@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FamHealth — Maqueta alta del Profesional</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.x/dist/tabler-icons.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --verde:#2D6A4F;--vc:#52B788;--vs:#D8F3DC;--crema:#FAF7F2;--arena:#E9E0D0;
+  --texto:#1A1A1A;--gris:#5C5C5C;--blanco:#FFFFFF;--rojo:#E07A5F;--rs:#FCEBEB;
+  --as:#FAEEDA;--amber:#854F0B;--bg2:#F5F4F0;--bdr:#E2DDD6;
+}
+@media(prefers-color-scheme:dark){:root{--crema:#161616;--texto:#F0EDE8;--gris:#9A9590;--blanco:#202020;--arena:#3A3A3A;--bg2:#262626;--bdr:#363636;--vs:#173a29;--as:#2D1F08;--rs:#2D1515;}}
+html,body{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--texto);background:var(--crema);min-height:100vh}
+a{color:var(--verde)}
+:focus-visible{outline:2px solid var(--verde);outline-offset:2px;border-radius:6px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+.tb{background:var(--blanco);border-bottom:.5px solid var(--bdr);padding:12px 20px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50}
+.tb .logo{font-size:17px;font-weight:600;color:var(--verde)} .tb .logo b{color:var(--vc);font-weight:700}
+.tb .spacer{flex:1}
+.tb .who{font-size:12px;color:var(--gris)}
+
+.wrap{max-width:920px;margin:0 auto;padding:22px 18px 60px}
+h1{font-size:22px;font-weight:600;letter-spacing:-.01em}
+.sub{font-size:13px;color:var(--gris);margin:3px 0 18px}
+
+.prog-card{background:var(--blanco);border:.5px solid var(--bdr);border-radius:14px;padding:14px 16px;margin-bottom:14px}
+.prog-top{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:500;margin-bottom:8px}
+.prog-pct{color:var(--verde);font-weight:600}
+.prog-bar{height:8px;background:var(--bg2);border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;width:0;background:linear-gradient(90deg,var(--vc),var(--verde));border-radius:99px;transition:width .35s ease}
+
+.stepper-card{background:var(--blanco);border:.5px solid var(--bdr);border-radius:14px;padding:6px;margin-bottom:16px;overflow-x:auto}
+.stepper{display:flex;min-width:760px}
+.step{flex:1;display:flex;align-items:center;gap:9px;padding:12px 14px;position:relative;cursor:pointer;border:none;background:none;text-align:left;font-family:inherit}
+.step:not(:last-child)::after{content:"";position:absolute;right:-1px;top:14px;bottom:14px;width:1px;background:var(--bdr)}
+.step .ic{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;border:1.5px solid var(--bdr);color:var(--gris);flex-shrink:0;transition:.2s}
+.step .tx{line-height:1.25}
+.step .tt{font-size:12.5px;font-weight:600;color:var(--gris)}
+.step .td{font-size:10.5px;color:var(--gris);opacity:.8;display:block;margin-top:1px}
+.step.active .ic{border-color:var(--verde);color:var(--verde);background:var(--vs)}
+.step.active .tt{color:var(--verde)}
+.step.done .ic{background:var(--verde);border-color:var(--verde);color:#fff}
+.step.done .tt{color:var(--texto)}
+
+.panel{background:var(--blanco);border:.5px solid var(--bdr);border-radius:14px;padding:22px;display:none}
+.panel.on{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.panel h2{font-size:17px;font-weight:600;margin-bottom:3px}
+.panel .ph{font-size:12.5px;color:var(--gris);margin-bottom:18px}
+.opt-tag{font-size:11px;font-weight:600;color:var(--verde);background:var(--vs);padding:2px 9px;border-radius:99px;margin-left:8px;vertical-align:middle}
+.note{font-size:12px;background:var(--vs);color:var(--verde);padding:9px 12px;border-radius:8px;margin-bottom:16px;display:flex;gap:7px;align-items:flex-start}
+.note.amber{background:var(--as);color:var(--amber)}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.grid{grid-template-columns:1fr}}
+.fg{display:flex;flex-direction:column}
+.fg.full{grid-column:1/-1}
+.fg label{font-size:12px;font-weight:500;margin-bottom:6px}
+.fg label .req{color:var(--rojo)}
+.fg .hint{font-size:11px;color:var(--gris);margin-top:5px}
+input,select,textarea{width:100%;padding:10px 12px;border:.5px solid var(--bdr);border-radius:8px;font-size:13px;color:var(--texto);background:var(--bg2);outline:none;font-family:inherit}
+textarea{resize:vertical;min-height:84px}
+input:focus,select:focus,textarea:focus{border-color:var(--verde)}
+.fg.err input,.fg.err select,.fg.err textarea{border-color:var(--rojo);background:var(--rs)}
+.errmsg{font-size:11px;color:var(--rojo);margin-top:5px;display:none}
+.fg.err .errmsg{display:block}
+
+/* autocomplete multiselect */
+.ms{border:.5px solid var(--bdr);border-radius:8px;background:var(--bg2);padding:7px;position:relative}
+.ms:focus-within{border-color:var(--verde)}
+.ms-chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chip{background:var(--vs);color:var(--verde);font-size:12px;padding:3px 9px;border-radius:99px;display:inline-flex;gap:5px;align-items:center}
+.chip i{cursor:pointer;opacity:.7} .chip i:hover{opacity:1}
+.ms input{border:none;background:none;flex:1;min-width:110px;padding:4px}
+.ac{position:absolute;left:0;right:0;top:100%;margin-top:4px;background:var(--blanco);border:.5px solid var(--bdr);border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,.12);z-index:20;max-height:190px;overflow-y:auto;display:none}
+.ac.on{display:block}
+.ac div{padding:9px 12px;font-size:13px;cursor:pointer}
+.ac div:hover,.ac div.hl{background:var(--vs);color:var(--verde)}
+
+/* dropzone real */
+.drop{border:1.5px dashed var(--bdr);border-radius:10px;padding:20px;text-align:center;font-size:13px;color:var(--gris);background:var(--bg2);cursor:pointer;transition:.2s}
+.drop:hover{border-color:var(--verde);color:var(--verde)}
+.drop b{color:var(--verde)}
+.drop.filled{border-style:solid;border-color:var(--vc);background:var(--vs);color:var(--verde);text-align:left;display:flex;align-items:center;gap:10px;justify-content:space-between}
+.drop.filled .fname{display:flex;align-items:center;gap:8px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.drop.filled .rm{background:none;border:none;color:var(--rojo);cursor:pointer;font-size:12px;font-weight:600;flex-shrink:0}
+.doc-row{margin-bottom:18px}
+.doc-row .dl{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px;gap:10px;flex-wrap:wrap}
+.doc-row .dl .name{font-size:13px;font-weight:600} .doc-row .dl .name .req{color:var(--rojo)}
+.doc-row .dl .tag{font-size:11px;color:var(--amber)}
+.doc-row .meta{font-size:11px;color:var(--gris);margin-top:6px;line-height:1.5}
+
+.tog-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:.5px solid var(--bdr)}
+.tog-row:last-child{border-bottom:none}
+.tog{width:42px;height:24px;border-radius:99px;background:var(--bdr);position:relative;cursor:pointer;flex-shrink:0;transition:.2s}
+.tog::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s}
+.tog.on{background:var(--verde)} .tog.on::after{left:21px}
+.tog-row .tl{font-size:13px;font-weight:500} .tog-row .ts{font-size:11px;color:var(--gris)}
+
+.disp{overflow-x:auto}
+.disp table{width:100%;border-collapse:collapse;min-width:480px}
+.disp th{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--gris);font-weight:600;padding:10px 6px;text-align:center}
+.disp th:first-child{text-align:left}
+.disp td{padding:8px 6px;text-align:center;border-top:.5px solid var(--bdr)}
+.disp td:first-child{text-align:left;font-size:13px;font-weight:500}
+.slot{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--bdr);background:var(--bg2);cursor:pointer;color:var(--gris);font-size:15px;display:inline-flex;align-items:center;justify-content:center;transition:.15s}
+.slot.on{background:var(--verde);border-color:var(--verde);color:#fff}
+.btn-sm{padding:7px 13px;font-size:12px}
+.disp-actions{margin:14px 0 4px;display:flex;gap:8px}
+
+.rev-item{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:.5px solid var(--bdr);font-size:13px}
+.rev-item .k{color:var(--gris)} .rev-item .v{font-weight:500;text-align:right}
+.rev-item:last-child{border-bottom:none}
+
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;padding-top:18px;border-top:.5px solid var(--bdr)}
+.btn{padding:11px 20px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:.5px solid var(--bdr);background:var(--blanco);color:var(--texto);font-family:inherit;display:inline-flex;gap:7px;align-items:center}
+.btn:hover{background:var(--bg2)}
+.btn-p{background:var(--verde);color:#fff;border-color:var(--verde)} .btn-p:hover{background:#255a42}
+.btn-ghost{background:none;border:none;color:var(--gris)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:18px}
+.modal-bg.on{display:flex}
+.modal{background:var(--blanco);border-radius:16px;padding:26px;max-width:520px;width:100%;box-shadow:0 14px 40px rgba(0,0,0,.25)}
+.modal h3{font-size:18px;font-weight:600;margin-bottom:8px;display:flex;gap:9px;align-items:center}
+.modal h3 .mi{width:36px;height:36px;border-radius:10px;background:var(--vs);color:var(--verde);display:flex;align-items:center;justify-content:center;font-size:19px}
+.modal p{font-size:13px;color:var(--gris);line-height:1.6;margin-bottom:14px}
+.modal .req-list{font-size:13px;line-height:1.7;margin:0 0 16px}
+.modal .req-list li{list-style:none;padding:8px 0;border-bottom:.5px solid var(--bdr)}
+.modal .req-list li b{color:var(--texto)}
+.modal-x{float:right;background:none;border:none;font-size:22px;cursor:pointer;color:var(--gris);line-height:1}
+
+.done-card{background:var(--blanco);border:.5px solid var(--bdr);border-radius:16px;padding:34px;text-align:center;display:none}
+.done-card.on{display:block}
+.done-ic{width:66px;height:66px;border-radius:50%;background:var(--vs);color:var(--verde);font-size:34px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.done-card h2{font-size:21px;font-weight:600;margin-bottom:6px}
+.done-card p{font-size:13px;color:var(--gris);max-width:440px;margin:0 auto 18px;line-height:1.6}
+.badge{display:inline-flex;gap:6px;align-items:center;font-size:12px;font-weight:600;color:var(--amber);background:var(--as);padding:6px 13px;border-radius:99px;margin-bottom:18px}
+.check-list{max-width:380px;margin:0 auto;text-align:left;background:var(--bg2);border-radius:12px;padding:14px 18px}
+.check-list div{font-size:13px;padding:7px 0;display:flex;gap:9px;align-items:center;color:var(--gris)}
+.check-list i{color:var(--verde)}
+
+.mock-flag{font-size:11px;color:var(--gris);text-align:center;margin-top:24px;opacity:.7}
+</style>
+</head>
+<body>
+
+<div class="tb">
+  <div class="logo">Fam<b>Health</b></div>
+  <div class="spacer"></div>
+  <div class="who">Carolina Parra · <span style="color:var(--rojo)">Perfil incompleto</span></div>
+</div>
+
+<div class="wrap">
+  <div id="flow">
+    <h1>Completa tu registro como profesional</h1>
+    <p class="sub">Antes de aparecer en el buscador de FamHealth, tu perfil pasa por una verificación de Administración. Toma unos 10 minutos.</p>
+
+    <div class="prog-card">
+      <div class="prog-top"><span>Progreso de registro</span><span class="prog-pct" id="pct">0%</span></div>
+      <div class="prog-bar"><div class="prog-fill" id="fill"></div></div>
+    </div>
+
+    <div class="stepper-card"><div class="stepper" id="stepper"></div></div>
+
+    <!-- 1. PERFIL PÚBLICO -->
+    <section class="panel on" data-step="0">
+      <h2>Perfil público</h2>
+      <p class="ph">Esto es lo que verán las familias cuando te encuentren.</p>
+      <div class="note"><i class="ti ti-eye"></i><span>Tu dirección y documentos nunca son visibles para las familias. Solo lo de esta sección.</span></div>
+      <div class="grid">
+        <div class="fg"><label>Nombre público <span class="req">*</span></label><input value="Carolina Parra"><div class="hint">Nombre y apellido como aparecerán en tu ficha.</div></div>
+        <div class="fg" data-req><label>Fecha de nacimiento <span class="req">*</span></label><input type="date"><div class="errmsg">Este campo es obligatorio.</div><div class="hint">Debes ser mayor de edad.</div></div>
+        <div class="fg"><label>Teléfono (WhatsApp) <span class="req">*</span></label><input placeholder="+56 9 1234 5678"></div>
+        <div class="fg"><label>Idiomas</label><div id="ms-idiomas"></div><div class="hint">Escribe y elige de la lista.</div></div>
+        <div class="fg full"><label>Descripción corta <span class="req">*</span></label><input placeholder="Ej: Kinesióloga, 8 años de experiencia en rehabilitación de adulto mayor."><div class="hint">Tu perfil en una frase.</div></div>
+        <div class="fg full"><label>Presentación <span class="req">*</span></label><textarea placeholder="Cuéntale a las familias sobre tu enfoque, experiencia y por qué trabajas con adultos mayores…"></textarea></div>
+        <div class="fg full"><label>Foto de perfil <span class="req">*</span></label>
+          <input type="file" id="file-foto" accept="image/png,image/jpeg" hidden>
+          <div class="drop" id="drop-foto" onclick="document.getElementById('file-foto').click()"><i class="ti ti-camera"></i> Arrastra una foto o <b>examinar</b><div class="meta" style="margin-top:4px">PNG/JPG · máx 4MB</div></div>
+        </div>
+        <div class="fg full"><label>Video de presentación (opcional)</label>
+          <input type="file" id="file-video" accept="video/*" hidden>
+          <div class="drop" id="drop-video" onclick="document.getElementById('file-video').click()"><i class="ti ti-video"></i> Sube un video corto (15s máx) o <b>examinar</b></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. DATOS PROFESIONALES -->
+    <section class="panel" data-step="1">
+      <h2>Datos profesionales</h2>
+      <p class="ph">Lo que nos permite verificar que estás habilitado para ejercer.</p>
+      <div class="note amber"><i class="ti ti-shield-check"></i><span>Validamos tu N° RNPI contra el Registro Nacional de Prestadores Individuales de la Superintendencia de Salud.</span></div>
+      <div class="grid">
+        <div class="fg" data-req><label>Especialidad <span class="req">*</span></label>
+          <select><option value="">Selecciona…</option><option>Médico Geriatra</option><option>Enfermera/o</option><option>Kinesiólogo/a</option><option>Fonoaudiólogo/a</option><option>Nutricionista</option><option>Terapeuta Ocupacional</option><option>Psicólogo/a</option><option>Cuidador/a certificado/a</option></select>
+          <div class="errmsg">Selecciona tu especialidad.</div>
+        </div>
+        <div class="fg"><label>Subespecialidad / área (opcional)</label><input placeholder="Ej: Rehabilitación neurológica"></div>
+        <div class="fg" data-req><label>N° de registro RNPI <span class="req">*</span></label><input placeholder="Ej: 123456"><div class="errmsg">Ingresa tu número de registro.</div></div>
+        <div class="fg"><label>Universidad de titulación <span class="req">*</span></label><input placeholder="Ej: Universidad de Chile"></div>
+        <div class="fg"><label>Año de titulación <span class="req">*</span></label><input type="number" placeholder="Ej: 2016"></div>
+        <div class="fg"><label>RUT <span class="req">*</span></label><input placeholder="12.345.678-9"></div>
+      </div>
+    </section>
+
+    <!-- 3. ZONA Y MODALIDAD -->
+    <section class="panel" data-step="2">
+      <h2>Zona y modalidad de atención</h2>
+      <p class="ph">Dónde y cómo atiendes. Tu dirección particular es privada.</p>
+      <div class="grid">
+        <div class="fg full"><label>Dirección particular <span class="req">*</span></label><input placeholder="Calle, número, depto"><div class="hint">No visible para las familias. La usamos para sugerirte pacientes cercanos.</div></div>
+        <div class="fg"><label>Región <span class="req">*</span></label><select><option value="">Selecciona…</option><option>Metropolitana</option><option>Valparaíso</option><option>Biobío</option></select></div>
+        <div class="fg"><label>Comuna <span class="req">*</span></label><select><option value="">Selecciona…</option><option>Providencia</option><option>Las Condes</option><option>Ñuñoa</option></select></div>
+        <div class="fg full"><label>Comunas donde atiendes <span class="req">*</span></label><div id="ms-comunas"></div><div class="hint">Escribe y elige de la lista. Puedes agregar varias.</div></div>
+        <div class="fg"><label>Modalidad <span class="req">*</span></label><select><option>Domicilio</option><option>Teleconsulta</option><option>Presencial en consulta</option><option>Domicilio y teleconsulta</option></select></div>
+      </div>
+    </section>
+
+    <!-- 4. DOCUMENTOS -->
+    <section class="panel" data-step="3">
+      <h2>Documentos de verificación</h2>
+      <p class="ph">Obligatorios para garantizar la seguridad de los adultos mayores. Confidenciales.</p>
+      <div class="doc-row">
+        <div class="dl"><span class="name">Carnet de identidad (ambos lados) <span class="req">*</span></span><span class="tag">Confidencial · solo verificación</span></div>
+        <input type="file" id="file-carnet" accept="image/png,image/jpeg,application/pdf" multiple hidden>
+        <div class="drop" id="drop-carnet" onclick="document.getElementById('file-carnet').click()"><i class="ti ti-id"></i> Arrastra o <b>examinar</b></div>
+        <div class="meta">PNG, JPG, JPEG o PDF · máx 4MB.</div>
+      </div>
+      <div class="doc-row">
+        <div class="dl"><span class="name">Certificado de título <span class="req">*</span></span><span class="tag">Acredita tu profesión</span></div>
+        <input type="file" id="file-titulo" accept="image/png,image/jpeg,application/pdf" hidden>
+        <div class="drop" id="drop-titulo" onclick="document.getElementById('file-titulo').click()"><i class="ti ti-certificate"></i> Arrastra o <b>examinar</b></div>
+      </div>
+      <div class="doc-row">
+        <div class="dl"><span class="name">Certificado de antecedentes <span class="req">*</span></span><span class="tag">Emitido hace menos de 30 días</span></div>
+        <input type="file" id="file-antec" accept="image/png,image/jpeg,application/pdf" hidden>
+        <div class="drop" id="drop-antec" onclick="document.getElementById('file-antec').click()"><i class="ti ti-file-shield"></i> Arrastra o <b>examinar</b></div>
+        <div class="meta">Lo obtienes en <a href="https://www.registrocivil.cl" target="_blank" rel="noopener">www.registrocivil.cl</a></div>
+      </div>
+      <div class="doc-row">
+        <div class="dl"><span class="name">Comprobante RNPI <span class="req">*</span></span><span class="tag">Superintendencia de Salud</span></div>
+        <input type="file" id="file-rnpi" accept="image/png,image/jpeg,application/pdf" hidden>
+        <div class="drop" id="drop-rnpi" onclick="document.getElementById('file-rnpi').click()"><i class="ti ti-clipboard-check"></i> Arrastra o <b>examinar</b></div>
+        <div class="meta">Captura o certificado de tu inscripción vigente en el RNPI.</div>
+      </div>
+    </section>
+
+    <!-- 5. EXPERIENCIA -->
+    <section class="panel" data-step="4">
+      <h2>Experiencia y formación</h2>
+      <p class="ph">Cuéntanos tu trayectoria atendiendo adultos mayores.</p>
+      <div class="grid">
+        <div class="fg"><label>Años de experiencia total <span class="req">*</span></label><input type="number" placeholder="Ej: 8"></div>
+        <div class="fg"><label>Años con adulto mayor <span class="req">*</span></label><input type="number" placeholder="Ej: 5"></div>
+        <div class="fg full"><label>Áreas / patologías que manejas</label><textarea placeholder="Ej: hipertensión, diabetes, rehabilitación post-ACV, demencias…"></textarea></div>
+      </div>
+      <div class="note amber" style="margin-top:16px"><i class="ti ti-info-circle"></i><span>Formación complementaria (suma puntaje a tu perfil):</span></div>
+      <div class="tog-row"><div class="tog" onclick="this.classList.toggle('on')"></div><div><div class="tl">Curso de cuidados paliativos</div><div class="ts">¿Has realizado formación en cuidados paliativos?</div></div></div>
+      <div class="tog-row"><div class="tog" onclick="this.classList.toggle('on')"></div><div><div class="tl">Manejo de demencias / Alzheimer</div><div class="ts">Formación específica en deterioro cognitivo.</div></div></div>
+      <div class="tog-row"><div class="tog" onclick="this.classList.toggle('on')"></div><div><div class="tl">Primeros auxilios / RCP vigente</div><div class="ts">Certificación al día.</div></div></div>
+    </section>
+
+    <!-- 6. DISPONIBILIDAD (OPCIONAL) -->
+    <section class="panel" data-step="5">
+      <h2>Disponibilidad semanal <span class="opt-tag">Opcional</span></h2>
+      <p class="ph">Una referencia inicial de tus franjas. Puedes saltarte este paso.</p>
+      <div class="note"><i class="ti ti-calendar-cog"></i><span>Tu disponibilidad real se gestiona en el calendario de cada profesional. Esto es solo una primera referencia para las familias.</span></div>
+      <div class="disp-actions"><button class="btn btn-sm" onclick="toggleAll()"><i class="ti ti-check"></i> Marcar todo</button><button class="btn btn-sm" onclick="clearAll()"><i class="ti ti-eraser"></i> Limpiar</button></div>
+      <div class="disp">
+        <table>
+          <thead><tr><th>Día</th><th>Mañana</th><th>Mediodía</th><th>Tarde</th><th>Noche</th></tr></thead>
+          <tbody id="disp-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 7. TARIFAS -->
+    <section class="panel" data-step="6">
+      <h2>Tarifas y condiciones</h2>
+      <p class="ph">Esto ayuda a las familias a decidir. Puedes ajustarlo cuando quieras.</p>
+      <div class="grid">
+        <div class="fg"><label>Valor consulta (CLP) <span class="req">*</span></label><input type="number" placeholder="Ej: 35000"></div>
+        <div class="fg"><label>Duración sesión (min) <span class="req">*</span></label><input type="number" placeholder="Ej: 45"></div>
+        <div class="fg"><label>Atiende por ISAPRE</label><select><option>Sí</option><option>No</option></select></div>
+        <div class="fg"><label>Atiende por FONASA</label><select><option>Sí</option><option>No</option></select></div>
+        <div class="fg full"><label>Link de agendamiento (opcional)</label><input placeholder="https://cal.com/tu-usuario"></div>
+      </div>
+      <div class="tog-row" style="margin-top:14px"><div class="tog" onclick="this.classList.toggle('on')"></div><div><div class="tl">Acepto los términos y el código de conducta de FamHealth <span class="req">*</span></div><div class="ts">Incluye el correcto manejo de datos clínicos del paciente.</div></div></div>
+    </section>
+
+    <!-- 8. REVISIÓN -->
+    <section class="panel" data-step="7">
+      <h2>Revisa y envía</h2>
+      <p class="ph">Verifica que esté todo correcto. Una vez enviado, Administración validará tu información.</p>
+      <div class="rev-item"><span class="k">Nombre público</span><span class="v">Carolina Parra</span></div>
+      <div class="rev-item"><span class="k">Especialidad</span><span class="v">Kinesióloga · Rehabilitación AM</span></div>
+      <div class="rev-item"><span class="k">N° RNPI</span><span class="v">123456 · por verificar</span></div>
+      <div class="rev-item"><span class="k">Comunas de atención</span><span class="v" id="rev-comunas">—</span></div>
+      <div class="rev-item"><span class="k">Documentos</span><span class="v" id="rev-docs">0 de 4 cargados</span></div>
+      <div class="rev-item"><span class="k">Disponibilidad</span><span class="v" id="rev-disp">Sin marcar (opcional)</span></div>
+      <div class="note" style="margin-top:18px"><i class="ti ti-clock"></i><span>Tras enviar quedarás <b>En revisión</b> y no aparecerás en el buscador hasta que Administración apruebe tu perfil (24–48h hábiles).</span></div>
+    </section>
+
+    <div class="nav">
+      <button class="btn btn-ghost" id="prev" onclick="go(-1)"><i class="ti ti-arrow-left"></i> Anterior</button>
+      <span style="font-size:11px;color:var(--gris)" id="stepcount">Paso 1 de 8</span>
+      <button class="btn btn-p" id="next" onclick="go(1)">Guardar y continuar <i class="ti ti-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <div class="done-card" id="done">
+    <div class="done-ic"><i class="ti ti-clock-check"></i></div>
+    <h2>¡Registro enviado!</h2>
+    <div class="badge"><i class="ti ti-circle-dot"></i> Estado: En revisión</div>
+    <p>Gracias, Carolina. Administración está validando tu RNPI y tus documentos. Te avisaremos por correo cuando tu perfil esté aprobado y visible para las familias.</p>
+    <div class="check-list">
+      <div><i class="ti ti-circle-check"></i> Datos de perfil recibidos</div>
+      <div><i class="ti ti-circle-check"></i> Documentos cargados</div>
+      <div><i class="ti ti-loader"></i> Verificación RNPI en curso</div>
+      <div><i class="ti ti-loader"></i> Revisión de Administración pendiente</div>
+    </div>
+  </div>
+
+  <div class="mock-flag">Maqueta navegable · sin backend · FamHealth</div>
+</div>
+
+<!-- MODAL INTRO -->
+<div class="modal-bg on" id="intro">
+  <div class="modal">
+    <button class="modal-x" onclick="closeIntro()">×</button>
+    <h3><span class="mi"><i class="ti ti-file-description"></i></span> Antes de comenzar</h3>
+    <p>Para completar tu alta como profesional necesitarás subir estos documentos. Te recomendamos tenerlos a mano:</p>
+    <ul class="req-list">
+      <li><b>1. Carnet de identidad</b> — fotos o escaneos de ambos lados.</li>
+      <li><b>2. Certificado de título</b> — que acredite tu profesión.</li>
+      <li><b>3. Certificado de antecedentes</b> — emitido hace menos de 30 días (registrocivil.cl).</li>
+      <li><b>4. Comprobante RNPI</b> — inscripción vigente en la Superintendencia de Salud.</li>
+    </ul>
+    <p style="font-size:12px">Formatos: PNG, JPG, JPEG o PDF (máx 4MB por archivo).</p>
+    <button class="btn btn-p" onclick="closeIntro()">Entendido, continuar</button>
+  </div>
+</div>
+
+<script>
+var TOTAL=8, cur=0;
+function closeIntro(){document.getElementById('intro').classList.remove('on');}
+
+/* ---------- FILE UPLOADS (reales) ---------- */
+function setupDrop(inputId, dropId){
+  var inp=document.getElementById(inputId), drop=document.getElementById(dropId);
+  var original=drop.innerHTML;
+  inp.addEventListener('change',function(){
+    if(inp.files.length){
+      var label=inp.files.length>1 ? (inp.files.length+' archivos') : inp.files[0].name;
+      drop.classList.add('filled');
+      drop.innerHTML='<span class="fname"><i class="ti ti-circle-check"></i>'+label+'</span><button class="rm" type="button">Quitar</button>';
+      drop.querySelector('.rm').addEventListener('click',function(e){
+        e.stopPropagation(); inp.value=''; drop.classList.remove('filled'); drop.innerHTML=original; updateDocCount();
+      });
+    }
+    updateDocCount();
+  });
+}
+['foto','video','carnet','titulo','antec','rnpi'].forEach(function(id){ setupDrop('file-'+id,'drop-'+id); });
+function updateDocCount(){
+  var ids=['carnet','titulo','antec','rnpi'], n=0;
+  ids.forEach(function(id){ if(document.getElementById('file-'+id).files.length)n++; });
+  document.getElementById('rev-docs').textContent=n+' de 4 cargados';
+}
+
+/* ---------- AUTOCOMPLETE MULTISELECT ---------- */
+function makeMultiselect(mountId, options, placeholder){
+  var mount=document.getElementById(mountId);
+  var sel=[];
+  mount.innerHTML='<div class="ms"><div class="ms-chips"></div><div class="ac"></div></div>';
+  var ms=mount.querySelector('.ms'), chipsBox=mount.querySelector('.ms-chips'), ac=mount.querySelector('.ac');
+  var input=document.createElement('input'); input.placeholder=placeholder; chipsBox.appendChild(input);
+  var hl=-1, shown=[];
+  function renderChips(){
+    chipsBox.querySelectorAll('.chip').forEach(function(c){c.remove()});
+    sel.forEach(function(v){
+      var c=document.createElement('span'); c.className='chip';
+      c.innerHTML=v+' <i class="ti ti-x"></i>';
+      c.querySelector('i').onclick=function(){ sel=sel.filter(function(x){return x!==v}); renderChips(); syncRev(); };
+      chipsBox.insertBefore(c,input);
+    });
+  }
+  function add(v){ if(v&&sel.indexOf(v)<0)sel.push(v); input.value=''; renderChips(); hideAc(); syncRev(); input.focus(); }
+  function hideAc(){ ac.classList.remove('on'); hl=-1; }
+  function showAc(){
+    var q=input.value.trim().toLowerCase();
+    shown=options.filter(function(o){ return o.toLowerCase().indexOf(q)>-1 && sel.indexOf(o)<0; }).slice(0,8);
+    if(!shown.length){ hideAc(); return; }
+    ac.innerHTML=''; shown.forEach(function(o,i){
+      var d=document.createElement('div'); d.textContent=o;
+      d.onclick=function(){ add(o); };
+      ac.appendChild(d);
+    });
+    ac.classList.add('on');
+  }
+  input.addEventListener('input',showAc);
+  input.addEventListener('focus',showAc);
+  input.addEventListener('keydown',function(e){
+    var items=ac.querySelectorAll('div');
+    if(e.key==='ArrowDown'){ e.preventDefault(); hl=Math.min(hl+1,items.length-1); }
+    else if(e.key==='ArrowUp'){ e.preventDefault(); hl=Math.max(hl-1,0); }
+    else if(e.key==='Enter'){ e.preventDefault(); if(hl>-1&&shown[hl])add(shown[hl]); else if(input.value.trim())add(input.value.trim()); return; }
+    else if(e.key==='Backspace'&&!input.value&&sel.length){ sel.pop(); renderChips(); syncRev(); return; }
+    items.forEach(function(it,i){ it.classList.toggle('hl',i===hl); });
+  });
+  document.addEventListener('click',function(e){ if(!ms.contains(e.target))hideAc(); });
+  mount._getSel=function(){return sel;};
+}
+var comunasCL=['Providencia','Ñuñoa','Las Condes','Santiago Centro','La Reina','Vitacura','Macul','Peñalolén','La Florida','Maipú','Estación Central','Recoleta','Independencia','San Miguel','Puente Alto'];
+var idiomasL=['Español','Inglés','Portugués','Francés','Alemán','Mapudungún','Creole','Italiano'];
+makeMultiselect('ms-idiomas', idiomasL, 'Agregar idioma…');
+var msComunas=document.getElementById('ms-comunas');
+makeMultiselect('ms-comunas', comunasCL, 'Agregar comuna…');
+['Español'].forEach(function(){}); // Español preseleccionado:
+(function(){ var i=document.querySelector('#ms-idiomas .ms-chips input'); if(i){ i.focus(); } })();
+function syncRev(){
+  var c=msComunas._getSel ? msComunas._getSel() : [];
+  document.getElementById('rev-comunas').textContent=c.length? c.join(', ') : '—';
+}
+
+/* ---------- DISPONIBILIDAD ---------- */
+var dias=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+var db=document.getElementById('disp-body');
+dias.forEach(function(d){
+  var tr=document.createElement('tr');var tds='<td>'+d+'</td>';
+  for(var k=0;k<4;k++)tds+='<td><button class="slot" onclick="this.classList.toggle(\'on\');countDisp()"><i class="ti ti-plus"></i></button></td>';
+  tr.innerHTML=tds;db.appendChild(tr);
+});
+function toggleAll(){document.querySelectorAll('.slot').forEach(function(s){s.classList.add('on')});countDisp();}
+function clearAll(){document.querySelectorAll('.slot').forEach(function(s){s.classList.remove('on')});countDisp();}
+function countDisp(){var n=document.querySelectorAll('.slot.on').length;document.getElementById('rev-disp').textContent=n? (n+' franjas marcadas') : 'Sin marcar (opcional)';}
+
+/* ---------- NAV ---------- */
+function render(){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('on',+p.dataset.step===cur)});
+  document.querySelectorAll('.step').forEach(function(s){var i=+s.dataset.i;s.classList.toggle('active',i===cur);s.classList.toggle('done',i<cur);});
+  var pct=Math.round((cur/(TOTAL-1))*100);
+  document.getElementById('fill').style.width=pct+'%';
+  document.getElementById('pct').textContent=pct+'%';
+  document.getElementById('stepcount').textContent='Paso '+(cur+1)+' de '+TOTAL;
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').innerHTML=cur===TOTAL-1?'Enviar para verificación <i class="ti ti-send"></i>':'Guardar y continuar <i class="ti ti-arrow-right"></i>';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function validate(){
+  var panel=document.querySelector('.panel[data-step="'+cur+'"]');var ok=true;
+  panel.querySelectorAll('.fg[data-req]').forEach(function(fg){
+    var f=fg.querySelector('input,select');
+    if(!f.value){fg.classList.add('err');ok=false;} else fg.classList.remove('err');
+  });
+  return ok;
+}
+function go(d){
+  if(d>0&&!validate())return;
+  if(d>0&&cur===TOTAL-1){submit();return;}
+  cur=Math.max(0,Math.min(TOTAL-1,cur+d));render();
+}
+function jump(i){ if(i<=cur){cur=i;render();} else { if(validate()){cur=i;render();} } }
+function submit(){
+  document.getElementById('flow').style.display='none';
+  document.getElementById('done').classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* stepper build */
+var steps=[
+  ['ti-user-circle','Perfil','Tus datos públicos'],
+  ['ti-stethoscope','Profesional','RNPI y título'],
+  ['ti-map-pin','Zona','Dónde atiendes'],
+  ['ti-files','Documentos','Verificación'],
+  ['ti-briefcase','Experiencia','Tu trayectoria'],
+  ['ti-calendar','Disponibilidad','Opcional'],
+  ['ti-coin','Tarifas','Valores'],
+  ['ti-send','Revisión','Enviar']
+];
+var stp=document.getElementById('stepper');
+steps.forEach(function(s,i){
+  var b=document.createElement('button');b.className='step';b.dataset.i=i;
+  b.innerHTML='<span class="ic"><i class="ti '+s[0]+'"></i></span><span class="tx"><span class="tt">'+s[1]+'</span><span class="td">'+s[2]+'</span></span>';
+  b.onclick=function(){jump(i);};
+  stp.appendChild(b);
+});
+render();
+</script>
+</body>
+</html>
