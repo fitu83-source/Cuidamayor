@@ -538,20 +538,51 @@
     }
     .reveal { opacity: 1; transform: none; }
     .reveal.visible { opacity: 1; transform: none; }
+    
+.nav-login details { position: relative; }
+    .nav-login summary {
+      list-style: none; cursor: pointer; font-weight: 500;
+      color: #475569; padding: 0;
+    }
+    .nav-login summary::-webkit-details-marker { display: none; }
+    .nav-login summary::after { content: " ▾"; font-size: .8em; }
+    .nav-login summary:hover { color: var(--verde); }
+    .login-menu {
+      position: absolute; right: 0; top: 200%;
+      background: #fff; border: 1px solid var(--verde-suave);
+      border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.12);
+      min-width: 230px; padding: .4rem; z-index: 200;
+    }
+    .login-menu a {
+      display: block; padding: .65rem .85rem; border-radius: 8px;
+      color: var(--verde) !important; text-decoration: none; font-size: .95rem;
+    }
+    .login-menu a:hover { background: var(--verde-suave); }
+    
   </style>
 </head>
 <body>
 
+  
 <!-- NAV -->
 <nav>
   <a href="#" class="nav-logo">Fam<span>Health</span></a>
   <ul class="nav-links">
     <li><a href="#como-funciona">Cómo funciona</a></li>
     <li><a href="#profesionales">Para profesionales</a></li>
+    <li class="nav-login">
+      <details>
+        <summary>Iniciar sesión</summary>
+        <div class="login-menu">
+          <a href="mi-cuenta.html">👤 Paciente o cuidador</a>
+          <a href="profesional.html">🩺 Profesional</a>
+        </div>
+      </details>
+    </li>
     <li><a href="#registro" class="nav-cta">Comenzar gratis</a></li>
   </ul>
 </nav>
-
+  
 <!-- HERO -->
 <section class="hero">
   <div class="hero-content">
@@ -845,6 +876,8 @@
         <a href="#como-funciona">Cómo funciona</a>
         <a href="#profesionales">Para profesionales</a>
         <a href="#registro">Registrarse</a>
+        <a href="profesional.html">Acceso profesionales</a>
+        <a href="mi-cuenta.html">Acceso pacientes y cuidadores</a>
       </div>
     </div>
     <div>
