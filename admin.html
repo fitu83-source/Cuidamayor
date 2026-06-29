@@ -572,6 +572,7 @@ tr:hover td{background:var(--bg2)}
       <button class="tab" onclick="showTab('pf-experiencia',this)">Experiencia</button>
       <button class="tab" onclick="showTab('pf-practica',this)">Práctica clínica</button>
       <button class="tab" onclick="showTab('pf-bio',this)">Sobre mí</button>
+      <button class="tab" onclick="showTab('pf-documentos',this);loadProfDocs()">Documentos</button>
     </div>
 
     <!-- TAB DATOS BÁSICOS -->
@@ -676,7 +677,12 @@ tr:hover td{background:var(--bg2)}
         <label>Descripción libre — "Sobre mí"</label>
         <textarea id="pf-bio-text" style="min-height:180px" placeholder="Describe tu enfoque clínico, tu experiencia con el adulto mayor, lo que te diferencia como profesional..."></textarea>
       </div>
-      <p style="font-size:11px;color:var(--gris);margin-top:.5rem">Este texto aparecerá en el perfil público del profesional visible para las familias.</p>
+     <p style="font-size:11px;color:var(--gris);margin-top:.5rem">Este texto aparecerá en el perfil público del profesional visible para las familias.</p>
+    </div>
+
+    <div id="pf-documentos" class="tab-pane">
+      <p style="font-size:12px;color:var(--gris);margin-bottom:1rem">Documentos subidos por el profesional al registrarse. Se guardan de forma permanente en Drive.</p>
+      <div id="pf-docs-list"><div class="loading"><span class="spin"></span>Cargando...</div></div>
     </div>
 
     <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:1rem;padding-top:.75rem;border-top:0.5px solid var(--bdr)">
@@ -1139,8 +1145,35 @@ let currentProfFila = null;
 let formacionItems = [];
 let experienciaItems = [];
 
+async function loadProfDocs(){
+  var cont = document.getElementById('pf-docs-list');
+  cont.innerHTML = '<div class="loading"><span class="spin"></span>Cargando...</div>';
+  var resp = await get('getProfesionalDocs', `rut=${encodeURIComponent(window._profRut||'')}`);
+  var dp = resp.data || {};
+  function dl(label,url){
+    return (url && String(url).indexOf('http')===0)
+      ? `<a class="btn btn-sm" href="${url}" target="_blank" rel="noopener"><i class="ti ti-file-text" aria-hidden="true"></i> ${label}</a>`
+      : `<span class="badge bgr" style="opacity:.55">${label}: falta</span>`;
+  }
+  var x={}; try{ x=JSON.parse(dp.datosExtra||'{}'); }catch(e){}
+  var extra=[];
+  if(x.universidad) extra.push('Universidad '+x.universidad);
+  if(x.anioTitulacion) extra.push('titulado '+x.anioTitulacion);
+  if(x.subespecialidad) extra.push(x.subespecialidad);
+  if(x.formacionPaliativos==='Sí') extra.push('Paliativos');
+  if(x.formacionDemencias==='Sí') extra.push('Demencias');
+  if(x.formacionRCP==='Sí') extra.push('RCP');
+  cont.innerHTML = `
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem">
+      ${dl('Carnet', dp.docCarnet)}${dl('Título', dp.docTitulo)}${dl('Antecedentes', dp.docAntecedentes)}${dl('RNPI', dp.docRNPI)}${dl('Foto', dp.fotoUrl)}
+    </div>
+    ${extra.length ? `<div style="font-size:12px;color:var(--gris)"><b>Formación complementaria:</b> ${extra.join(' · ')}</div>` : ''}
+    <div style="font-size:11px;color:var(--gris);margin-top:.75rem">Los documentos se abren en Google Drive (debes estar con tu cuenta de admin para verlos).</div>`;
+}
+  
 async function verFichaProf(p) {
   currentProfFila = p.fila;
+  window._profRut = p.rut;
   document.getElementById('prof-ficha-titulo').textContent = p.nombre || 'Ficha del profesional';
   document.getElementById('pf-nombre').value      = p.nombre || '';
   document.getElementById('pf-rut').value         = p.rut || '';
