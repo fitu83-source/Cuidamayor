@@ -303,7 +303,7 @@ tr:hover td{background:var(--bg2)}
     <div class="nsec">Gestión</div>
     <button class="nb" onclick="sp('leads',this);loadLeads()"><i class="ti ti-users-group" aria-hidden="true"></i><span class="nb-text">Leads</span><span class="chip" id="lchip"></span></button>
     <button class="nb" onclick="sp('citas',this);loadCitas()"><i class="ti ti-calendar" aria-hidden="true"></i><span class="nb-text">Citas agendadas</span></button>
-    <button class="nb" onclick="sp('verificacion',this);loadVerificacion()"><i class="ti ti-shield-check" aria-hidden="true"></i><span class="nb-text">Verificación RNPI</span><span class="chip" id="vchip"></span></button>
+    <button class="nb" onclick="sp('verificacion',this);loadVerificacion()"><i class="ti ti-shield-check" aria-hidden="true"></i><span class="nb-text">Verificación</span><span class="chip" id="vchip"></span></button>
     <button class="nb" onclick="sp('cuidadores',this);loadCuidadoresAdmin()"><i class="ti ti-user-shield" aria-hidden="true"></i><span class="nb-text">Cuidadores</span></button>
     <div class="sfoot">
       famhealthcl@gmail.com<br>
@@ -340,7 +340,7 @@ tr:hover td{background:var(--bg2)}
           <input type="text" id="sp2" placeholder="Buscar nombre, RUT o especialidad..." oninput="ft('prof-body',this.value,document.getElementById('flt-prof').value)">
           <select id="flt-prof" onchange="ft('prof-body',document.getElementById('sp2').value,this.value)">
             <option value="">Todos los estados</option>
-            <option>Aprobado</option><option>Pendiente</option><option>Rechazado</option>
+            <option>Aprobado</option><option>Pendiente</option><option>En revisión</option><option>Rechazado</option>
           </select>
           <button class="btn btn-p btn-sm" onclick="loadProfesionales()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
         </div>
@@ -688,7 +688,7 @@ tr:hover td{background:var(--bg2)}
 
 <!-- VERIFICACIÓN -->
     <div id="pg-verificacion" class="pg">
-      <div class="ph"><h1>Verificación RNPI</h1><p id="ver-count">Cargando...</p></div>
+      <div class="ph"><h1>Verificación</h1><p id="ver-count">Cargando...</p></div>
       <div id="ver-list"><div class="loading"><span class="spin"></span>Cargando...</div></div>
     </div>
 
@@ -929,7 +929,7 @@ function toggleDesktop() {
 const pageNames = {
   dashboard: 'Dashboard', pacientes: 'Pacientes', profesionales: 'Profesionales',
   atenciones: 'Historial', recetas: 'Recetas', alertas: 'Alertas',
-  leads: 'Leads', citas: 'Citas', verificacion: 'Verificación RNPI'
+  leads: 'Leads', citas: 'Citas', verificacion: 'Verificación'
 };
 let currentPage = 'dashboard';
 
@@ -1050,7 +1050,7 @@ async function loadDashboard() {
   const alArr   = al.data   || [];
 
   const act  = profArr.filter(p => p.estado === 'Aprobado').length;
-  const pend = profArr.filter(p => p.estado === 'Pendiente').length;
+  const pend = profArr.filter(p => p.estado === 'Pendiente' || p.estado === 'En revisión').length;
   const leadsPend = (await get('getLeads')).data?.filter(l => l.estado === 'Por contactar').length || 0;
 
   document.getElementById('m-pac').textContent  = pacArr.length;
@@ -1128,7 +1128,7 @@ async function loadProfesionales() {
       <td><span class="badge ${p.publico==='Sí'?'bg':'bgr'}">${p.publico||'No'}</span></td>
       <td>
         <button class="btn btn-p btn-sm" onclick='verFichaProf(${JSON.stringify(p)})'>Ver ficha</button>
-        ${p.estado==='Pendiente'?`<button class="btn btn-sm" onclick="aprobar(${p.fila},'Aprobado')">✓</button>`:''}
+        ${(p.estado==='Pendiente'||p.estado==='En revisión')?`<button class="btn btn-sm" onclick="aprobar(${p.fila},'Aprobado')">✓</button>`:''}
       </td>
     </tr>`
   ).join('') : '<tr><td colspan="9" class="empty">Sin registros aún</td></tr>';
@@ -1460,13 +1460,13 @@ async function updateCita(fila, estado) {
 // ── VERIFICACIÓN ──
 async function loadVerificacion() {
   const d = (await get('getProfesionales')).data || [];
-  const pend = d.filter(p => p.estado === 'Pendiente');
-  document.getElementById('ver-count').textContent = `${pend.length} profesionales pendientes`;
+  const pend = d.filter(p => p.estado === 'Pendiente' || p.estado === 'En revisión');
+  document.getElementById('ver-count').textContent = `${pend.length} profesionales por verificar`;
   const vc = document.getElementById('vchip');
   if (pend.length > 0) { vc.style.display = 'inline'; vc.textContent = pend.length; } else { vc.style.display = 'none'; }
   document.getElementById('ver-list').innerHTML = pend.length ? pend.map(p =>
     `<div class="card" id="vc-${p.fila}">
-      <div class="ch"><div><div style="font-size:13px;font-weight:500">${p.nombre || '—'}</div><div style="font-size:11px;color:var(--gris)">${p.especialidad || '—'} · ${(p.fecha || '').substring(0, 10)}</div></div>${badge('Pendiente')}</div>
+      <div class="ch"><div><div style="font-size:13px;font-weight:500">${p.nombre || '—'}</div><div style="font-size:11px;color:var(--gris)">${p.especialidad || '—'} · ${(p.fecha || '').substring(0, 10)}</div></div>${badge(p.estado)}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin:.75rem 0;font-size:12px">
         <div><div style="font-size:11px;color:var(--gris)">RUT</div>${p.rut || '—'}</div>
         <div><div style="font-size:11px;color:var(--gris)">Email</div>${p.email || '—'}</div>
