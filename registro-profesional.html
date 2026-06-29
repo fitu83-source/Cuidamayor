@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>FamHealth — Maqueta alta del Profesional</title>
+<title>FamHealth — Registro de Profesional</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.x/dist/tabler-icons.min.css"/>
 <style>
@@ -153,7 +153,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--verde)}
 <div class="tb">
   <div class="logo">Fam<b>Health</b></div>
   <div class="spacer"></div>
-  <div class="who">Carolina Parra · <span style="color:var(--rojo)">Perfil incompleto</span></div>
+  <div class="who">Registro de profesional</div>
 </div>
 
 <div class="wrap">
@@ -174,12 +174,15 @@ input:focus,select:focus,textarea:focus{border-color:var(--verde)}
       <p class="ph">Esto es lo que verán las familias cuando te encuentren.</p>
       <div class="note"><i class="ti ti-eye"></i><span>Tu dirección y documentos nunca son visibles para las familias. Solo lo de esta sección.</span></div>
       <div class="grid">
-        <div class="fg"><label>Nombre público <span class="req">*</span></label><input value="Carolina Parra"><div class="hint">Nombre y apellido como aparecerán en tu ficha.</div></div>
-        <div class="fg" data-req><label>Fecha de nacimiento <span class="req">*</span></label><input type="date"><div class="errmsg">Este campo es obligatorio.</div><div class="hint">Debes ser mayor de edad.</div></div>
-        <div class="fg"><label>Teléfono (WhatsApp) <span class="req">*</span></label><input placeholder="+56 9 1234 5678"></div>
-        <div class="fg"><label>Idiomas</label><div id="ms-idiomas"></div><div class="hint">Escribe y elige de la lista.</div></div>
-        <div class="fg full"><label>Descripción corta <span class="req">*</span></label><input placeholder="Ej: Kinesióloga, 8 años de experiencia en rehabilitación de adulto mayor."><div class="hint">Tu perfil en una frase.</div></div>
-        <div class="fg full"><label>Presentación <span class="req">*</span></label><textarea placeholder="Cuéntale a las familias sobre tu enfoque, experiencia y por qué trabajas con adultos mayores…"></textarea></div>
+        <div class="fg"><label>Nombre público <span class="req">*</span></label><input id="f-nombre" placeholder="Nombre y apellido"><div class="hint">Nombre y apellido como aparecerán en tu ficha.</div></div>
+        <div class="fg"><label>Fecha de nacimiento <span class="req">*</span></label><input type="date" id="f-fechanac"><div class="hint">Debes ser mayor de edad.</div></div>
+        <div class="fg"><label>Email <span class="req">*</span></label><input type="email" id="f-email" placeholder="tucorreo@mail.com"><div class="hint">Con este email iniciarás sesión.</div></div>
+        <div class="fg"><label>Teléfono (WhatsApp) <span class="req">*</span></label><input id="f-whatsapp" placeholder="+56 9 1234 5678"></div>
+        <div class="fg"><label>Crea tu clave <span class="req">*</span></label><input type="password" id="f-clave" placeholder="Mínimo 6 caracteres"><div class="hint">La usarás junto a tu email para entrar.</div></div>
+        <div class="fg"><label>Repite tu clave <span class="req">*</span></label><input type="password" id="f-clave2" placeholder="Repite la clave"></div>
+        <div class="fg full"><label>Idiomas</label><div id="ms-idiomas"></div><div class="hint">Escribe y elige de la lista.</div></div>
+        <div class="fg full"><label>Descripción corta <span class="req">*</span></label><input id="f-desc" placeholder="Ej: Kinesióloga, 8 años de experiencia en rehabilitación de adulto mayor."><div class="hint">Tu perfil en una frase.</div></div>
+        <div class="fg full"><label>Presentación <span class="req">*</span></label><textarea id="f-present" placeholder="Cuéntale a las familias sobre tu enfoque, experiencia y por qué trabajas con adultos mayores…"></textarea></div>
         <div class="fg full"><label>Foto de perfil <span class="req">*</span></label>
           <input type="file" id="file-foto" accept="image/png,image/jpeg" hidden>
           <div class="drop" id="drop-foto" onclick="document.getElementById('file-foto').click()"><i class="ti ti-camera"></i> Arrastra una foto o <b>examinar</b><div class="meta" style="margin-top:4px">PNG/JPG · máx 4MB</div></div>
@@ -197,15 +200,14 @@ input:focus,select:focus,textarea:focus{border-color:var(--verde)}
       <p class="ph">Lo que nos permite verificar que estás habilitado para ejercer.</p>
       <div class="note amber"><i class="ti ti-shield-check"></i><span>Validamos tu N° RNPI contra el Registro Nacional de Prestadores Individuales de la Superintendencia de Salud.</span></div>
       <div class="grid">
-        <div class="fg" data-req><label>Especialidad <span class="req">*</span></label>
-          <select><option value="">Selecciona…</option><option>Médico Geriatra</option><option>Enfermera/o</option><option>Kinesiólogo/a</option><option>Fonoaudiólogo/a</option><option>Nutricionista</option><option>Terapeuta Ocupacional</option><option>Psicólogo/a</option><option>Cuidador/a certificado/a</option></select>
-          <div class="errmsg">Selecciona tu especialidad.</div>
+        <div class="fg"><label>Especialidad <span class="req">*</span></label>
+          <select id="f-esp"><option value="">Selecciona…</option><option>Médico Geriatra</option><option>Enfermera/o</option><option>Kinesiólogo/a</option><option>Fonoaudiólogo/a</option><option>Nutricionista</option><option>Terapeuta Ocupacional</option><option>Psicólogo/a</option><option>Cuidador/a certificado/a</option></select>
         </div>
-        <div class="fg"><label>Subespecialidad / área (opcional)</label><input placeholder="Ej: Rehabilitación neurológica"></div>
-        <div class="fg" data-req><label>N° de registro RNPI <span class="req">*</span></label><input placeholder="Ej: 123456"><div class="errmsg">Ingresa tu número de registro.</div></div>
-        <div class="fg"><label>Universidad de titulación <span class="req">*</span></label><input placeholder="Ej: Universidad de Chile"></div>
-        <div class="fg"><label>Año de titulación <span class="req">*</span></label><input type="number" placeholder="Ej: 2016"></div>
-        <div class="fg"><label>RUT <span class="req">*</span></label><input placeholder="12.345.678-9"></div>
+        <div class="fg"><label>Subespecialidad / área (opcional)</label><input id="f-subesp" placeholder="Ej: Rehabilitación neurológica"></div>
+        <div class="fg"><label>N° de registro RNPI <span class="req">*</span></label><input id="f-rnpi" placeholder="Ej: 123456"></div>
+        <div class="fg"><label>Universidad de titulación <span class="req">*</span></label><input id="f-univ" placeholder="Ej: Universidad de Chile"></div>
+        <div class="fg"><label>Año de titulación <span class="req">*</span></label><input type="number" id="f-anio" placeholder="Ej: 2016"></div>
+        <div class="fg"><label>RUT <span class="req">*</span></label><input id="f-rut" placeholder="12.345.678-9"></div>
       </div>
     </section>
 
@@ -214,11 +216,11 @@ input:focus,select:focus,textarea:focus{border-color:var(--verde)}
       <h2>Zona y modalidad de atención</h2>
       <p class="ph">Dónde y cómo atiendes. Tu dirección particular es privada.</p>
       <div class="grid">
-        <div class="fg full"><label>Dirección particular <span class="req">*</span></label><input placeholder="Calle, número, depto"><div class="hint">No visible para las familias. La usamos para sugerirte pacientes cercanos.</div></div>
-        <div class="fg"><label>Región <span class="req">*</span></label><select><option value="">Selecciona…</option><option>Metropolitana</option><option>Valparaíso</option><option>Biobío</option></select></div>
-        <div class="fg"><label>Comuna <span class="req">*</span></label><select><option value="">Selecciona…</option><option>Providencia</option><option>Las Condes</option><option>Ñuñoa</option></select></div>
+        <div class="fg full"><label>Dirección particular <span class="req">*</span></label><input id="f-dir" placeholder="Calle, número, depto"><div class="hint">No visible para las familias. La usamos para sugerirte pacientes cercanos.</div></div>
+        <div class="fg"><label>Región <span class="req">*</span></label><select id="f-region"><option value="">Selecciona…</option><option>Metropolitana</option><option>Valparaíso</option><option>Biobío</option></select></div>
+        <div class="fg"><label>Comuna <span class="req">*</span></label><select id="f-comuna"><option value="">Selecciona…</option><option>Providencia</option><option>Las Condes</option><option>Ñuñoa</option></select></div>
         <div class="fg full"><label>Comunas donde atiendes <span class="req">*</span></label><div id="ms-comunas"></div><div class="hint">Escribe y elige de la lista. Puedes agregar varias.</div></div>
-        <div class="fg"><label>Modalidad <span class="req">*</span></label><select><option>Domicilio</option><option>Teleconsulta</option><option>Presencial en consulta</option><option>Domicilio y teleconsulta</option></select></div>
+        <div class="fg"><label>Modalidad <span class="req">*</span></label><select id="f-mod"><option>Domicilio</option><option>Teleconsulta</option><option>Presencial en consulta</option><option>Domicilio y teleconsulta</option></select></div>
       </div>
     </section>
 
@@ -256,14 +258,14 @@ input:focus,select:focus,textarea:focus{border-color:var(--verde)}
       <h2>Experiencia y formación</h2>
       <p class="ph">Cuéntanos tu trayectoria atendiendo adultos mayores.</p>
       <div class="grid">
-        <div class="fg"><label>Años de experiencia total <span class="req">*</span></label><input type="number" placeholder="Ej: 8"></div>
-        <div class="fg"><label>Años con adulto mayor <span class="req">*</span></label><input type="number" placeholder="Ej: 5"></div>
-        <div class="fg full"><label>Áreas / patologías que manejas</label><textarea placeholder="Ej: hipertensión, diabetes, rehabilitación post-ACV, demencias…"></textarea></div>
+        <div class="fg"><label>Años de experiencia total <span class="req">*</span></label><input type="number" id="f-exptotal" placeholder="Ej: 8"></div>
+        <div class="fg"><label>Años con adulto mayor <span class="req">*</span></label><input type="number" id="f-expam" placeholder="Ej: 5"></div>
+        <div class="fg full"><label>Áreas / patologías que manejas</label><textarea id="f-areas" placeholder="Ej: hipertensión, diabetes, rehabilitación post-ACV, demencias…"></textarea></div>
       </div>
       <div class="note amber" style="margin-top:16px"><i class="ti ti-info-circle"></i><span>Formación complementaria (suma puntaje a tu perfil):</span></div>
-      <div class="tog-row"><div class="tog" onclick="this.classList.toggle('on')"></div><div><div class="tl">Curso de cuidados paliativos</div><div class="ts">¿Has realizado formación en cuidados paliativos?</div></div></div>
-      <div class="tog-row"><div class="tog" onclick="this.classList.toggle('on')"></div><div><div class="tl">Manejo de demencias / Alzheimer</div><div class="ts">Formación específica en deterioro cognitivo.</div></div></div>
-      <div class="tog-row"><div class="tog" onclick="this.classList.toggle('on')"></div><div><div class="tl">Primeros auxilios / RCP vigente</div><div class="ts">Certificación al día.</div></div></div>
+      <div class="tog-row"><div class="tog" id="tog-paliativos" onclick="this.classList.toggle('on')"></div><div><div class="tl">Curso de cuidados paliativos</div><div class="ts">¿Has realizado formación en cuidados paliativos?</div></div></div>
+      <div class="tog-row"><div class="tog" id="tog-demencias" onclick="this.classList.toggle('on')"></div><div><div class="tl">Manejo de demencias / Alzheimer</div><div class="ts">Formación específica en deterioro cognitivo.</div></div></div>
+      <div class="tog-row"><div class="tog" id="tog-rcp" onclick="this.classList.toggle('on')"></div><div><div class="tl">Primeros auxilios / RCP vigente</div><div class="ts">Certificación al día.</div></div></div>
     </section>
 
     <!-- 6. DISPONIBILIDAD (OPCIONAL) -->
@@ -285,22 +287,23 @@ input:focus,select:focus,textarea:focus{border-color:var(--verde)}
       <h2>Tarifas y condiciones</h2>
       <p class="ph">Esto ayuda a las familias a decidir. Puedes ajustarlo cuando quieras.</p>
       <div class="grid">
-        <div class="fg"><label>Valor consulta (CLP) <span class="req">*</span></label><input type="number" placeholder="Ej: 35000"></div>
-        <div class="fg"><label>Duración sesión (min) <span class="req">*</span></label><input type="number" placeholder="Ej: 45"></div>
-        <div class="fg"><label>Atiende por ISAPRE</label><select><option>Sí</option><option>No</option></select></div>
-        <div class="fg"><label>Atiende por FONASA</label><select><option>Sí</option><option>No</option></select></div>
-        <div class="fg full"><label>Link de agendamiento (opcional)</label><input placeholder="https://cal.com/tu-usuario"></div>
+        <div class="fg"><label>Valor consulta (CLP) <span class="req">*</span></label><input type="number" id="f-precio" placeholder="Ej: 35000"></div>
+        <div class="fg"><label>Duración sesión (min) <span class="req">*</span></label><input type="number" id="f-duracion" placeholder="Ej: 45"></div>
+        <div class="fg"><label>Atiende por ISAPRE</label><select id="f-isapre"><option>Sí</option><option>No</option></select></div>
+        <div class="fg"><label>Atiende por FONASA</label><select id="f-fonasa"><option>Sí</option><option>No</option></select></div>
+        <div class="fg full"><label>Link de agendamiento (opcional)</label><input id="f-cal" placeholder="https://cal.com/tu-usuario"></div>
       </div>
-      <div class="tog-row" style="margin-top:14px"><div class="tog" onclick="this.classList.toggle('on')"></div><div><div class="tl">Acepto los términos y el código de conducta de FamHealth <span class="req">*</span></div><div class="ts">Incluye el correcto manejo de datos clínicos del paciente.</div></div></div>
+      <div class="tog-row" style="margin-top:14px"><div class="tog" id="tog-terminos" onclick="this.classList.toggle('on')"></div><div><div class="tl">Acepto los términos y el código de conducta de FamHealth <span class="req">*</span></div><div class="ts">Incluye el correcto manejo de datos clínicos del paciente.</div></div></div>
     </section>
 
     <!-- 8. REVISIÓN -->
     <section class="panel" data-step="7">
       <h2>Revisa y envía</h2>
       <p class="ph">Verifica que esté todo correcto. Una vez enviado, Administración validará tu información.</p>
-      <div class="rev-item"><span class="k">Nombre público</span><span class="v">Carolina Parra</span></div>
-      <div class="rev-item"><span class="k">Especialidad</span><span class="v">Kinesióloga · Rehabilitación AM</span></div>
-      <div class="rev-item"><span class="k">N° RNPI</span><span class="v">123456 · por verificar</span></div>
+      <div class="rev-item"><span class="k">Nombre público</span><span class="v" id="rev-nombre">—</span></div>
+      <div class="rev-item"><span class="k">Email</span><span class="v" id="rev-email">—</span></div>
+      <div class="rev-item"><span class="k">Especialidad</span><span class="v" id="rev-esp">—</span></div>
+      <div class="rev-item"><span class="k">N° RNPI</span><span class="v" id="rev-rnpi">—</span></div>
       <div class="rev-item"><span class="k">Comunas de atención</span><span class="v" id="rev-comunas">—</span></div>
       <div class="rev-item"><span class="k">Documentos</span><span class="v" id="rev-docs">0 de 4 cargados</span></div>
       <div class="rev-item"><span class="k">Disponibilidad</span><span class="v" id="rev-disp">Sin marcar (opcional)</span></div>
@@ -318,7 +321,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--verde)}
     <div class="done-ic"><i class="ti ti-clock-check"></i></div>
     <h2>¡Registro enviado!</h2>
     <div class="badge"><i class="ti ti-circle-dot"></i> Estado: En revisión</div>
-    <p>Gracias, Carolina. Administración está validando tu RNPI y tus documentos. Te avisaremos por correo cuando tu perfil esté aprobado y visible para las familias.</p>
+    <p>Gracias por registrarte. Administración está validando tu RNPI y tus documentos. Te avisaremos por correo cuando tu perfil esté aprobado y visible para las familias.</p>
     <div class="check-list">
       <div><i class="ti ti-circle-check"></i> Datos de perfil recibidos</div>
       <div><i class="ti ti-circle-check"></i> Documentos cargados</div>
@@ -327,8 +330,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--verde)}
     </div>
   </div>
 
-  <div class="mock-flag">Maqueta navegable · sin backend · FamHealth</div>
-</div>
+  </div>
 
 <!-- MODAL INTRO -->
 <div class="modal-bg on" id="intro">
@@ -451,7 +453,14 @@ function render(){
   document.getElementById('stepcount').textContent='Paso '+(cur+1)+' de '+TOTAL;
   document.getElementById('prev').disabled=cur===0;
   document.getElementById('next').innerHTML=cur===TOTAL-1?'Enviar para verificación <i class="ti ti-send"></i>':'Guardar y continuar <i class="ti ti-arrow-right"></i>';
+  if(cur===TOTAL-1) syncReview();
   window.scrollTo({top:0,behavior:'smooth'});
+}
+function syncReview(){
+  document.getElementById('rev-nombre').textContent = val('f-nombre') || '—';
+  document.getElementById('rev-email').textContent  = val('f-email')  || '—';
+  document.getElementById('rev-esp').textContent    = val('f-esp')    || '—';
+  document.getElementById('rev-rnpi').textContent   = val('f-rnpi') ? (val('f-rnpi')+' · por verificar') : '—';
 }
 function validate(){
   var panel=document.querySelector('.panel[data-step="'+cur+'"]');var ok=true;
@@ -467,10 +476,134 @@ function go(d){
   cur=Math.max(0,Math.min(TOTAL-1,cur+d));render();
 }
 function jump(i){ if(i<=cur){cur=i;render();} else { if(validate()){cur=i;render();} } }
-function submit(){
-  document.getElementById('flow').style.display='none';
-  document.getElementById('done').classList.add('on');
-  window.scrollTo({top:0,behavior:'smooth'});
+/* ---------- ENVÍO REAL AL BACKEND ---------- */
+// ⬇️ PEGA AQUÍ LA MISMA URL /exec que usa tu deployment con registroProfesional
+var SC = 'https://script.google.com/macros/s/AKfycbwhDi3J-CUdAV2dMZC-bST14Hn1-uLf7bd9B6a0Eknup6qFggwIZgNOeXNMuPVjcaVjkw/exec';
+
+function val(id){ var el=document.getElementById(id); return el ? el.value.trim() : ''; }
+function togOn(id){ var el=document.getElementById(id); return el ? el.classList.contains('on') : false; }
+
+// Lee un input[type=file] y lo devuelve como {data(base64), name, type}
+function fileToObj(inputId){
+  return new Promise(function(resolve){
+    var inp=document.getElementById(inputId);
+    if(!inp || !inp.files || !inp.files.length){ resolve(null); return; }
+    var file=inp.files[0];
+    if(file.size > 4*1024*1024){ resolve({error:'pesado', name:file.name}); return; }
+    var r=new FileReader();
+    r.onload=function(){ resolve({data:r.result, name:file.name, type:file.type}); };
+    r.onerror=function(){ resolve(null); };
+    r.readAsDataURL(file);
+  });
+}
+
+// Construye un resumen de disponibilidad: "Lunes: Mañana, Tarde; Martes: …"
+function getDisponibilidad(){
+  var dias=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+  var franjas=['Mañana','Mediodía','Tarde','Noche'];
+  var filas=document.querySelectorAll('#disp-body tr'), out=[];
+  filas.forEach(function(tr,i){
+    var slots=tr.querySelectorAll('.slot'), marcadas=[];
+    slots.forEach(function(s,j){ if(s.classList.contains('on')) marcadas.push(franjas[j]); });
+    if(marcadas.length) out.push(dias[i]+': '+marcadas.join(', '));
+  });
+  return out.join(' · ');
+}
+
+async function submit(){
+  var btn=document.getElementById('next');
+
+  // Validación de los campos críticos
+  var faltan=[];
+  if(!val('f-nombre')) faltan.push('Nombre');
+  if(!val('f-email'))  faltan.push('Email');
+  if(!val('f-clave'))  faltan.push('Clave');
+  if(!val('f-rut'))    faltan.push('RUT');
+  if(!val('f-esp'))    faltan.push('Especialidad');
+  if(!val('f-rnpi'))   faltan.push('N° RNPI');
+  if(faltan.length){ alert('Faltan campos obligatorios: '+faltan.join(', ')+'.\nRevisa los pasos anteriores.'); return; }
+  if(val('f-clave').length < 6){ alert('La clave debe tener al menos 6 caracteres.'); return; }
+  if(val('f-clave') !== val('f-clave2')){ alert('Las dos claves no coinciden.'); return; }
+  if(!togOn('tog-terminos')){ alert('Debes aceptar los términos y el código de conducta (paso Tarifas).'); return; }
+
+  btn.disabled=true; btn.innerHTML='Enviando… <i class="ti ti-loader"></i>';
+
+  try {
+    // Leer archivos (en paralelo)
+    var archivos = await Promise.all([
+      fileToObj('file-foto'), fileToObj('file-carnet'), fileToObj('file-titulo'),
+      fileToObj('file-antec'), fileToObj('file-rnpi')
+    ]);
+    var nombres=['Foto','Carnet','Título','Antecedentes','RNPI'];
+    for(var i=0;i<archivos.length;i++){
+      if(archivos[i] && archivos[i].error==='pesado'){
+        alert('El archivo "'+archivos[i].name+'" ('+nombres[i]+') supera los 4MB. Súbelo más liviano.');
+        btn.disabled=false; btn.innerHTML='Enviar para verificación <i class="ti ti-send"></i>'; return;
+      }
+    }
+
+    var idiomas = (document.getElementById('ms-idiomas')._getSel ? document.getElementById('ms-idiomas')._getSel() : []).join(', ');
+    var comunas = (document.getElementById('ms-comunas')._getSel ? document.getElementById('ms-comunas')._getSel() : []).join(', ');
+
+    var payload = {
+      tipo: 'registroProfesional',
+      nombre: val('f-nombre'),
+      email: val('f-email'),
+      clave: val('f-clave'),
+      whatsapp: val('f-whatsapp'),
+      fechaNacimiento: val('f-fechanac'),
+      idiomas: idiomas,
+      descripcionCorta: val('f-desc'),
+      presentacion: val('f-present'),
+      especialidad: val('f-esp'),
+      subespecialidad: val('f-subesp'),
+      rnpi: val('f-rnpi'),
+      universidad: val('f-univ'),
+      anioTitulacion: val('f-anio'),
+      rut: val('f-rut'),
+      direccion: val('f-dir'),
+      region: val('f-region'),
+      comunaBase: val('f-comuna'),
+      comunas: comunas,
+      modalidad: val('f-mod'),
+      expTotal: val('f-exptotal'),
+      expAm: val('f-expam'),
+      areasPatologias: val('f-areas'),
+      formacionPaliativos: togOn('tog-paliativos'),
+      formacionDemencias: togOn('tog-demencias'),
+      formacionRCP: togOn('tog-rcp'),
+      disponibilidad: getDisponibilidad(),
+      precio: val('f-precio'),
+      duracion: val('f-duracion'),
+      isapre: val('f-isapre'),
+      fonasa: val('f-fonasa'),
+      calLink: val('f-cal'),
+      terminos: togOn('tog-terminos'),
+      foto: archivos[0],
+      docCarnet: archivos[1],
+      docTitulo: archivos[2],
+      docAntecedentes: archivos[3],
+      docRNPI: archivos[4]
+    };
+
+    var resp = await fetch(SC, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(payload)
+    });
+    var j = await resp.json();
+
+    if(j && j.status==='ok'){
+      document.getElementById('flow').style.display='none';
+      document.getElementById('done').classList.add('on');
+      window.scrollTo({top:0,behavior:'smooth'});
+    } else {
+      throw new Error(j && j.message ? j.message : 'Respuesta inesperada');
+    }
+  } catch(err){
+    alert('Hubo un problema al enviar tu registro. Intenta de nuevo.\n\nDetalle: '+err);
+    btn.disabled=false; btn.innerHTML='Enviar para verificación <i class="ti ti-send"></i>';
+  }
 }
 
 /* stepper build */
