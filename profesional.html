@@ -63,6 +63,16 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
 .filt{display:flex;gap:6px;margin-bottom:.75rem} .filt input{flex:1;font-size:12px;padding:5px 8px;border:0.5px solid var(--bdr);border-radius:8px;background:var(--bg2);color:var(--texto);outline:none}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem} .fg{display:flex;flex-direction:column;gap:4px} .fg label{font-size:11px;font-weight:500;color:var(--gris)} .fg input,.fg select,.fg textarea{font-size:13px;padding:8px 10px;border:0.5px solid var(--bdr);border-radius:8px;background:var(--bg2);color:var(--texto);outline:none} .fg.full{grid-column:1/-1}
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:none;align-items:center;justify-content:center;padding:16px;} .modal-bg.open{display:flex} .modal{background:var(--blanco);border-radius:14px;padding:1.5rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto}
+  .fg-ac{position:relative}
+.ac-list{position:absolute;top:100%;left:0;right:0;background:var(--blanco);border:.5px solid var(--bdr);border-radius:8px;margin-top:4px;max-height:190px;overflow-y:auto;z-index:600;box-shadow:0 8px 22px rgba(0,0,0,.14);display:none}
+.ac-item{padding:8px 12px;cursor:pointer;border-bottom:.5px solid var(--bdr)}
+.ac-item:last-child{border-bottom:none}
+.ac-item:hover{background:var(--bg2)}
+.ac-item .an{font-size:12.5px;font-weight:500}
+.ac-item .ar{font-size:11px;color:var(--gris)}
+.modo-tabs{display:flex;gap:6px;margin-bottom:14px}
+.modo-tab{flex:1;padding:8px;text-align:center;border:.5px solid var(--bdr);border-radius:8px;cursor:pointer;font-size:12px;font-weight:500;color:var(--gris);background:var(--bg2)}
+.modo-tab.on{background:var(--verde);color:#fff;border-color:var(--verde)}
 .av{width:26px;height:26px;border-radius:50%;background:var(--vs);color:var(--verde);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;margin-right:6px}
 .loading,.empty{text-align:center;padding:2rem;color:var(--gris);font-size:12px}
 #toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--verde);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;transform:translateY(100px);opacity:0;transition:all .3s;z-index:999} #toast.show{transform:translateY(0);opacity:1}
@@ -135,8 +145,7 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
     </div>
 
     <div id="pg-citas" class="pg">
-      <div class="ph"><h1>Mis Citas Agendadas</h1><p>Acepta, rechaza o inicia la atención clínica.</p></div>
-
+<div class="ph"><h1>Mis Citas Agendadas</h1><p>Acepta, rechaza o inicia la atención clínica.</p><button class="btn btn-p" style="margin-top:8px" onclick="openCitaProfModal()"><i class="ti ti-plus"></i> Nueva cita</button></div>
       <!-- PRÓXIMAS 10 CITAS -->
       <div class="card">
         <div class="ch"><span class="ct">Próximas citas</span></div>
