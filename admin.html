@@ -215,6 +215,14 @@ tr:hover td{background:var(--bg2)}
 .modal-title{font-size:15px;font-weight:500}
 .modal-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--gris);padding:4px}
 
+.fg-ac{position:relative}
+.ac-list{position:absolute;top:100%;left:0;right:0;background:var(--blanco);border:.5px solid var(--bdr);border-radius:8px;margin-top:4px;max-height:190px;overflow-y:auto;z-index:600;box-shadow:0 8px 22px rgba(0,0,0,.14);display:none}
+.ac-item{padding:8px 12px;cursor:pointer;border-bottom:.5px solid var(--bdr)}
+.ac-item:last-child{border-bottom:none}
+.ac-item:hover{background:var(--bg2)}
+.ac-item .an{font-size:12.5px;font-weight:500}
+.ac-item .ar{font-size:11px;color:var(--gris)}
+
 /* DETALLE PACIENTE */
 .tabs{display:flex;gap:4px;border-bottom:0.5px solid var(--bdr);margin-bottom:1rem}
 .tab{padding:7px 14px;font-size:12px;cursor:pointer;border:none;background:none;color:var(--gris);font-family:'DM Sans',sans-serif;border-bottom:2px solid transparent;transition:all .15s}
@@ -484,7 +492,7 @@ tr:hover td{background:var(--bg2)}
             </select>
             <button class="btn btn-p btn-sm" onclick="loadCitas()"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
           </div>
-          <button class="btn btn-p btn-sm" onclick="openModal('modal-cita')"><i class="ti ti-plus" aria-hidden="true"></i> Nueva cita</button>
+          <button class="btn btn-p btn-sm" onclick="openCitaModal()"><i class="ti ti-plus" aria-hidden="true"></i> Nueva cita</button>
         </div>
         <div class="tbl-scroll"><table>
           <thead><tr>
@@ -532,15 +540,24 @@ tr:hover td{background:var(--bg2)}
       <button class="modal-close" onclick="closeModal('modal-cita')"><i class="ti ti-x" aria-hidden="true"></i></button>
     </div>
     <div class="form-grid">
-      <div class="fg"><label>Paciente *</label><input type="text" id="cit-pac" placeholder="Nombre del paciente"/></div>
-      <div class="fg"><label>Profesional *</label><input type="text" id="cit-prof" placeholder="Nombre del profesional"/></div>
+      <div class="fg fg-ac">
+        <label>Paciente *</label>
+        <input type="text" id="cit-pac" placeholder="Nombre o RUT del paciente" autocomplete="off" oninput="buscarSugerencia('pac', this.value)" onfocus="buscarSugerencia('pac', this.value)"/>
+        <input type="hidden" id="cit-pac-rut"/>
+        <div class="ac-list" id="ac-pac" data-tipo="pac"></div>
+      </div>
+      <div class="fg fg-ac">
+        <label>RUT del profesional *</label>
+        <input type="text" id="cit-prof-rut" placeholder="Ej: 12.345.678-9 (o busca por nombre)" autocomplete="off" oninput="buscarSugerencia('prof', this.value)" onfocus="buscarSugerencia('prof', this.value)"/>
+        <input type="hidden" id="cit-prof-nombre"/>
+        <div class="ac-list" id="ac-prof" data-tipo="prof"></div>
+        <div class="hint" style="font-size:11px;color:var(--gris);margin-top:5px">El RUT es obligatorio; puedes escribir el nombre para encontrarlo.</div>
+      </div>
       <div class="fg"><label>Email profesional</label><input type="email" id="cit-email-prof" placeholder="para notificación"/></div>
       <div class="fg"><label>WhatsApp profesional</label><input type="tel" id="cit-wa-prof" placeholder="+56 9 XXXX XXXX"/></div>
-      <div class="fg"><label>Especialidad</label>
+      <div class="fg"><label>Especialidad *</label>
         <select id="cit-esp">
-          <option value="">Seleccionar...</option>
-          <option>Kinesiología</option><option>Geriatría</option><option>Enfermería</option>
-          <option>Fonoaudiología</option><option>Psicología</option><option>Nutrición</option><option>Medicina General</option>
+          <option value="">Selecciona un profesional primero...</option>
         </select>
       </div>
       <div class="fg"><label>Modalidad</label>
@@ -1453,18 +1470,105 @@ async function loadCitas() {
   ).join('') : '<div class="empty">Sin profesionales aprobados aún</div>';
 }
 
+let _pacCache = [], _profCache = [];
+
+async function openCitaModal() {
+  toast('Cargando pacientes y profesionales...');
+  const [pac, prof] = await Promise.all([get('getPacientes'), get('getProfesionales')]);
+  _pacCache  = pac.data  || [];
+  _profCache = prof.data || [];
+  document.getElementById('cit-pac').value = '';
+  document.getElementById('cit-pac-rut').value = '';
+  document.getElementById('cit-prof-rut').value = '';
+  document.getElementById('cit-prof-nombre').value = '';
+  document.getElementById('cit-email-prof').value = '';
+  document.getElementById('cit-wa-prof').value = '';
+  document.getElementById('cit-esp').innerHTML = '<option value="">Selecciona un profesional primero...</option>';
+  document.getElementById('cit-fecha').value = '';
+  document.getElementById('cit-hora').value = '';
+  document.getElementById('cit-dir').value = '';
+  openModal('modal-cita');
+}
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function buscarSugerencia(tipo, texto) {
+  const cache = tipo === 'pac' ? _pacCache : _profCache;
+  const box = document.getElementById('ac-' + tipo);
+  const q = (texto || '').trim().toLowerCase();
+  if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  const res = cache.filter(x =>
+    (x.nombre || '').toLowerCase().includes(q) || (x.rut || '').toLowerCase().includes(q)
+  ).slice(0, 8);
+  if (!res.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  box.innerHTML = res.map(x =>
+    `<div class="ac-item" data-rut="${esc(x.rut)}"><div class="an">${esc(x.nombre)}</div><div class="ar">${esc(x.rut)}${x.especialidad ? ' · ' + esc(x.especialidad) : ''}</div></div>`
+  ).join('');
+  box.style.display = 'block';
+}
+
+document.addEventListener('mousedown', function(e) {
+  const item = e.target.closest('.ac-item');
+  if (!item) return;
+  const box = item.closest('.ac-list');
+  seleccionarSugerencia(box.dataset.tipo, item.dataset.rut);
+});
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.fg-ac')) {
+    document.querySelectorAll('.ac-list').forEach(b => b.style.display = 'none');
+  }
+});
+
+function seleccionarSugerencia(tipo, rut) {
+  const cache = tipo === 'pac' ? _pacCache : _profCache;
+  const item = cache.find(x => x.rut === rut);
+  if (!item) return;
+  document.getElementById('ac-' + tipo).style.display = 'none';
+
+  if (tipo === 'pac') {
+    document.getElementById('cit-pac').value = item.nombre;
+    document.getElementById('cit-pac-rut').value = item.rut;
+  } else {
+    document.getElementById('cit-prof-rut').value = item.nombre + ' — ' + item.rut;
+    document.getElementById('cit-prof-nombre').value = item.rut;
+    document.getElementById('cit-email-prof').value = item.email || '';
+    document.getElementById('cit-wa-prof').value = item.whatsapp || '';
+
+    const especialidades = (item.especialidad || '').split(/,|\/| y /i).map(e => e.trim()).filter(Boolean);
+    const sel = document.getElementById('cit-esp');
+    if (especialidades.length === 1) {
+      sel.innerHTML = `<option value="${esc(especialidades[0])}">${esc(especialidades[0])}</option>`;
+      sel.value = especialidades[0];
+    } else if (especialidades.length > 1) {
+      sel.innerHTML = '<option value="">Selecciona la especialidad...</option>' +
+        especialidades.map(e => `<option value="${esc(e)}">${esc(e)}</option>`).join('');
+    } else {
+      sel.innerHTML = '<option value="">Sin especialidad registrada</option>';
+    }
+  }
+}
+
 async function saveCita() {
-  const pac  = document.getElementById('cit-pac').value;
-  const prof = document.getElementById('cit-prof').value;
-  const fech = document.getElementById('cit-fecha').value;
-  const hora = document.getElementById('cit-hora').value;
-  if (!pac || !prof || !fech || !hora) { toast('Completa los campos obligatorios', false); return; }
+  const pacRut  = document.getElementById('cit-pac-rut').value;
+  const pacTxt  = document.getElementById('cit-pac').value;
+  const profRut = document.getElementById('cit-prof-nombre').value;
+  const esp     = document.getElementById('cit-esp').value;
+  const fech    = document.getElementById('cit-fecha').value;
+  const hora    = document.getElementById('cit-hora').value;
+
+  if (!pacTxt || !profRut || !esp || !fech || !hora) {
+    toast('Completa los campos obligatorios (paciente, RUT profesional, especialidad, fecha y hora)', false);
+    return;
+  }
 
   const params = new URLSearchParams({
     action: 'createCita',
-    paciente: pac,
-    profesional: prof,
-    especialidad: document.getElementById('cit-esp').value,
+    paciente: pacTxt,
+    rutPaciente: pacRut,
+    rutProfesional: profRut,
+    especialidad: esp,
     fechaCita: fech,
     hora: hora,
     modalidad: document.getElementById('cit-mod').value,
@@ -1475,7 +1579,7 @@ async function saveCita() {
   });
 
   toast('Creando cita...');
-  await get('createCita', params.toString().replace('action=createCita&',''));
+  await get('createCita', params.toString().replace('action=createCita&', ''));
   closeModal('modal-cita');
   toast('✓ Cita creada y confirmada automáticamente');
   setTimeout(loadCitas, 1500);
