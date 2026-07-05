@@ -85,6 +85,12 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
 .tab{padding:7px 14px;font-size:12px;cursor:pointer;border:none;background:none;color:var(--gris);font-family:'DM Sans',sans-serif;border-bottom:2px solid transparent;}
 .tab.on{color:var(--verde);border-bottom-color:var(--verde);font-weight:500}
 .tab-pane{display:none} .tab-pane.on{display:block}
+.mets-hero{display:flex;gap:16px;margin-bottom:1rem;flex-wrap:wrap}
+.met-hero{flex:1;min-width:220px;background:var(--bg2);border-radius:12px;padding:20px}
+.met-hero-label{font-size:14px;color:var(--gris);margin-bottom:6px}
+.met-hero-value{font-size:42px;font-weight:600;color:var(--verde);line-height:1}
+.met-hero.warn-hero{background:var(--as)}
+.met-hero.warn-hero .met-hero-value{color:var(--amber)}
 .prof-pic{width:80px;height:80px;border-radius:50%;object-fit:cover;background:var(--bg2);border:1px solid var(--bdr);display:block;margin-bottom:10px}
 </style>
 </head>
@@ -119,6 +125,7 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
     <button class="nb" onclick="sp('alertas',this);loadProfAlertas()"><i class="ti ti-bell-ringing"></i><span class="nb-text">Alertas de Pacientes</span></button>
     
     <div class="nsec">Configuración</div>
+    <button class="nb" onclick="sp('financiero',this)"><i class="ti ti-currency-dollar"></i><span class="nb-text">Financiero</span></button>
     <button class="nb" onclick="sp('perfil',this);loadMiPerfil()"><i class="ti ti-user-circle"></i><span class="nb-text">Mi Perfil Profesional</span></button>
     
     <div class="sfoot">
@@ -132,10 +139,9 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
 
     <div id="pg-dashboard" class="pg on">
       <div class="ph"><h1 id="dash-welcome">¡Hola!</h1><p>Resumen clínico de tu actividad en FamHealth.</p></div>
-      <div class="mets">
-        <div class="met"><div class="ml">Citas pendientes</div><div class="mv" id="p-citas-count">0</div></div>
-        <div class="met"><div class="ml">Atenciones clínicas</div><div class="mv" id="p-at-count">0</div></div>
-        <div class="met"><div class="ml">Recetas extendidas</div><div class="mv" id="p-rec-count">0</div></div>
+      <div class="mets-hero">
+        <div class="met-hero"><div class="met-hero-label">Citas pendientes</div><div class="met-hero-value" id="p-citas-count">0</div></div>
+        <div class="met-hero warn-hero"><div class="met-hero-label">Alertas por vencer</div><div class="met-hero-value" id="p-alertas-vencer-count">0</div></div>
       </div>
       <div class="two">
         <div class="card"><div class="ch"><span class="ct">Próximas citas en agenda</span></div>
@@ -185,8 +191,8 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
         <div class="ch"><span class="ct">Recetario Electrónico</span><button class="btn btn-p" onclick="openModal('modal-receta')"><i class="ti ti-plus"></i> Extender Receta</button></div>
         <div class="filt"><input type="text" placeholder="Buscar medicamento..." oninput="ft('recetas-body',this.value)"></div>
         <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:15%">Fecha Emisión</th><th style="width:20%">Paciente</th><th style="width:15%">RUT</th><th style="width:20%">Medicamento</th><th>Dosis</th><th>Duración</th></tr></thead>
-          <tbody id="recetas-body"><tr><td colspan="6" class="loading">Cargando recetario...</td></tr></tbody>
+          <thead><tr><th style="width:13%">Fecha Emisión</th><th style="width:17%">Paciente</th><th style="width:13%">RUT</th><th style="width:17%">Medicamento</th><th>Dosis</th><th>Duración</th><th style="width:10%">Alerta</th></tr></thead>
+          <tbody id="recetas-body"><tr><td colspan="7" class="loading">Cargando recetario...</td></tr></tbody>
         </table></div>
       </div>
     </div>
@@ -194,7 +200,13 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
     <div id="pg-alertas" class="pg">
       <div class="ph"><h1>Alertas de Mis Pacientes</h1><p>Seguimiento de medicación y controles.</p></div>
       <div class="card">
-        <div class="filt"><input type="text" placeholder="Buscar paciente o mensaje..." oninput="ft('alertas-body',this.value)"></div>
+        <div class="filt">
+          <input type="text" id="al-filtro-pac" placeholder="Buscar paciente o mensaje..." oninput="ft('alertas-body',this.value,document.getElementById('al-filtro-estado').value)">
+          <select id="al-filtro-estado" onchange="ft('alertas-body',document.getElementById('al-filtro-pac').value,this.value)">
+            <option value="">Todos los estados</option>
+            <option>Activa</option><option>Pausada</option><option>Completada</option>
+          </select>
+        </div>
         <div class="tbl-scroll"><table>
           <thead><tr><th style="width:15%">Fecha Creación</th><th style="width:20%">Paciente</th><th>Tipo</th><th style="width:30%">Mensaje Recordatorio</th><th>Frecuencia</th><th>Estado</th></tr></thead>
           <tbody id="alertas-body"><tr><td colspan="6" class="loading">Cargando alertas vigentes...</td></tr></tbody>
@@ -202,7 +214,16 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
       </div>
     </div>
 
-    <div id="pg-perfil" class="pg">
+    <div id="pg-financiero" class="pg">
+  <div class="ph"><h1>Financiero</h1><p>Ingresos por atenciones agendadas a través de FamHealth.</p></div>
+  <div class="card" style="text-align:center;padding:3rem">
+    <i class="ti ti-currency-dollar" style="font-size:2.5rem;color:var(--vc);display:block;margin-bottom:.75rem"></i>
+    <div style="font-size:16px;font-weight:500;margin-bottom:6px">Próximamente</div>
+    <p style="font-size:12px;color:var(--gris);max-width:420px;margin:0 auto">Cuando integremos el pago en línea de las consultas (Transbank/Khipu), aquí vas a ver el detalle de tus ingresos por atención.</p>
+  </div>
+</div>
+
+<div id="pg-perfil" class="pg">
       <div class="ph"><h1>Mi Perfil Profesional</h1><p>Mantén actualizada tu vitrina pública y configuración comercial.</p></div>
       <div class="card" style="max-width:800px">
         <div class="tabs">
@@ -270,10 +291,69 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
   </div>
 </div>
 
+<div class="modal-bg" id="modal-cita-prof">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Nueva cita manual</span><button class="modal-close" onclick="closeModal('modal-cita-prof')">×</button></div>
+
+    <div class="modo-tabs">
+      <div class="modo-tab on" id="tab-mp" onclick="setModoPaciente('mispacientes')">Mis pacientes</div>
+      <div class="modo-tab" id="tab-plat" onclick="setModoPaciente('plataforma')">Buscar en plataforma</div>
+      <div class="modo-tab" id="tab-nuevo" onclick="setModoPaciente('nuevo')">Paciente nuevo</div>
+    </div>
+
+    <!-- MODO: Mis pacientes -->
+    <div id="modo-mispacientes" class="form-grid">
+      <div class="fg full"><label>Paciente *</label>
+        <select id="citp-mispac-sel" onchange="seleccionarMiPaciente()">
+          <option value="">Selecciona uno de tus pacientes...</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- MODO: Buscar en plataforma -->
+    <div id="modo-plataforma" class="form-grid" style="display:none">
+      <div class="fg fg-ac full">
+        <label>Paciente *</label>
+        <input type="text" id="citp-pac-buscar" placeholder="Nombre o RUT del paciente" autocomplete="off" oninput="buscarSugerenciaProf(this.value)" onfocus="buscarSugerenciaProf(this.value)"/>
+        <div class="ac-list" id="ac-citp-pac"></div>
+      </div>
+    </div>
+
+    <!-- MODO: Paciente nuevo -->
+    <div id="modo-nuevo" class="form-grid" style="display:none">
+      <div class="fg"><label>Nombre completo *</label><input type="text" id="citp-nuevo-nombre"></div>
+      <div class="fg"><label>RUT *</label><input type="text" id="citp-nuevo-rut" placeholder="12.345.678-9"></div>
+      <div class="fg"><label>Fecha de nacimiento</label><input type="date" id="citp-nuevo-fnac"></div>
+      <div class="fg"><label>Contacto (WhatsApp)</label><input type="tel" id="citp-nuevo-wa" placeholder="+56 9 XXXX XXXX"></div>
+      <div class="fg full"><label>Diagnóstico / motivo (opcional)</label><input type="text" id="citp-nuevo-diag"></div>
+    </div>
+
+    <input type="hidden" id="citp-pac-rut-final"/>
+    <input type="hidden" id="citp-pac-nombre-final"/>
+
+    <div class="form-grid" style="margin-top:14px;border-top:.5px solid var(--bdr);padding-top:14px">
+      <div class="fg"><label>Especialidad *</label>
+        <select id="citp-esp"></select>
+      </div>
+      <div class="fg"><label>Modalidad</label>
+        <select id="citp-mod"><option>Domicilio</option><option>Teleconsulta</option><option>Presencial</option></select>
+      </div>
+      <div class="fg"><label>Fecha de la cita *</label><input type="date" id="citp-fecha"></div>
+      <div class="fg"><label>Hora *</label><input type="time" id="citp-hora"></div>
+      <div class="fg full"><label>Dirección (si es domicilio)</label><input type="text" id="citp-dir" placeholder="Ej: Av. Providencia 1234, Dpto 52, Providencia"></div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
+      <button class="btn" onclick="closeModal('modal-cita-prof')">Cancelar</button>
+      <button class="btn btn-p" onclick="guardarCitaProf()"><i class="ti ti-check"></i> Crear cita y notificar</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
-const SC = 'https://script.google.com/macros/s/AKfycbzg983iE3ZGuf-s7wBAm5cNF_VTQDQe-uMRAg6PFPA5t0TCvzmfqD7N9oZ2I2j0yRP7uA/exec';
+const SC = 'https://script.google.com/macros/s/AKfycbwhDi3J-CUdAV2dMZC-bST14Hn1-uLf7bd9B6a0Eknup6qFggwIZgNOeXNMuPVjcaVjkw/exec';
 
 let ME_PROF_NAME = ''; let ME_PROF_SPEC = ''; let ME_PROF_RUT = ''; let ME_PROF_FILA = null;
 let profFullData = null; // Para editar mi perfil
@@ -317,7 +397,7 @@ let sidebarMini = false; function toggleDesktop() { sidebarMini = !sidebarMini; 
 function sp(id, btn) { document.querySelectorAll('.pg').forEach(p => p.classList.remove('on')); document.querySelectorAll('.nb').forEach(b => b.classList.remove('on')); document.getElementById('pg-' + id).classList.add('on'); if (btn) btn.classList.add('on'); closeSidebar(); }
 function badge(e) { const m = { 'Confirmada': 'bg', 'Completada': 'bg', 'Pendiente': 'ba', 'Rechazada': 'br' }; return `<span class="badge ${m[e] || 'bgr'}">${e}</span>`; }
 function av(n) { if (!n) return '??'; const p = n.trim().split(' '); return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase(); }
-function ft(id, q) { q = q.toLowerCase(); document.querySelectorAll('#' + id + ' tr').forEach(r => { const t = r.textContent.toLowerCase(); r.style.display = (!q || t.includes(q)) ? '' : 'none'; }); }
+function ft(id, q, estado) { q = (q||'').toLowerCase(); estado = (estado||'').toLowerCase(); document.querySelectorAll('#' + id + ' tr').forEach(r => { const t = r.textContent.toLowerCase(); r.style.display = (!q || t.includes(q)) && (!estado || t.includes(estado)) ? '' : 'none'; }); }
 function openModal(id) { document.getElementById(id).classList.add('open'); } function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function showTab(id, btn) { document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('on')); document.querySelectorAll('.tab').forEach(b => b.classList.remove('on')); document.getElementById(id).classList.add('on'); if (btn) btn.classList.add('on'); }
 function toast(msg, ok) { const t = document.getElementById('toast'); t.textContent = msg; t.style.background = ok === false ? '#E07A5F' : '#2D6A4F'; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
@@ -358,11 +438,14 @@ function initPortal() {
 }
 
 async function loadProfDashboard() {
-  const [citas, atenciones, recetas] = await Promise.all([ fetch(`${SC}?action=getCitas`).then(r=>r.json()), fetch(`${SC}?action=getAtenciones`).then(r=>r.json()), fetch(`${SC}?action=getRecetas`).then(r=>r.json()) ]);
+  const [citas, pac, alertas] = await Promise.all([ fetch(`${SC}?action=getCitas`).then(r=>r.json()), fetch(`${SC}?action=getPacientes`).then(r=>r.json()), fetch(`${SC}?action=getAlertas`).then(r=>r.json()) ]);
   const miAgenda = (citas.data || []).filter(c => c.profesional === ME_PROF_NAME);
   document.getElementById('p-citas-count').textContent = miAgenda.filter(c => c.estado === 'Pendiente' || c.estado === 'Confirmada').length;
-  document.getElementById('p-at-count').textContent = (atenciones.data || []).filter(a => a.profesional === ME_PROF_NAME).length;
-  document.getElementById('p-rec-count').textContent = (recetas.data || []).filter(r => r.profesional === ME_PROF_NAME).length;
+
+  const misRuts = (pac.data||[]).filter(p => (p.profesional||'').includes(ME_PROF_NAME)).map(p => p.rut);
+  const misAlertasActivas = (alertas.data||[]).filter(a => misRuts.includes(a.rut) && a.estado === 'Activa');
+  document.getElementById('p-alertas-vencer-count').textContent = misAlertasActivas.length;
+
   const proximas = miAgenda.filter(c => c.estado === 'Confirmada').slice(0, 4);
   document.getElementById('dash-citas').innerHTML = proximas.length ? proximas.map(c => {
     const dt = formatDT(c.fechaCita);
@@ -541,12 +624,31 @@ async function guardarAtencionProf() { const p = document.getElementById('at-pac
 
 async function loadProfRecetas() {
   try {
-    const d = (await fetch(`${SC}?action=getRecetas`).then(r=>r.json())).data.filter(r => r.profesional === ME_PROF_NAME) || [];
+    const [recResp, alResp] = await Promise.all([
+      fetch(`${SC}?action=getRecetas`).then(r=>r.json()),
+      fetch(`${SC}?action=getAlertas`).then(r=>r.json())
+    ]);
+    const d = (recResp.data || []).filter(r => r.profesional === ME_PROF_NAME);
+    const alertas = alResp.data || [];
+
     document.getElementById('recetas-body').innerHTML = d.length ? d.map(r => {
       const dt = formatDT(r.fecha);
-      return `<tr><td><span class="dt-fe">${dt.d}</span> <span class="dt-ho">${dt.t}</span></td><td><span class="av">${av(r.paciente)}</span>${r.paciente||'—'}</td><td>${r.rut||'—'}</td><td><strong>${r.medicamento||'—'}</strong></td><td>${r.dosis||'—'}</td><td>${r.duracion||'—'}</td></tr>`;
-    }).join('') : `<tr><td colspan="6" class="empty">Sin recetas</td></tr>`;
-  } catch(e) { document.getElementById('recetas-body').innerHTML = `<tr><td colspan="6" class="empty">Error de tabla</td></tr>`; }
+      const alertaPac = alertas.filter(a => a.rut === r.rut && a.tipo === 'Medicamento').sort((a,b) => (b.fecha||'').localeCompare(a.fecha||''))[0];
+      let colAlerta = '<span style="color:var(--gris);font-size:11px">Sin alerta</span>';
+      if (alertaPac) {
+        colAlerta = `<button class="btn btn-sm" title="Ver alerta de ${r.paciente}" onclick="irAAlertaDePaciente('${r.paciente.replace(/'/g,"\\'")}')"><i class="ti ti-bell-ringing" aria-hidden="true"></i></button> ${badge(alertaPac.estado)}`;
+      }
+      return `<tr><td><span class="dt-fe">${dt.d}</span> <span class="dt-ho">${dt.t}</span></td><td><span class="av">${av(r.paciente)}</span>${r.paciente||'—'}</td><td>${r.rut||'—'}</td><td><strong>${r.medicamento||'—'}</strong></td><td>${r.dosis||'—'}</td><td>${r.duracion||'—'}</td><td>${colAlerta}</td></tr>`;
+    }).join('') : `<tr><td colspan="7" class="empty">Sin recetas</td></tr>`;
+  } catch(e) { document.getElementById('recetas-body').innerHTML = `<tr><td colspan="7" class="empty">Error de tabla</td></tr>`; }
+}
+
+function irAAlertaDePaciente(nombrePaciente) {
+  sp('alertas', document.querySelectorAll('.nb')[4]);
+  loadProfAlertas().then(() => {
+    document.getElementById('al-filtro-pac').value = nombrePaciente;
+    ft('alertas-body', nombrePaciente, document.getElementById('al-filtro-estado').value);
+  });
 }
 async function emitirRecetaProf() { const p = document.getElementById('rec-pac').value; const m = document.getElementById('rec-med').value; if(!p||!m)return; toast('Emitiendo...'); await fetch(SC, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tipo: 'receta', paciente: p, rut: document.getElementById('rec-rut').value, profesional: ME_PROF_NAME, medicamento: m, dosis: document.getElementById('rec-dosis').value, duracion: document.getElementById('rec-dur').value, comentarios: document.getElementById('rec-com').value }) }); closeModal('modal-receta'); toast('✓ Emitido'); setTimeout(loadProfRecetas, 1000); }
 
@@ -598,6 +700,154 @@ async function saveMiPerfil() {
   const params = `fila=${ME_PROF_FILA}&rut=${ME_PROF_RUT}&whatsapp=${encodeURIComponent(document.getElementById('pe-wa').value)}&expTotal=${document.getElementById('pe-expt').value}&expAm=${document.getElementById('pe-expam').value}&idiomas=${encodeURIComponent(document.getElementById('pe-idiomas').value)}&comunas=${encodeURIComponent(document.getElementById('pe-comunas').value)}&modalidad=${encodeURIComponent(document.getElementById('pe-mod').value)}&calLink=${encodeURIComponent(document.getElementById('pe-cal').value)}&precio=${document.getElementById('pe-precio').value}&duracion=${document.getElementById('pe-duracion').value}&isapre=${document.getElementById('pe-isa').value}&fonasa=${document.getElementById('pe-fon').value}&publico=${document.getElementById('pe-pub').value}&foto=${encodeURIComponent(document.getElementById('pe-foto').value)}&bio=${encodeURIComponent(document.getElementById('pe-bio').value)}`;
   await fetch(`${SC}?action=updateProfFicha&${params}`);
   toast('✓ Perfil actualizado');
+}
+
+// ── NUEVA CITA MANUAL (PROFESIONAL) ──
+let _misPacientesCache = [], _todosPacientesCache = [], _modoPacienteActual = 'mispacientes';
+
+function especialidadesDe(str) {
+  return (str || '').split(/,|\/| y /i).map(s => s.trim()).filter(Boolean);
+}
+
+function poblarEspecialidadProf() {
+  const sel = document.getElementById('citp-esp');
+  const esps = especialidadesDe(ME_PROF_SPEC);
+  if (esps.length <= 1) {
+    const unica = esps[0] || ME_PROF_SPEC || '';
+    sel.innerHTML = `<option value="${unica}">${unica}</option>`;
+  } else {
+    sel.innerHTML = '<option value="">Selecciona la especialidad...</option>' +
+      esps.map(e => `<option value="${e}">${e}</option>`).join('');
+  }
+}
+
+async function openCitaProfModal() {
+  toast('Cargando pacientes...');
+  const j = await fetch(`${SC}?action=getPacientes`).then(r=>r.json());
+  _todosPacientesCache = j.data || [];
+  _misPacientesCache = _todosPacientesCache.filter(p => (p.profesional || '').includes(ME_PROF_NAME));
+
+  document.getElementById('citp-mispac-sel').innerHTML = '<option value="">Selecciona uno de tus pacientes...</option>' +
+    _misPacientesCache.map(p => `<option value="${p.rut}">${p.nombre} — ${p.rut}</option>`).join('');
+
+  document.getElementById('citp-pac-buscar').value = '';
+  document.getElementById('citp-nuevo-nombre').value = '';
+  document.getElementById('citp-nuevo-rut').value = '';
+  document.getElementById('citp-nuevo-fnac').value = '';
+  document.getElementById('citp-nuevo-wa').value = '';
+  document.getElementById('citp-nuevo-diag').value = '';
+  document.getElementById('citp-pac-rut-final').value = '';
+  document.getElementById('citp-pac-nombre-final').value = '';
+  document.getElementById('citp-fecha').value = '';
+  document.getElementById('citp-hora').value = '';
+  document.getElementById('citp-dir').value = '';
+
+  setModoPaciente('mispacientes');
+  poblarEspecialidadProf();
+  openModal('modal-cita-prof');
+}
+
+function setModoPaciente(modo) {
+  _modoPacienteActual = modo;
+  document.getElementById('modo-mispacientes').style.display = modo === 'mispacientes' ? 'grid' : 'none';
+  document.getElementById('modo-plataforma').style.display   = modo === 'plataforma'   ? 'grid' : 'none';
+  document.getElementById('modo-nuevo').style.display         = modo === 'nuevo'         ? 'grid' : 'none';
+  document.getElementById('tab-mp').classList.toggle('on', modo === 'mispacientes');
+  document.getElementById('tab-plat').classList.toggle('on', modo === 'plataforma');
+  document.getElementById('tab-nuevo').classList.toggle('on', modo === 'nuevo');
+  document.getElementById('citp-pac-rut-final').value = '';
+  document.getElementById('citp-pac-nombre-final').value = '';
+}
+
+function seleccionarMiPaciente() {
+  const rut = document.getElementById('citp-mispac-sel').value;
+  const p = _misPacientesCache.find(x => x.rut === rut);
+  document.getElementById('citp-pac-rut-final').value = p ? p.rut : '';
+  document.getElementById('citp-pac-nombre-final').value = p ? p.nombre : '';
+}
+
+function escP(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function buscarSugerenciaProf(texto) {
+  const box = document.getElementById('ac-citp-pac');
+  const q = (texto || '').trim().toLowerCase();
+  if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  const res = _todosPacientesCache.filter(x =>
+    (x.nombre || '').toLowerCase().includes(q) || (x.rut || '').toLowerCase().includes(q)
+  ).slice(0, 8);
+  if (!res.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  box.innerHTML = res.map(x =>
+    `<div class="ac-item" data-rut="${escP(x.rut)}"><div class="an">${escP(x.nombre)}</div><div class="ar">${escP(x.rut)}</div></div>`
+  ).join('');
+  box.style.display = 'block';
+}
+
+document.addEventListener('mousedown', function(e) {
+  const item = e.target.closest('#ac-citp-pac .ac-item');
+  if (!item) return;
+  const p = _todosPacientesCache.find(x => x.rut === item.dataset.rut);
+  if (!p) return;
+  document.getElementById('citp-pac-buscar').value = p.nombre;
+  document.getElementById('citp-pac-rut-final').value = p.rut;
+  document.getElementById('citp-pac-nombre-final').value = p.nombre;
+  document.getElementById('ac-citp-pac').style.display = 'none';
+});
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.fg-ac')) document.getElementById('ac-citp-pac').style.display = 'none';
+});
+
+async function guardarCitaProf() {
+  const esp = document.getElementById('citp-esp').value;
+  const fech = document.getElementById('citp-fecha').value;
+  const hora = document.getElementById('citp-hora').value;
+  if (!esp || !fech || !hora) { toast('Completa especialidad, fecha y hora', false); return; }
+
+  let rutPac = document.getElementById('citp-pac-rut-final').value;
+  let nombrePac = document.getElementById('citp-pac-nombre-final').value;
+
+  if (_modoPacienteActual === 'nuevo') {
+    const nombre = document.getElementById('citp-nuevo-nombre').value.trim();
+    const rut = document.getElementById('citp-nuevo-rut').value.trim();
+    if (!nombre || !rut) { toast('Completa nombre y RUT del paciente nuevo', false); return; }
+    toast('Creando ficha del paciente...');
+    await fetch(SC, {
+      method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tipo: 'paciente', nombre, rut,
+        fechaNac: document.getElementById('citp-nuevo-fnac').value,
+        coordWa: document.getElementById('citp-nuevo-wa').value,
+        diagnostico: document.getElementById('citp-nuevo-diag').value,
+        profesional: ME_PROF_NAME, estado: 'Activo',
+        usuarioRut: ME_PROF_RUT, usuarioTipo: 'profesional'
+      })
+    });
+    rutPac = rut; nombrePac = nombre;
+  }
+
+  if (!rutPac || !nombrePac) { toast('Selecciona o crea un paciente', false); return; }
+
+  const params = new URLSearchParams({
+    action: 'createCita',
+    paciente: nombrePac,
+    rutPaciente: rutPac,
+    rutProfesional: ME_PROF_RUT,
+    especialidad: esp,
+    fechaCita: fech,
+    hora: hora,
+    modalidad: document.getElementById('citp-mod').value,
+    origen: 'Manual',
+    direccion: document.getElementById('citp-dir').value,
+    emailProf: '',
+    waProf: ''
+  });
+
+  toast('Creando cita...');
+  await fetch(`${SC}?${params.toString()}`);
+  closeModal('modal-cita-prof');
+  toast('✓ Cita creada y confirmada automáticamente');
+  setTimeout(loadProfCitas, 1500);
 }
 </script>
 <!-- MODAL DIRECCIÓN -->
