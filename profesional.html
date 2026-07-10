@@ -139,9 +139,17 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
 
     <div id="pg-dashboard" class="pg on">
       <div class="ph"><h1 id="dash-welcome">¡Hola!</h1><p>Resumen clínico de tu actividad en FamHealth.</p></div>
+      <div class="filt" style="margin-bottom:14px">
+        <input type="text" id="dash-buscador" placeholder="Buscar paciente en tus citas próximas..." oninput="ft('dash-citas',this.value)" style="flex:1">
+      </div>
       <div class="mets-hero">
         <div class="met-hero"><div class="met-hero-label">Citas pendientes</div><div class="met-hero-value" id="p-citas-count">0</div></div>
         <div class="met-hero warn-hero"><div class="met-hero-label">Alertas por vencer</div><div class="met-hero-value" id="p-alertas-vencer-count">0</div></div>
+        <div class="met-hero"><div class="met-hero-label">Alertas pasadas</div><div class="met-hero-value" id="p-alertas-pasadas-count">0</div></div>
+      </div>
+      <div class="card" style="margin-bottom:.75rem">
+        <div class="ch"><span class="ct">Calendario — próximas 2 semanas</span></div>
+        <div id="dash-cal-2sem" style="overflow-x:auto"></div>
       </div>
       <div class="two">
         <div class="card"><div class="ch"><span class="ct">Próximas citas en agenda</span></div>
@@ -395,7 +403,11 @@ function formatDT(dateStr) {
   if(!dateStr || dateStr === '—') return { d: '—', t: '' };
   let dateObj;
   try {
-    if (dateStr.includes('-')) {
+    dateStr = String(dateStr).trim();
+    if (/^[A-Za-z]{3}\s[A-Za-z]{3}\s\d{1,2}\s\d{4}/.test(dateStr)) {
+      // Formato nativo de JS en inglés: "Wed Jul 09 2026 ..." — se parsea y se re-traduce abajo
+      dateObj = new Date(dateStr);
+    } else if (dateStr.includes('-')) {
       const p = dateStr.split(' ');
       const dp = p[0].split('-');
       if (dp[0].length === 4) {
@@ -475,6 +487,8 @@ async function loadProfDashboard() {
   const misRuts = (pac.data||[]).filter(p => (p.profesional||'').includes(ME_PROF_NAME)).map(p => p.rut);
   const misAlertasActivas = (alertas.data||[]).filter(a => misRuts.includes(a.rut) && a.estado === 'Activa');
   document.getElementById('p-alertas-vencer-count').textContent = misAlertasActivas.length;
+  const misAlertasPasadas = (alertas.data||[]).filter(a => misRuts.includes(a.rut) && a.estado === 'Completada');
+  document.getElementById('p-alertas-pasadas-count').textContent = misAlertasPasadas.length;
 
   const proximas = miAgenda.filter(c => c.estado === 'Confirmada').slice(0, 4);
   document.getElementById('dash-citas').innerHTML = proximas.length ? proximas.map(c => {
@@ -488,6 +502,37 @@ async function loadProfDashboard() {
       <td>${badge(c.estado)}</td>
     </tr>`;
   }).join('') : '<tr><td colspan="5" class="empty">Agenda libre</td></tr>';
+
+  renderCalendarioDosSemanas(miAgenda);
+}
+
+function renderCalendarioDosSemanas(citas) {
+  const DIAS = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  const hoy = new Date(); hoy.setHours(0,0,0,0);
+  const diaSemana = hoy.getDay() === 0 ? 6 : hoy.getDay() - 1;
+  const lunesBase = new Date(hoy); lunesBase.setDate(hoy.getDate() - diaSemana);
+
+  let html = '<div class="cal-grid">';
+  for (let i = 0; i < 7; i++) {
+    html += `<div class="cal-day-header">${DIAS[i]}</div>`;
+  }
+  for (let i = 0; i < 14; i++) {
+    const dia = new Date(lunesBase); dia.setDate(lunesBase.getDate() + i);
+    const esHoy = dia.toDateString() === hoy.toDateString();
+    const citasDia = citas.filter(c => {
+      const fc = parseFecha(c.fechaCita);
+      return fc.toDateString() === dia.toDateString();
+    }).sort((a,b) => (a.hora||'').localeCompare(b.hora||''));
+    html += `<div class="cal-day${esHoy?' hoy':''}"><div class="cal-day-num">${dia.getDate()}</div>`;
+    citasDia.forEach(c => {
+      const hora = formatHora(c.hora);
+      const cls = c.estado==='Rechazada'?'rechazada':c.estado==='Completada'?'completada':'';
+      html += `<div class="cal-cita ${cls}" title="${c.paciente} — ${hora}"><strong>${hora}</strong><br>${(c.paciente||'').split(' ')[0]}</div>`;
+    });
+    html += '</div>';
+  }
+  html += '</div>';
+  document.getElementById('dash-cal-2sem').innerHTML = html;
 }
 
 // Cache de citas para el calendario
