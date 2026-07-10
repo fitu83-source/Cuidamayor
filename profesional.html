@@ -145,7 +145,10 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
       </div>
       <div class="two">
         <div class="card"><div class="ch"><span class="ct">Próximas citas en agenda</span></div>
-        <div class="tbl-scroll"><table id="dash-citas"><tbody><tr><td class="loading">Cargando...</td></tr></tbody></table></div></div>
+        <div class="tbl-scroll"><table>
+          <thead><tr><th style="width:14%">Fecha</th><th style="width:10%">Hora</th><th style="width:32%">Paciente</th><th style="width:24%">Modalidad</th><th style="width:20%">Estado</th></tr></thead>
+          <tbody id="dash-citas"><tr><td colspan="5" class="loading">Cargando...</td></tr></tbody>
+        </table></div></div>
         <div class="card"><div class="ch"><span class="ct">Información de Cobertura</span></div><div style="font-size:12px; line-height:1.6; padding:.5rem; background:var(--bg2); border-radius:8px"><p><strong>⚠️ Reembolsos:</strong> Recuerda registrar la evolución clínica para facilitar el reembolso ISAPRE/FONASA del paciente.</p></div></div>
       </div>
     </div>
@@ -157,7 +160,7 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
         <div class="ch"><span class="ct">Próximas citas</span></div>
         <div class="filt"><input type="text" placeholder="Filtrar por paciente..." oninput="ft('citas-body',this.value)"></div>
         <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:13%">Fecha</th><th style="width:8%">Hora</th><th style="width:22%">Paciente</th><th>Modalidad</th><th>Dirección</th><th>Estado</th><th style="width:15%">Acción</th></tr></thead>
+          <thead><tr><th style="width:13%">Fecha</th><th style="width:8%">Hora</th><th style="width:22%">Paciente</th><th>Modalidad</th><th style="width:12%">Detalle</th><th>Estado</th><th style="width:15%">Acción</th></tr></thead>
           <tbody id="citas-body"><tr><td colspan="7" class="loading">Cargando agenda...</td></tr></tbody>
         </table></div>
       </div>
@@ -291,6 +294,33 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
   </div>
 </div>
 
+<div class="modal-bg" id="modal-detalle-cita-prof">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header"><span class="modal-title">Detalle de la cita</span><button class="modal-close" onclick="closeModal('modal-detalle-cita-prof')">×</button></div>
+    <div style="font-size:13px;line-height:1.8">
+      <div style="font-size:11px;color:var(--gris);margin-bottom:2px">Paciente</div>
+      <div id="vd-paciente" style="font-weight:600;margin-bottom:12px">—</div>
+
+      <div style="font-size:11px;color:var(--gris);margin-bottom:2px">Fecha y hora</div>
+      <div id="vd-fecha" style="margin-bottom:12px">—</div>
+
+      <div style="font-size:11px;color:var(--gris);margin-bottom:2px">Modalidad</div>
+      <div id="vd-modalidad" style="margin-bottom:12px">—</div>
+
+      <div style="font-size:11px;color:var(--gris);margin-bottom:2px">Teléfono de contacto</div>
+      <div id="vd-telefono" style="margin-bottom:12px">—</div>
+
+      <div id="vd-direccion-box" style="display:none">
+        <div style="font-size:11px;color:var(--gris);margin-bottom:2px">Dirección</div>
+        <div id="vd-direccion" style="margin-bottom:12px">—</div>
+        <a id="vd-maps-link" href="#" target="_blank" class="btn btn-p" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none">
+          <i class="ti ti-map-pin" aria-hidden="true"></i> Ver en Google Maps
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal-bg" id="modal-cita-prof">
   <div class="modal">
     <div class="modal-header"><span class="modal-title">Nueva cita manual</span><button class="modal-close" onclick="closeModal('modal-cita-prof')">×</button></div>
@@ -354,7 +384,7 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
 
 <script>
 const SC = 'https://script.google.com/macros/s/AKfycbzg983iE3ZGuf-s7wBAm5cNF_VTQDQe-uMRAg6PFPA5t0TCvzmfqD7N9oZ2I2j0yRP7uA/exec';
-  
+
 let ME_PROF_NAME = ''; let ME_PROF_SPEC = ''; let ME_PROF_RUT = ''; let ME_PROF_FILA = null;
 let profFullData = null; // Para editar mi perfil
 
@@ -450,8 +480,14 @@ async function loadProfDashboard() {
   document.getElementById('dash-citas').innerHTML = proximas.length ? proximas.map(c => {
     const dt = formatDT(c.fechaCita);
     const hora = formatHora(c.hora);
-    return `<tr><td class="dt-fe">${dt.d} <span class="dt-ho">${hora}</span></td><td>${c.paciente}</td><td>${badge(c.estado)}</td></tr>`;
-  }).join('') : '<tr><td class="empty">Agenda libre</td></tr>';
+    return `<tr>
+      <td><span class="dt-fe">${dt.d}</span></td>
+      <td style="font-weight:500;color:var(--verde)">${hora}</td>
+      <td><span class="av">${av(c.paciente)}</span>${c.paciente||'—'}</td>
+      <td>${c.modalidad||'—'}</td>
+      <td>${badge(c.estado)}</td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="5" class="empty">Agenda libre</td></tr>';
 }
 
 // Cache de citas para el calendario
@@ -473,15 +509,6 @@ async function loadProfCitas() {
     document.getElementById('citas-body').innerHTML = proximas.length ? proximas.map(c => {
       const dt = formatDT(c.fechaCita);
       const hora = formatHora(c.hora);
-      const esDom = (c.modalidad||'').toLowerCase().includes('domicilio');
-      let dirCol = '—';
-      if (esDom && c.direccion) {
-        const partes = c.direccion.split(',');
-        const comuna = partes[partes.length-1]?.trim() || c.direccion;
-        dirCol = `${comuna} <button class="btn btn-sm" style="font-size:10px;padding:2px 6px" onclick="verDireccionProf('${encodeURIComponent(c.direccion||'')}','${encodeURIComponent(c.paciente||'')}')">Ver</button>`;
-      } else if (esDom) {
-        dirCol = '<span style="color:var(--gris);font-size:11px">Sin dirección</span>';
-      }
       const accion = c.estado==='Confirmada'
         ? `<button class="btn btn-p" onclick="abrirNuevaAtencion('${c.paciente}')">Evolución</button><button class="btn" style="color:#A32D2D;border-color:#F7C1C1" onclick="accCita(${c.fila},'Rechazada')">✕</button>`
         : c.estado==='Rechazada' ? '<span style="color:var(--gris);font-size:11px">Rechazada</span>' : '—';
@@ -490,7 +517,7 @@ async function loadProfCitas() {
         <td style="font-weight:500;color:var(--verde)">${hora}</td>
         <td><span class="av">${av(c.paciente)}</span><strong>${c.paciente||'—'}</strong></td>
         <td>${c.modalidad||'—'}</td>
-        <td>${dirCol}</td>
+        <td><button class="btn btn-sm" onclick="verDetalleCitaProf(${c.fila})"><i class="ti ti-info-circle" aria-hidden="true"></i> Ver detalle</button></td>
         <td>${badge(c.estado)}</td>
         <td>${accion}</td>
       </tr>`;
@@ -601,6 +628,36 @@ async function accCita(fila, est) {
   await fetch(`${SC}?action=updateCita&fila=${fila}&estado=${est}`);
   toast(est === 'Rechazada' ? 'Cita rechazada' : '✓ Actualizado');
   loadProfCitas();
+}
+
+async function verDetalleCitaProf(fila) {
+  const c = todasMisCitas.find(x => x.fila === fila);
+  if (!c) return;
+
+  document.getElementById('vd-paciente').textContent = c.paciente || '—';
+  document.getElementById('vd-fecha').textContent = formatDT(c.fechaCita).d + ' · ' + formatHora(c.hora);
+  document.getElementById('vd-modalidad').textContent = c.modalidad || '—';
+
+  const esDom = (c.modalidad || '').toLowerCase().includes('domicilio');
+  const dirBox = document.getElementById('vd-direccion-box');
+  if (esDom && c.direccion) {
+    document.getElementById('vd-direccion').textContent = c.direccion;
+    document.getElementById('vd-maps-link').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.direccion)}`;
+    dirBox.style.display = 'block';
+  } else {
+    dirBox.style.display = 'none';
+  }
+
+  document.getElementById('vd-telefono').textContent = 'Cargando...';
+  openModal('modal-detalle-cita-prof');
+
+  try {
+    const pacResp = await fetch(`${SC}?action=getPacientes`).then(r => r.json());
+    const pac = (pacResp.data || []).find(p => p.rut === c.rutPaciente) || (pacResp.data || []).find(p => p.nombre === c.paciente);
+    document.getElementById('vd-telefono').textContent = pac && pac.coordWa ? pac.coordWa : 'Sin teléfono registrado';
+  } catch (e) {
+    document.getElementById('vd-telefono').textContent = 'Sin teléfono registrado';
+  }
 }
 
 function abrirNuevaAtencion(pac = '') {
