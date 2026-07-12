@@ -154,6 +154,7 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
       <div class="card" style="margin-bottom:.75rem">
         <div class="ch">
           <button class="btn btn-sm" onclick="quincenaAnterior()">← Anterior</button>
+          <button class="btn btn-sm" onclick="quincenaHoy()">Hoy</button>
           <span class="ct" id="dash-cal-titulo" style="flex:1;text-align:center"></span>
           <button class="btn btn-sm" onclick="quincenaSiguiente()">Siguiente →</button>
         </div>
@@ -193,6 +194,7 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
       <div class="card" style="margin-top:.75rem">
         <div class="ch">
           <button class="btn btn-sm" onclick="semanaAnterior()">← Anterior</button>
+          <button class="btn btn-sm" onclick="semanaHoy()">Hoy</button>
           <span class="ct" id="cal-semana-titulo" style="flex:1;text-align:center"></span>
           <button class="btn btn-sm" onclick="semanaSiguiente()">Siguiente →</button>
         </div>
@@ -366,6 +368,8 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
       <div id="vd-direccion-box" style="display:none">
         <div style="font-size:11px;color:var(--gris);margin-bottom:2px">Dirección</div>
         <div id="vd-direccion" style="margin-bottom:12px">—</div>
+        <div style="font-size:11px;color:var(--gris);margin-bottom:2px">Comuna</div>
+        <div id="vd-comuna" style="margin-bottom:12px">—</div>
         <a id="vd-maps-link" href="#" target="_blank" class="btn btn-p" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none">
           <i class="ti ti-map-pin" aria-hidden="true"></i> Ver en Google Maps
         </a>
@@ -423,7 +427,8 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
       </div>
       <div class="fg"><label>Fecha de la cita *</label><input type="date" id="citp-fecha"></div>
       <div class="fg"><label>Hora *</label><input type="time" id="citp-hora"></div>
-      <div class="fg full"><label>Dirección (si es domicilio)</label><input type="text" id="citp-dir" placeholder="Ej: Av. Providencia 1234, Dpto 52, Providencia"></div>
+      <div class="fg"><label>Dirección (calle y número, si es domicilio)</label><input type="text" id="citp-calle" placeholder="Ej: Av. Providencia 1234, Dpto 52"></div>
+      <div class="fg"><label>Comuna (si es domicilio)</label><input type="text" id="citp-comuna" placeholder="Ej: Providencia"></div>
     </div>
 
     <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
@@ -560,6 +565,7 @@ let citasDashboardCache = [];
 
 function quincenaAnterior() { quincenaOffset -= 2; renderCalendarioDosSemanas(citasDashboardCache); }
 function quincenaSiguiente() { quincenaOffset += 2; renderCalendarioDosSemanas(citasDashboardCache); }
+function quincenaHoy() { quincenaOffset = 0; renderCalendarioDosSemanas(citasDashboardCache); }
 
 function renderCalendarioDosSemanas(citas) {
   citasDashboardCache = citas;
@@ -610,11 +616,7 @@ let semanaOffset = 0;
 let citasSortCampo = 'fechaCita';
 let citasSortAsc = true;
 
-function comunaDeDireccion(direccion) {
-  if (!direccion) return '';
-  const partes = direccion.split(',');
-  return partes[partes.length - 1]?.trim() || '';
-}
+// La comuna ahora viene como campo propio (c.comuna) desde el backend
 
 async function loadProfCitas() {
   try {
@@ -645,7 +647,7 @@ function renderCitasBodyTabla() {
   proximas.sort((a, b) => {
     let va, vb;
     if (citasSortCampo === 'fechaCita') { va = parseFecha(a.fechaCita).getTime(); vb = parseFecha(b.fechaCita).getTime(); }
-    else if (citasSortCampo === 'comuna') { va = comunaDeDireccion(a.direccion).toLowerCase(); vb = comunaDeDireccion(b.direccion).toLowerCase(); }
+    else if (citasSortCampo === 'comuna') { va = (a.comuna||'').toLowerCase(); vb = (b.comuna||'').toLowerCase(); }
     else { va = (a[citasSortCampo]||'').toString().toLowerCase(); vb = (b[citasSortCampo]||'').toString().toLowerCase(); }
     if (va < vb) return citasSortAsc ? -1 : 1;
     if (va > vb) return citasSortAsc ? 1 : -1;
@@ -656,7 +658,7 @@ function renderCitasBodyTabla() {
     const dt = formatDT(c.fechaCita);
     const hora = formatHora(c.hora);
     const esDom = (c.modalidad||'').toLowerCase().includes('domicilio');
-    const comuna = esDom ? comunaDeDireccion(c.direccion) : '';
+    const comuna = esDom ? (c.comuna || '') : '';
     const accion = c.estado==='Confirmada'
       ? `<button class="btn" style="color:#A32D2D;border-color:#F7C1C1" onclick="accCita(${c.fila},'Rechazada')">✕ Rechazar</button>`
       : c.estado==='Rechazada' ? '<span style="color:var(--gris);font-size:11px">Rechazada</span>' : '—';
@@ -700,6 +702,7 @@ function formatHora(horaStr) {
 
 function semanaAnterior() { semanaOffset--; renderCalendario(); }
 function semanaSiguiente() { semanaOffset++; renderCalendario(); }
+function semanaHoy() { semanaOffset = 0; renderCalendario(); }
 
 function renderCalendario() {
   const DIAS = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
@@ -834,7 +837,9 @@ async function verDetalleCitaProf(fila) {
   const dirBox = document.getElementById('vd-direccion-box');
   if (esDom && c.direccion) {
     document.getElementById('vd-direccion').textContent = c.direccion;
-    document.getElementById('vd-maps-link').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.direccion)}`;
+    document.getElementById('vd-comuna').textContent = c.comuna || '—';
+    const direccionCompleta = c.direccion + (c.comuna ? ', ' + c.comuna : '');
+    document.getElementById('vd-maps-link').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(direccionCompleta)}`;
     dirBox.style.display = 'block';
   } else {
     dirBox.style.display = 'none';
@@ -1008,7 +1013,8 @@ async function openCitaProfModal() {
   document.getElementById('citp-pac-nombre-final').value = '';
   document.getElementById('citp-fecha').value = '';
   document.getElementById('citp-hora').value = '';
-  document.getElementById('citp-dir').value = '';
+  document.getElementById('citp-calle').value = '';
+  document.getElementById('citp-comuna').value = '';
 
   setModoPaciente('mispacientes');
   poblarEspecialidadProf();
@@ -1106,7 +1112,8 @@ async function guardarCitaProf() {
     hora: hora,
     modalidad: document.getElementById('citp-mod').value,
     origen: 'Manual',
-    direccion: document.getElementById('citp-dir').value,
+    direccion: document.getElementById('citp-calle').value,
+    comuna: document.getElementById('citp-comuna').value,
     emailProf: '',
     waProf: ''
   });
