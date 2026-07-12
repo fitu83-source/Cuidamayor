@@ -567,7 +567,8 @@ tr:hover td{background:var(--bg2)}
       </div>
       <div class="fg"><label>Fecha de la cita *</label><input type="date" id="cit-fecha"/></div>
       <div class="fg"><label>Hora *</label><input type="time" id="cit-hora"/></div>
-      <div class="fg full"><label>Dirección (si es domicilio)</label><input type="text" id="cit-dir" placeholder="Ej: Av. Providencia 1234, Dpto 52, Providencia"/></div>
+      <div class="fg"><label>Dirección (calle y número, si es domicilio)</label><input type="text" id="cit-calle" placeholder="Ej: Av. Providencia 1234, Dpto 52"/></div>
+      <div class="fg"><label>Comuna (si es domicilio)</label><input type="text" id="cit-comuna" placeholder="Ej: Providencia"/></div>
     </div>
     <div style="display:flex;gap:8px;justify-content:flex-end">
       <button class="btn" onclick="closeModal('modal-cita')">Cancelar</button>
@@ -922,7 +923,7 @@ tr:hover td{background:var(--bg2)}
 <div id="toast"></div>
 
 <script>
-const SC = 'https://script.google.com/macros/s/AKfycbzg983iE3ZGuf-s7wBAm5cNF_VTQDQe-uMRAg6PFPA5t0TCvzmfqD7N9oZ2I2j0yRP7uA/exec';
+const SC = 'https://script.google.com/macros/s/AKfycbwhDi3J-CUdAV2dMZC-bST14Hn1-uLf7bd9B6a0Eknup6qFggwIZgNOeXNMuPVjcaVjkw/exec';
 const PWD = '1111';
 
 // ── SIDEBAR TOGGLE ──
@@ -1429,7 +1430,7 @@ async function loadCitas() {
       <td><span class="badge ${c.origen==='Cal.com'?'bb':'bgr'}">${c.origen||'—'}</span></td>
       <td>${badge(c.estado)}</td>
       <td><span class="badge ${c.fichaGenerada==='Sí'?'bg':'bgr'}">${c.fichaGenerada||'No'}</span></td>
-      <td>${c.direccion ? `<button class="btn btn-sm" onclick="verDireccionAdmin('${encodeURIComponent(c.direccion)}','${encodeURIComponent(c.paciente||'')}')"><i class="ti ti-map-pin" aria-hidden="true"></i> Ver</button>` : '—'}</td>
+      <td>${c.direccion ? `<button class="btn btn-sm" onclick="verDireccionAdmin('${encodeURIComponent(c.direccion)}','${encodeURIComponent(c.paciente||'')}','${encodeURIComponent(c.comuna||'')}')"><i class="ti ti-map-pin" aria-hidden="true"></i> Ver</button>` : '—'}</td>
       <td>${c.estado==='Confirmada'?
         `<button class="btn btn-d" onclick="updateCita(${c.fila},'Rechazada')">✕ Rechazar</button>`:
         c.estado==='Rechazada'?'<span style="color:var(--gris);font-size:11px">Rechazada</span>':
@@ -1486,7 +1487,8 @@ async function openCitaModal() {
   document.getElementById('cit-esp').innerHTML = '<option value="">Selecciona un profesional primero...</option>';
   document.getElementById('cit-fecha').value = '';
   document.getElementById('cit-hora').value = '';
-  document.getElementById('cit-dir').value = '';
+  document.getElementById('cit-calle').value = '';
+  document.getElementById('cit-comuna').value = '';
   openModal('modal-cita');
 }
 
@@ -1573,7 +1575,8 @@ async function saveCita() {
     hora: hora,
     modalidad: document.getElementById('cit-mod').value,
     origen: 'Manual',
-    direccion: document.getElementById('cit-dir').value,
+    direccion: document.getElementById('cit-calle').value,
+    comuna: document.getElementById('cit-comuna').value,
     emailProf: document.getElementById('cit-email-prof').value,
     waProf: document.getElementById('cit-wa-prof').value
   });
@@ -1824,15 +1827,19 @@ async function saveAlerta() {
   setTimeout(loadAlertas, 1500);
 }
 
-function verDireccionAdmin(dirEnc, pacEnc) {
+function verDireccionAdmin(dirEnc, pacEnc, comunaEnc) {
   const dir = decodeURIComponent(dirEnc);
   const pac = decodeURIComponent(pacEnc);
+  const comuna = comunaEnc ? decodeURIComponent(comunaEnc) : '';
   document.getElementById('dir-admin-content').innerHTML = `
     <div style="font-size:11px;color:var(--gris);margin-bottom:4px">Paciente</div>
     <div style="font-weight:600;margin-bottom:12px">${pac}</div>
     <div style="font-size:11px;color:var(--gris);margin-bottom:4px">Dirección</div>
-    <div>${dir}</div>`;
-  document.getElementById('dir-admin-maps').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dir)}`;
+    <div style="margin-bottom:12px">${dir}</div>
+    <div style="font-size:11px;color:var(--gris);margin-bottom:4px">Comuna</div>
+    <div>${comuna || '—'}</div>`;
+  const direccionCompleta = dir + (comuna ? ', ' + comuna : '');
+  document.getElementById('dir-admin-maps').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(direccionCompleta)}`;
   openModal('modal-dir-admin');
 }
 
