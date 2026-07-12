@@ -52,7 +52,9 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;font-size:14px;color:var(
 .cal-day.otro-mes{opacity:.4}
 .cal-day-num{font-size:11px;font-weight:600;color:var(--gris);margin-bottom:4px;text-align:center}
 .cal-day.hoy .cal-day-num{color:var(--verde)}
-.cal-cita{background:var(--verde);color:#fff;border-radius:6px;padding:3px 6px;font-size:10px;margin-bottom:3px;cursor:pointer;line-height:1.3;transition:opacity .15s}
+.cal-cita{background:var(--verde);color:#fff;border-radius:6px;padding:3px 6px;font-size:10px;margin-bottom:3px;cursor:pointer;line-height:1.3;transition:opacity .15s;display:flex;justify-content:space-between;align-items:center;gap:4px;overflow:hidden}
+.cal-cita .cch{font-weight:700;flex-shrink:0}
+.cal-cita .ccn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}
 .cal-cita:hover{opacity:.85}
 .cal-cita.rechazada{background:var(--rojo);opacity:.7}
 .cal-cita.completada{background:var(--gris);opacity:.7}
@@ -75,6 +77,8 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
 .modo-tab.on{background:var(--verde);color:#fff;border-color:var(--verde)}
 .av{width:26px;height:26px;border-radius:50%;background:var(--vs);color:var(--verde);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;margin-right:6px}
 .loading,.empty{text-align:center;padding:2rem;color:var(--gris);font-size:12px}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--bdr);border-top-color:var(--verde);border-radius:50%;animation:sp .8s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
 #toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--verde);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;transform:translateY(100px);opacity:0;transition:all .3s;z-index:999} #toast.show{transform:translateY(0);opacity:1}
 
 .dt-fe{font-weight:600;color:var(--texto)}
@@ -120,13 +124,13 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
     <div class="nsec">Mi Consulta</div>
     <button class="nb on" onclick="sp('dashboard',this)"><i class="ti ti-home-heart"></i><span class="nb-text">Inicio</span></button>
     <button class="nb" onclick="sp('citas',this);loadProfCitas()"><i class="ti ti-calendar-event"></i><span class="nb-text">Mis Citas</span></button>
-    <button class="nb" onclick="sp('atenciones',this);loadProfAtenciones()"><i class="ti ti-notes"></i><span class="nb-text">Historial Clínico</span></button>
+    <button class="nb" onclick="sp('atenciones',this);loadProfAtenciones();loadHistorialPacientes()"><i class="ti ti-notes"></i><span class="nb-text">Historial Clínico</span></button>
     <button class="nb" onclick="sp('recetas',this);loadProfRecetas()"><i class="ti ti-pill"></i><span class="nb-text">Mis Recetas</span></button>
     <button class="nb" onclick="sp('alertas',this);loadProfAlertas()"><i class="ti ti-bell-ringing"></i><span class="nb-text">Alertas de Pacientes</span></button>
     
     <div class="nsec">Configuración</div>
     <button class="nb" onclick="sp('financiero',this)"><i class="ti ti-currency-dollar"></i><span class="nb-text">Financiero</span></button>
-    <button class="nb" onclick="sp('perfil',this);loadMiPerfil()"><i class="ti ti-user-circle"></i><span class="nb-text">Mi Perfil Profesional</span></button>
+    <button class="nb" onclick="sp('perfil',this);loadMiPerfil()"><i class="ti ti-user-circle"></i><span class="nb-text">Mi Perfil</span></button>
     
     <div class="sfoot">
       <span id="prof-logged-name" style="font-weight:600; display:block;">Especialista</span>
@@ -140,7 +144,7 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
     <div id="pg-dashboard" class="pg on">
       <div class="ph"><h1 id="dash-welcome">¡Hola!</h1><p>Resumen clínico de tu actividad en FamHealth.</p></div>
       <div class="filt" style="margin-bottom:14px">
-        <input type="text" id="dash-buscador" placeholder="Buscar paciente en tus citas próximas..." oninput="ft('dash-citas',this.value)" style="flex:1">
+        <input type="text" id="dash-buscador" placeholder="Buscar paciente en tus próximas alertas..." oninput="ft('dash-alertas-body',this.value)" style="flex:1">
       </div>
       <div class="mets-hero">
         <div class="met-hero"><div class="met-hero-label">Citas pendientes</div><div class="met-hero-value" id="p-citas-count">0</div></div>
@@ -148,16 +152,19 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
         <div class="met-hero"><div class="met-hero-label">Alertas pasadas</div><div class="met-hero-value" id="p-alertas-pasadas-count">0</div></div>
       </div>
       <div class="card" style="margin-bottom:.75rem">
-        <div class="ch"><span class="ct">Calendario — próximas 2 semanas</span></div>
+        <div class="ch">
+          <button class="btn btn-sm" onclick="quincenaAnterior()">← Anterior</button>
+          <span class="ct" id="dash-cal-titulo" style="flex:1;text-align:center"></span>
+          <button class="btn btn-sm" onclick="quincenaSiguiente()">Siguiente →</button>
+        </div>
         <div id="dash-cal-2sem" style="overflow-x:auto"></div>
       </div>
-      <div class="two">
-        <div class="card"><div class="ch"><span class="ct">Próximas citas en agenda</span></div>
+      <div class="card">
+        <div class="ch"><span class="ct">Próximas 5 alertas de tus pacientes</span></div>
         <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:14%">Fecha</th><th style="width:10%">Hora</th><th style="width:32%">Paciente</th><th style="width:24%">Modalidad</th><th style="width:20%">Estado</th></tr></thead>
-          <tbody id="dash-citas"><tr><td colspan="5" class="loading">Cargando...</td></tr></tbody>
-        </table></div></div>
-        <div class="card"><div class="ch"><span class="ct">Información de Cobertura</span></div><div style="font-size:12px; line-height:1.6; padding:.5rem; background:var(--bg2); border-radius:8px"><p><strong>⚠️ Reembolsos:</strong> Recuerda registrar la evolución clínica para facilitar el reembolso ISAPRE/FONASA del paciente.</p></div></div>
+          <thead><tr><th style="width:15%">Fecha</th><th style="width:25%">Paciente</th><th style="width:15%">Tipo</th><th>Mensaje</th><th style="width:12%">Estado</th></tr></thead>
+          <tbody id="dash-alertas-body"><tr><td colspan="5" class="loading">Cargando...</td></tr></tbody>
+        </table></div>
       </div>
     </div>
 
@@ -168,8 +175,17 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
         <div class="ch"><span class="ct">Próximas citas</span></div>
         <div class="filt"><input type="text" placeholder="Filtrar por paciente..." oninput="ft('citas-body',this.value)"></div>
         <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:13%">Fecha</th><th style="width:8%">Hora</th><th style="width:22%">Paciente</th><th>Modalidad</th><th style="width:12%">Detalle</th><th>Estado</th><th style="width:15%">Acción</th></tr></thead>
-          <tbody id="citas-body"><tr><td colspan="7" class="loading">Cargando agenda...</td></tr></tbody>
+          <thead><tr>
+            <th style="width:11%;cursor:pointer" onclick="sortCitas('fechaCita')">Fecha <i class="ti ti-arrows-sort" aria-hidden="true" style="font-size:10px"></i></th>
+            <th style="width:7%;cursor:pointer" onclick="sortCitas('hora')">Hora <i class="ti ti-arrows-sort" aria-hidden="true" style="font-size:10px"></i></th>
+            <th style="width:19%;cursor:pointer" onclick="sortCitas('paciente')">Paciente <i class="ti ti-arrows-sort" aria-hidden="true" style="font-size:10px"></i></th>
+            <th style="cursor:pointer" onclick="sortCitas('modalidad')">Modalidad <i class="ti ti-arrows-sort" aria-hidden="true" style="font-size:10px"></i></th>
+            <th style="width:12%;cursor:pointer" onclick="sortCitas('comuna')">Comuna <i class="ti ti-arrows-sort" aria-hidden="true" style="font-size:10px"></i></th>
+            <th style="width:10%">Detalle</th>
+            <th style="width:10%;cursor:pointer" onclick="sortCitas('estado')">Estado <i class="ti ti-arrows-sort" aria-hidden="true" style="font-size:10px"></i></th>
+            <th style="width:10%">Acción</th>
+          </tr></thead>
+          <tbody id="citas-body"><tr><td colspan="8" class="loading">Cargando agenda...</td></tr></tbody>
         </table></div>
       </div>
 
@@ -185,13 +201,21 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
     </div>
 
     <div id="pg-atenciones" class="pg">
-      <div class="ph"><h1>Historial Clínico</h1><p>Consulta evoluciones y notas médicas.</p></div>
+      <div class="ph"><h1>Historial Clínico</h1><p>Consulta la ficha completa de tus pacientes y sus evoluciones.</p></div>
+      <div class="card">
+        <div class="ch"><span class="ct">Mis pacientes</span></div>
+        <div class="filt"><input type="text" placeholder="Buscar paciente..." oninput="ft('pacientes-hist-body',this.value)"></div>
+        <div class="tbl-scroll"><table>
+          <thead><tr><th style="width:35%">Paciente</th><th style="width:20%">RUT</th><th style="width:20%">Estado</th><th style="width:25%">Ficha</th></tr></thead>
+          <tbody id="pacientes-hist-body"><tr><td colspan="4" class="loading">Cargando...</td></tr></tbody>
+        </table></div>
+      </div>
       <div class="card">
         <div class="ch"><span class="ct">Evoluciones Firmadas</span><button class="btn btn-p" onclick="openModal('modal-atencion')"><i class="ti ti-plus"></i> Registrar Evolución</button></div>
         <div class="filt"><input type="text" placeholder="Buscar por paciente o notas..." oninput="ft('atenciones-body',this.value)"></div>
         <div class="tbl-scroll"><table>
-          <thead><tr><th style="width:15%">Fecha Registro</th><th style="width:20%">Paciente</th><th style="width:15%">RUT</th><th style="width:30%">Notas Sesión</th><th>Próxima Sesión</th></tr></thead>
-          <tbody id="atenciones-body"><tr><td colspan="5" class="loading">Cargando historial clínico...</td></tr></tbody>
+          <thead><tr><th style="width:18%">Fecha Registro</th><th style="width:25%">Paciente</th><th style="width:17%">RUT</th><th>Notas Sesión</th></tr></thead>
+          <tbody id="atenciones-body"><tr><td colspan="4" class="loading">Cargando historial clínico...</td></tr></tbody>
         </table></div>
       </div>
     </div>
@@ -235,7 +259,7 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
 </div>
 
 <div id="pg-perfil" class="pg">
-      <div class="ph"><h1>Mi Perfil Profesional</h1><p>Mantén actualizada tu vitrina pública y configuración comercial.</p></div>
+      <div class="ph"><h1>Mi Perfil</h1><p>Mantén actualizada tu vitrina pública y configuración comercial.</p></div>
       <div class="card" style="max-width:800px">
         <div class="tabs">
           <button class="tab on" onclick="showTab('pe-basicos',this)">Datos Públicos</button>
@@ -299,6 +323,27 @@ td{padding:8px;border-bottom:0.5px solid var(--bg2);vertical-align:middle;white-
       <div class="fg"><label>Fecha Próx. Sesión</label><input type="date" id="at-prox"></div>
     </div>
     <div style="display:flex;justify-content:flex-end;gap:8px"><button class="btn" onclick="closeModal('modal-atencion')">Cancelar</button><button class="btn btn-p" onclick="guardarAtencionProf()">Registrar Evolución</button></div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal-ficha-paciente">
+  <div class="modal" style="width:680px">
+    <div class="modal-header">
+      <span class="modal-title" id="fp-titulo">Ficha del paciente</span>
+      <button class="modal-close" onclick="closeModal('modal-ficha-paciente')">×</button>
+    </div>
+    <div class="tabs">
+      <button class="tab on" onclick="showTab('fp-ficha',this)">Ficha</button>
+      <button class="tab" onclick="showTab('fp-atenciones',this)">Atenciones</button>
+      <button class="tab" onclick="showTab('fp-recetas',this)">Recetas</button>
+      <button class="tab" onclick="showTab('fp-alertas',this)">Alertas</button>
+      <button class="tab" onclick="showTab('fp-registro',this)">Registro</button>
+    </div>
+    <div id="fp-ficha" class="tab-pane on"><div class="loading"><span class="spin"></span>Cargando...</div></div>
+    <div id="fp-atenciones" class="tab-pane"><div class="loading"><span class="spin"></span>Cargando...</div></div>
+    <div id="fp-recetas" class="tab-pane"><div class="loading"><span class="spin"></span>Cargando...</div></div>
+    <div id="fp-alertas" class="tab-pane"><div class="loading"><span class="spin"></span>Cargando...</div></div>
+    <div id="fp-registro" class="tab-pane"><div class="loading"><span class="spin"></span>Cargando...</div></div>
   </div>
 </div>
 
@@ -484,33 +529,49 @@ async function loadProfDashboard() {
   const miAgenda = (citas.data || []).filter(c => c.profesional === ME_PROF_NAME);
   document.getElementById('p-citas-count').textContent = miAgenda.filter(c => c.estado === 'Pendiente' || c.estado === 'Confirmada').length;
 
-  const misRuts = (pac.data||[]).filter(p => (p.profesional||'').includes(ME_PROF_NAME)).map(p => p.rut);
+  const misPacientes = (pac.data||[]).filter(p => (p.profesional||'').includes(ME_PROF_NAME));
+  const misRuts = misPacientes.map(p => p.rut);
   const misAlertasActivas = (alertas.data||[]).filter(a => misRuts.includes(a.rut) && a.estado === 'Activa');
   document.getElementById('p-alertas-vencer-count').textContent = misAlertasActivas.length;
   const misAlertasPasadas = (alertas.data||[]).filter(a => misRuts.includes(a.rut) && a.estado === 'Completada');
   document.getElementById('p-alertas-pasadas-count').textContent = misAlertasPasadas.length;
 
-  const proximas = miAgenda.filter(c => c.estado === 'Confirmada').slice(0, 4);
-  document.getElementById('dash-citas').innerHTML = proximas.length ? proximas.map(c => {
-    const dt = formatDT(c.fechaCita);
-    const hora = formatHora(c.hora);
-    return `<tr>
+  const proximasAlertas = misAlertasActivas
+    .sort((a,b) => (b.fecha||'').localeCompare(a.fecha||''))
+    .slice(0, 5);
+  document.getElementById('dash-alertas-body').innerHTML = proximasAlertas.length ? proximasAlertas.map(a => {
+    const dt = formatDT(a.fecha);
+    const pacRut = (misPacientes.find(p => p.rut === a.rut) || {}).rut || a.rut || '';
+    return `<tr style="cursor:pointer" onclick="verFichaPacienteProf('${pacRut}','${(a.paciente||'').replace(/'/g,"\\'")}')">
       <td><span class="dt-fe">${dt.d}</span></td>
-      <td style="font-weight:500;color:var(--verde)">${hora}</td>
-      <td><span class="av">${av(c.paciente)}</span>${c.paciente||'—'}</td>
-      <td>${c.modalidad||'—'}</td>
-      <td>${badge(c.estado)}</td>
+      <td><span class="av">${av(a.paciente)}</span>${a.paciente||'—'}</td>
+      <td>${badge(a.tipo)}</td>
+      <td style="max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.mensaje||'—'}</td>
+      <td>${badge(a.estado)}</td>
     </tr>`;
-  }).join('') : '<tr><td colspan="5" class="empty">Agenda libre</td></tr>';
+  }).join('') : '<tr><td colspan="5" class="empty">Sin alertas activas</td></tr>';
 
+  quincenaOffset = 0;
   renderCalendarioDosSemanas(miAgenda);
 }
 
+let quincenaOffset = 0;
+let citasDashboardCache = [];
+
+function quincenaAnterior() { quincenaOffset -= 2; renderCalendarioDosSemanas(citasDashboardCache); }
+function quincenaSiguiente() { quincenaOffset += 2; renderCalendarioDosSemanas(citasDashboardCache); }
+
 function renderCalendarioDosSemanas(citas) {
+  citasDashboardCache = citas;
   const DIAS = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  const MESES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
   const hoy = new Date(); hoy.setHours(0,0,0,0);
   const diaSemana = hoy.getDay() === 0 ? 6 : hoy.getDay() - 1;
-  const lunesBase = new Date(hoy); lunesBase.setDate(hoy.getDate() - diaSemana);
+  const lunesBase = new Date(hoy); lunesBase.setDate(hoy.getDate() - diaSemana + (quincenaOffset * 7));
+
+  const fin = new Date(lunesBase); fin.setDate(lunesBase.getDate() + 13);
+  const tit = `${lunesBase.getDate()} ${MESES[lunesBase.getMonth()]} — ${fin.getDate()} ${MESES[fin.getMonth()]} ${fin.getFullYear()}`;
+  document.getElementById('dash-cal-titulo').textContent = tit;
 
   let html = '<div class="cal-grid">';
   for (let i = 0; i < 7; i++) {
@@ -525,9 +586,7 @@ function renderCalendarioDosSemanas(citas) {
     }).sort((a,b) => (a.hora||'').localeCompare(b.hora||''));
     html += `<div class="cal-day${esHoy?' hoy':''}"><div class="cal-day-num">${dia.getDate()}</div>`;
     citasDia.forEach(c => {
-      const hora = formatHora(c.hora);
-      const cls = c.estado==='Rechazada'?'rechazada':c.estado==='Completada'?'completada':'';
-      html += `<div class="cal-cita ${cls}" title="${c.paciente} — ${hora}"><strong>${hora}</strong><br>${(c.paciente||'').split(' ')[0]}</div>`;
+      html += pintarCitaCalendario(c);
     });
     html += '</div>';
   }
@@ -535,45 +594,85 @@ function renderCalendarioDosSemanas(citas) {
   document.getElementById('dash-cal-2sem').innerHTML = html;
 }
 
+function pintarCitaCalendario(c) {
+  const hora = formatHora(c.hora);
+  const cls = c.estado==='Rechazada'?'rechazada':c.estado==='Completada'?'completada':'';
+  const rut = (c.rutPaciente||'').replace(/'/g,"\\'");
+  const nombre = (c.paciente||'').replace(/'/g,"\\'");
+  return `<div class="cal-cita ${cls}" title="${c.paciente} — ${hora}" onclick="verFichaPacienteProf('${rut}','${nombre}')">
+    <span class="cch">${hora}</span><span class="ccn">${c.paciente||''}</span>
+  </div>`;
+}
+
 // Cache de citas para el calendario
 let todasMisCitas = [];
 let semanaOffset = 0;
+let citasSortCampo = 'fechaCita';
+let citasSortAsc = true;
+
+function comunaDeDireccion(direccion) {
+  if (!direccion) return '';
+  const partes = direccion.split(',');
+  return partes[partes.length - 1]?.trim() || '';
+}
 
 async function loadProfCitas() {
   try {
     const data = (await fetch(`${SC}?action=getCitas`).then(r=>r.json())).data || [];
     todasMisCitas = data.filter(c => c.profesional === ME_PROF_NAME);
-
-    // Tabla — máximo 10 próximas confirmadas
-    const hoy = new Date(); hoy.setHours(0,0,0,0);
-    const proximas = todasMisCitas
-      .filter(c => c.estado === 'Confirmada' || c.estado === 'Pendiente')
-      .sort((a,b) => parseFecha(a.fechaCita) - parseFecha(b.fechaCita))
-      .slice(0, 10);
-
-    document.getElementById('citas-body').innerHTML = proximas.length ? proximas.map(c => {
-      const dt = formatDT(c.fechaCita);
-      const hora = formatHora(c.hora);
-      const accion = c.estado==='Confirmada'
-        ? `<button class="btn btn-p" onclick="abrirNuevaAtencion('${c.paciente}')">Evolución</button><button class="btn" style="color:#A32D2D;border-color:#F7C1C1" onclick="accCita(${c.fila},'Rechazada')">✕</button>`
-        : c.estado==='Rechazada' ? '<span style="color:var(--gris);font-size:11px">Rechazada</span>' : '—';
-      return `<tr>
-        <td><span class="dt-fe">${dt.d}</span></td>
-        <td style="font-weight:500;color:var(--verde)">${hora}</td>
-        <td><span class="av">${av(c.paciente)}</span><strong>${c.paciente||'—'}</strong></td>
-        <td>${c.modalidad||'—'}</td>
-        <td><button class="btn btn-sm" onclick="verDetalleCitaProf(${c.fila})"><i class="ti ti-info-circle" aria-hidden="true"></i> Ver detalle</button></td>
-        <td>${badge(c.estado)}</td>
-        <td>${accion}</td>
-      </tr>`;
-    }).join('') : `<tr><td colspan="7" class="empty">Sin citas próximas</td></tr>`;
+    renderCitasBodyTabla();
 
     // Renderizar calendario
     semanaOffset = 0;
     renderCalendario();
   } catch(e) {
-    document.getElementById('citas-body').innerHTML = `<tr><td colspan="7" class="empty">Error al cargar</td></tr>`;
+    document.getElementById('citas-body').innerHTML = `<tr><td colspan="8" class="empty">Error al cargar</td></tr>`;
   }
+}
+
+function sortCitas(campo) {
+  if (citasSortCampo === campo) { citasSortAsc = !citasSortAsc; }
+  else { citasSortCampo = campo; citasSortAsc = true; }
+  renderCitasBodyTabla();
+}
+
+function renderCitasBodyTabla() {
+  const hoy = new Date(); hoy.setHours(0,0,0,0);
+  let proximas = todasMisCitas
+    .filter(c => c.estado === 'Confirmada' || c.estado === 'Pendiente')
+    .slice(0, 30);
+
+  proximas.sort((a, b) => {
+    let va, vb;
+    if (citasSortCampo === 'fechaCita') { va = parseFecha(a.fechaCita).getTime(); vb = parseFecha(b.fechaCita).getTime(); }
+    else if (citasSortCampo === 'comuna') { va = comunaDeDireccion(a.direccion).toLowerCase(); vb = comunaDeDireccion(b.direccion).toLowerCase(); }
+    else { va = (a[citasSortCampo]||'').toString().toLowerCase(); vb = (b[citasSortCampo]||'').toString().toLowerCase(); }
+    if (va < vb) return citasSortAsc ? -1 : 1;
+    if (va > vb) return citasSortAsc ? 1 : -1;
+    return 0;
+  });
+
+  document.getElementById('citas-body').innerHTML = proximas.length ? proximas.slice(0,10).map(c => {
+    const dt = formatDT(c.fechaCita);
+    const hora = formatHora(c.hora);
+    const esDom = (c.modalidad||'').toLowerCase().includes('domicilio');
+    const comuna = esDom ? comunaDeDireccion(c.direccion) : '';
+    const accion = c.estado==='Confirmada'
+      ? `<button class="btn" style="color:#A32D2D;border-color:#F7C1C1" onclick="accCita(${c.fila},'Rechazada')">✕ Rechazar</button>`
+      : c.estado==='Rechazada' ? '<span style="color:var(--gris);font-size:11px">Rechazada</span>' : '—';
+    const rut = (c.rutPaciente||'').replace(/'/g,"\\'");
+    const nombre = (c.paciente||'').replace(/'/g,"\\'");
+    return `<tr>
+      <td><span class="dt-fe">${dt.d}</span></td>
+      <td style="font-weight:500;color:var(--verde)">${hora}</td>
+      <td><span class="av">${av(c.paciente)}</span><strong style="cursor:pointer;text-decoration:underline" onclick="verFichaPacienteProf('${rut}','${nombre}')">${c.paciente||'—'}</strong></td>
+      <td>${c.modalidad||'—'}</td>
+      <td>${comuna || '<span style="color:var(--gris)">—</span>'}</td>
+      <td><button class="btn btn-sm" onclick="verDetalleCitaProf(${c.fila})"><i class="ti ti-info-circle" aria-hidden="true"></i> Ver detalle</button></td>
+      <td>${badge(c.estado)}</td>
+      <td>${accion}</td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="8" class="empty">Sin citas próximas</td></tr>`;
 }
 
 function parseFecha(fechaStr) {
@@ -641,11 +740,7 @@ function renderCalendario() {
     html += `<div class="cal-day${esHoy?' hoy':''}">`;
     if (citasDia.length) {
       citasDia.forEach(c => {
-        const hora = formatHora(c.hora);
-        const cls  = c.estado==='Rechazada'?'rechazada':c.estado==='Completada'?'completada':'';
-        html += `<div class="cal-cita ${cls}" title="${c.paciente} — ${hora}" onclick="abrirNuevaAtencion('${c.paciente}')">
-          <strong>${hora}</strong><br>${c.paciente.split(' ')[0]}
-        </div>`;
+        html += pintarCitaCalendario(c);
       });
     }
     html += '</div>';
@@ -666,6 +761,58 @@ function verDireccion(dirEnc, pacEnc) {
     <div>${dir}</div>`;
   document.getElementById('dir-maps-link').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dir)}`;
   openModal('modal-dir');
+}
+
+async function verFichaPacienteProf(rut, nombre) {
+  document.getElementById('fp-titulo').textContent = 'Ficha — ' + (nombre || rut || '');
+  openModal('modal-ficha-paciente');
+  showTab('fp-ficha', document.querySelector('#modal-ficha-paciente .tab'));
+  ['fp-ficha','fp-atenciones','fp-recetas','fp-alertas','fp-registro'].forEach(id => {
+    document.getElementById(id).innerHTML = '<div class="loading"><span class="spin"></span>Cargando...</div>';
+  });
+  if (!rut) {
+    document.getElementById('fp-ficha').innerHTML = '<div class="empty">No hay RUT asociado a esta cita para mostrar la ficha.</div>';
+    return;
+  }
+  try {
+    const d = await fetch(`${SC}?action=getPacienteDetalle&rut=${encodeURIComponent(rut)}`).then(r => r.json());
+    const p = d.paciente || {};
+    document.getElementById('fp-ficha').innerHTML = `
+      <div class="form-grid" style="font-size:13px">
+        <div><div style="font-size:11px;color:var(--gris)">Nombre</div>${p.nombre || '—'}</div>
+        <div><div style="font-size:11px;color:var(--gris)">RUT</div>${p.rut || '—'}</div>
+        <div><div style="font-size:11px;color:var(--gris)">Fecha de nacimiento</div>${p.fechaNac || '—'}</div>
+        <div><div style="font-size:11px;color:var(--gris)">Estado</div>${badge(p.estado)}</div>
+        <div class="fg full"><div style="font-size:11px;color:var(--gris)">Diagnóstico</div>${p.diagnostico || '—'}</div>
+        <div class="fg full"><div style="font-size:11px;color:var(--gris)">Medicamentos</div>${p.medicamentos || '—'}</div>
+        <div><div style="font-size:11px;color:var(--gris)">Alergias</div>${p.alergias || '—'}</div>
+        <div><div style="font-size:11px;color:var(--gris)">Contacto familiar</div>${p.contactoFamiliar || '—'}</div>
+      </div>`;
+
+    const ats = d.atenciones || [];
+    document.getElementById('fp-atenciones').innerHTML = ats.length ? '<table><thead><tr><th>Fecha</th><th>Profesional</th><th>Notas</th></tr></thead><tbody>' +
+      ats.map(a => `<tr><td>${(a.fecha||'').substring(0,10)}</td><td>${a.profesional||'—'}</td><td>${a.notas||'—'}</td></tr>`).join('') + '</tbody></table>' :
+      '<div class="empty">Sin atenciones registradas</div>';
+
+    const recs = d.recetas || [];
+    document.getElementById('fp-recetas').innerHTML = recs.length ? '<table><thead><tr><th>Fecha</th><th>Profesional</th><th>Medicamento</th><th>Dosis</th><th>Duración</th></tr></thead><tbody>' +
+      recs.map(r => `<tr><td>${(r.fecha||'').substring(0,10)}</td><td>${r.profesional||'—'}</td><td>${r.medicamento||'—'}</td><td>${r.dosis||'—'}</td><td>${r.duracion||'—'}</td></tr>`).join('') + '</tbody></table>' :
+      '<div class="empty">Sin recetas registradas</div>';
+
+    const als = d.alertas || [];
+    document.getElementById('fp-alertas').innerHTML = als.length ? '<table><thead><tr><th>Tipo</th><th>Mensaje</th><th>Frecuencia</th><th>Estado</th></tr></thead><tbody>' +
+      als.map(a => `<tr><td>${badge(a.tipo)}</td><td>${a.mensaje||'—'}</td><td>${a.frecuencia||'—'}</td><td>${badge(a.estado)}</td></tr>`).join('') + '</tbody></table>' :
+      '<div class="empty">Sin alertas configuradas</div>';
+
+    const logR = await fetch(`${SC}?action=getLog&rutPaciente=${encodeURIComponent(rut)}`).then(r => r.json());
+    const logs = (logR.data || []).sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''));
+    document.getElementById('fp-registro').innerHTML = logs.length ?
+      '<table style="font-size:12px"><thead><tr><th>Fecha</th><th>Acción</th><th>Detalle</th><th>Usuario</th></tr></thead><tbody>' +
+      logs.map(l => `<tr><td>${(l.fecha||'').substring(0,16)}</td><td><strong>${l.accion||'—'}</strong></td><td>${l.detalle||'—'}</td><td>${l.usuarioTipo||'—'}</td></tr>`).join('') +
+      '</tbody></table>' : '<div class="empty">Sin registros de cambios aún</div>';
+  } catch (e) {
+    document.getElementById('fp-ficha').innerHTML = '<div class="empty">Error al cargar la ficha</div>';
+  }
 }
 
 async function accCita(fila, est) {
@@ -717,11 +864,30 @@ async function loadProfAtenciones() {
   try {
     const d = (await fetch(`${SC}?action=getAtenciones`).then(r=>r.json())).data.filter(a => a.profesional === ME_PROF_NAME) || [];
     document.getElementById('atenciones-body').innerHTML = d.length ? d.map(a => {
-      const dt = formatDT(a.fecha); const dp = formatDT(a.proximaSesion);
-      return `<tr><td><span class="dt-fe">${dt.d}</span> <span class="dt-ho">${dt.t}</span></td><td><span class="av">${av(a.paciente)}</span>${a.paciente||'—'}</td><td>${a.rut||'—'}</td><td style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${a.notas}">${a.notas||'—'}</td><td><span class="dt-fe">${dp.d!=='—'?dp.d:'—'}</span></td></tr>`;
-    }).join('') : `<tr><td colspan="5" class="empty">Sin evoluciones</td></tr>`;
-  } catch(e) { document.getElementById('atenciones-body').innerHTML = `<tr><td colspan="5" class="empty">Error de tabla</td></tr>`; }
+      const dt = formatDT(a.fecha);
+      const nombre = (a.paciente||'').replace(/'/g,"\\'");
+      const rut = (a.rut||'').replace(/'/g,"\\'");
+      return `<tr><td><span class="dt-fe">${dt.d}</span> <span class="dt-ho">${dt.t}</span></td><td><span class="av">${av(a.paciente)}</span><strong style="cursor:pointer;text-decoration:underline" onclick="verFichaPacienteProf('${rut}','${nombre}')">${a.paciente||'—'}</strong></td><td>${a.rut||'—'}</td><td style="max-width:320px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${a.notas}">${a.notas||'—'}</td></tr>`;
+    }).join('') : `<tr><td colspan="4" class="empty">Sin evoluciones</td></tr>`;
+  } catch(e) { document.getElementById('atenciones-body').innerHTML = `<tr><td colspan="4" class="empty">Error de tabla</td></tr>`; }
 }
+
+async function loadHistorialPacientes() {
+  try {
+    const d = (await fetch(`${SC}?action=getPacientes`).then(r=>r.json())).data.filter(p => (p.profesional||'').includes(ME_PROF_NAME)) || [];
+    document.getElementById('pacientes-hist-body').innerHTML = d.length ? d.map(p => {
+      const rut = (p.rut||'').replace(/'/g,"\\'");
+      const nombre = (p.nombre||'').replace(/'/g,"\\'");
+      return `<tr>
+        <td><span class="av">${av(p.nombre)}</span><strong style="cursor:pointer;text-decoration:underline" onclick="verFichaPacienteProf('${rut}','${nombre}')">${p.nombre||'—'}</strong></td>
+        <td>${p.rut||'—'}</td>
+        <td>${badge(p.estado)}</td>
+        <td><button class="btn btn-p btn-sm" onclick="verFichaPacienteProf('${rut}','${nombre}')"><i class="ti ti-notes" aria-hidden="true"></i> Registro</button></td>
+      </tr>`;
+    }).join('') : `<tr><td colspan="4" class="empty">Aún no tienes pacientes asignados</td></tr>`;
+  } catch(e) { document.getElementById('pacientes-hist-body').innerHTML = `<tr><td colspan="4" class="empty">Error de tabla</td></tr>`; }
+}
+
 async function guardarAtencionProf() { const p = document.getElementById('at-pac').value; const n = document.getElementById('at-notas').value; if(!p || !n) return; toast('Guardando...'); await fetch(SC, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tipo: 'atencion', paciente: p, rut: document.getElementById('at-rut').value, profesional: ME_PROF_NAME, especialidad: ME_PROF_SPEC, notas: n, proximaSesion: document.getElementById('at-prox').value }) }); closeModal('modal-atencion'); toast('✓ Firmado'); setTimeout(loadProfAtenciones, 1000); }
 
 async function loadProfRecetas() {
